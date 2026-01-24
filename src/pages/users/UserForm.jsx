@@ -32,9 +32,9 @@ const userSchema = Yup.object().shape({
 const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
     const isEditing = !!user;
 
-    // Fetch departments and designations
-    const { data: deptResponse } = useGetApiQuery({ url: 'open/get-department-list' });
-    const { data: desigResponse } = useGetApiQuery({ url: 'open/get-designation-list' });
+    // Fetch departments and designations (only when modal is open)
+    const { data: deptResponse } = useGetApiQuery({ url: 'open/get-department-list' }, { skip: !isOpen });
+    const { data: desigResponse } = useGetApiQuery({ url: 'open/get-designation-list' }, { skip: !isOpen });
 
     const [createUser, { isLoading: isCreating }] = usePostFormDataApiMutation();
     const [updateUser, { isLoading: isUpdating }] = useUpdateFormDataPostApiMutation();
