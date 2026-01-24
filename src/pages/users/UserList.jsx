@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import UserForm from './UserForm';
 import { Card, CardHeader, CardBody } from '../../components/ui/Card';
+import { cn, getImageUrl } from '../../lib/utils';
 
 const UserList = () => {
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -18,11 +19,12 @@ const UserList = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
 
-    // Fetch users (assuming /users endpoint)
+    // Fetch users (using the endpoint you specified)
     const { data: response, isLoading, refetch } = useGetApiQuery({ url: '/admin/get-user-list' });
     const [deleteUser, { isLoading: isDeleting }] = useDeleteApiMutation();
 
-    const users = response?.data || [];
+    // The users array is nested in response.data.data according to your provided structure
+    const users = response?.data?.data || [];
 
     const handleEdit = (user) => {
         setSelectedUser(user);
@@ -55,7 +57,7 @@ const UserList = () => {
                     <div className="h-10 w-10 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden border border-slate-300">
                         {row.original.profile_picture ? (
                             <img
-                                src={row.original.profile_picture}
+                                src={getImageUrl(row.original.profile_picture)}
                                 alt={row.original.name}
                                 className="h-full w-full object-cover"
                             />
@@ -71,22 +73,32 @@ const UserList = () => {
             )
         },
         {
+            header: 'ID / Code',
+            accessorKey: 'employee_code',
+            cell: ({ row }) => (
+                <div className="text-xs text-slate-600">
+                    <div className="font-medium text-slate-900">{row.original.employee_code}</div>
+                    <div className="text-slate-400">HRM: {row.original.hrm_id || 'N/A'}</div>
+                </div>
+            )
+        },
+        {
+            header: 'Org Info',
+            id: 'org_info',
+            cell: ({ row }) => (
+                <div className="text-xs">
+                    <div className="font-medium text-slate-900">{row.original.department?.name || 'No Dept'}</div>
+                    <div className="text-slate-500">{row.original.designation?.name || 'No Desig'}</div>
+                </div>
+            )
+        },
+        {
             header: 'Role',
             accessorKey: 'user_type',
             cell: ({ row }) => (
                 <Badge variant={row.original.user_type === 'Admin' ? 'info' : 'gray'}>
                     {row.original.user_type}
                 </Badge>
-            )
-        },
-        {
-            header: 'Contact',
-            accessorKey: 'phone',
-            cell: ({ row }) => (
-                <div className="text-sm text-slate-600">
-                    <div>{row.original.phone || 'N/A'}</div>
-                    <div className="text-xs text-slate-400 uppercase">{row.original.wing}</div>
-                </div>
             )
         },
         {

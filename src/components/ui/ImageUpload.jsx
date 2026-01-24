@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useField } from 'formik';
-import { cn } from '../../lib/utils';
-import { Upload, X, ImageIcon } from 'lucide-react';
+import { cn, getImageUrl } from '../../lib/utils';
+import { X, ImageIcon } from 'lucide-react';
 
 const ImageUpload = ({ label, helperText, className, ...props }) => {
     const [field, meta, helpers] = useField(props);
@@ -12,7 +12,7 @@ const ImageUpload = ({ label, helperText, className, ...props }) => {
     useEffect(() => {
         if (field.value) {
             if (typeof field.value === 'string') {
-                setPreview(field.value);
+                setPreview(getImageUrl(field.value));
             } else if (field.value instanceof File) {
                 const objectUrl = URL.createObjectURL(field.value);
                 setPreview(objectUrl);
