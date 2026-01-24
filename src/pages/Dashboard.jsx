@@ -84,7 +84,7 @@ const Dashboard = () => {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-3xl font-bold text-dark-50 mb-2">
-                            Welcome back, {user?.firstName}! 👋
+                            Welcome back, {user?.name}! 👋
                         </h1>
                         <p className="text-dark-400">
                             Here's what's happening with your projects today.
@@ -142,8 +142,8 @@ const Dashboard = () => {
                                 className="flex items-center gap-3 p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors"
                             >
                                 <div className={`w-2 h-2 rounded-full ${task.priority === 'high' ? 'bg-red-500' :
-                                        task.priority === 'medium' ? 'bg-yellow-500' :
-                                            'bg-green-500'
+                                    task.priority === 'medium' ? 'bg-yellow-500' :
+                                        'bg-green-500'
                                     }`}></div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-dark-200 font-medium truncate">{task.title}</p>
@@ -152,9 +152,9 @@ const Dashboard = () => {
                                     </p>
                                 </div>
                                 <span className={`badge ${task.status === 'completed' ? 'badge-success' :
-                                        task.status === 'in_progress' ? 'badge-primary' :
-                                            task.status === 'blocked' ? 'badge-danger' :
-                                                'badge-info'
+                                    task.status === 'in_progress' ? 'badge-primary' :
+                                        task.status === 'blocked' ? 'badge-danger' :
+                                            'badge-info'
                                     }`}>
                                     {task.status.replace('_', ' ')}
                                 </span>
