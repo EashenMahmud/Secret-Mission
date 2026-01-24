@@ -1,50 +1,93 @@
 import React from 'react';
+import ReactSelect from 'react-select';
 import { useField } from 'formik';
 import { cn } from '../../lib/utils';
 
-const Select = ({ label, options = [], helperText, className, ...props }) => {
-    const [field, meta] = useField(props);
+const Select = ({ label, options = [], helperText, className, placeholder, ...props }) => {
+    const [field, meta, helpers] = useField(props);
     const isError = meta.touched && meta.error;
+
+    const customStyles = {
+        control: (base, state) => ({
+            ...base,
+            backgroundColor: 'white',
+            borderColor: state.isFocused ? '#4f46e5' : isError ? '#ef4444' : '#d1d5db',
+            boxShadow: state.isFocused ? '0 0 0 1px #4f46e5' : 'none',
+            borderRadius: '0.375rem',
+            padding: '1px',
+            fontSize: '0.875rem',
+            minHeight: '38px',
+            transition: 'all 0.2s ease',
+            '&:hover': {
+                borderColor: state.isFocused ? '#4f46e5' : '#9ca3af',
+            },
+        }),
+        menu: (base) => ({
+            ...base,
+            zIndex: 50,
+            borderRadius: '0.5rem',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            border: '1px border-slate-200',
+            overflow: 'hidden',
+        }),
+        option: (base, state) => ({
+            ...base,
+            backgroundColor: state.isSelected ? '#4f46e5' : state.isFocused ? '#f5f7ff' : 'white',
+            color: state.isSelected ? 'white' : '#1e293b',
+            '&:active': {
+                backgroundColor: '#4f46e5',
+            },
+        }),
+        placeholder: (base) => ({
+            ...base,
+            color: '#9ca3af',
+        }),
+        singleValue: (base) => ({
+            ...base,
+            color: '#1e293b',
+        }),
+    };
+
+    const handleChange = (selectedOption) => {
+        helpers.setValue(selectedOption ? selectedOption.value : '');
+    };
+
+    const currentValue = options.find(option => option.value === field.value) || null;
 
     return (
         <div className={cn('flex flex-col gap-1 w-full', className)}>
             {label && (
-                <label htmlFor={props.id || props.name} className="block text-sm font-medium leading-6 text-gray-900">
+                <label htmlFor={props.id || props.name} className="block text-sm font-medium leading-6 text-slate-700">
                     {label}
                 </label>
-            )}
+            )
+            }
             <div className="relative">
-                <select
-                    {...field}
+                <ReactSelect
                     {...props}
-                    className={cn(
-                        'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 transition-all appearance-none bg-white',
-                        isError && 'ring-red-500 focus:ring-red-500',
-                        props.disabled && 'bg-gray-50 text-gray-400 cursor-not-allowed'
-                    )}
-                >
-                    <option value="">Select an option</option>
-                    {options.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                    </svg>
-                </div>
+                    options={options}
+                    value={currentValue}
+                    onChange={handleChange}
+                    onBlur={() => helpers.setTouched(true)}
+                    styles={customStyles}
+                    placeholder={placeholder || 'Select...'}
+                    isClearable
+                    classNamePrefix="react-select"
+                />
             </div>
-            {isError && (
-                <p className="mt-1 text-xs text-red-600" id={`${props.name}-error`}>
-                    {meta.error}
-                </p>
-            )}
-            {helperText && !isError && (
-                <p className="mt-1 text-xs text-gray-500">{helperText}</p>
-            )}
-        </div>
+            {
+                isError && (
+                    <p className="mt-1 text-xs text-red-600" id={`${props.name}-error`}>
+                        {meta.error}
+                    </p>
+                )
+            }
+            {
+                helperText && !isError && (
+                    <p className="mt-1 text-xs text-slate-500">{helperText}</p>
+                )
+            }
+        </div >
     );
 };
 

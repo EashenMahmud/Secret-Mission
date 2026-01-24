@@ -10,6 +10,7 @@ const Modal = ({
     children,
     size = 'md',
     className,
+    contentClassName,
     showCloseButton = true
 }) => {
     useEffect(() => {
@@ -65,7 +66,7 @@ const Modal = ({
                 )}
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto p-6 text-gray-700">
+                <div className={cn('flex-1 overflow-y-auto p-6 text-gray-700', contentClassName)}>
                     {children}
                 </div>
             </div>

@@ -14,6 +14,7 @@ import {
     useUpdateFormDataPostApiMutation
 } from '../../store/api/commonApi';
 import { toast } from 'react-toastify';
+import { User, Mail, Shield, MapPin, Briefcase } from 'lucide-react';
 
 const userSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -70,7 +71,7 @@ const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
                 delete body.password;
             }
 
-            // Handle file upload correctly - if profile_picture isn't a File, don't send it
+            // Handle file upload correctly
             if (!(body.profile_picture instanceof File)) {
                 delete body.profile_picture;
             }
@@ -102,8 +103,10 @@ const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title={isEditing ? 'Edit User' : 'Add New User'}
-            size="lg"
+            title={isEditing ? 'Edit User Profile' : 'Register New User'}
+            size="xl"
+            className="overflow-hidden"
+            contentClassName="p-0 overflow-hidden"
         >
             <Formik
                 initialValues={initialValues}
@@ -111,48 +114,108 @@ const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
                 onSubmit={handleSubmit}
                 enableReinitialize
             >
-                {({ isSubmitting }) => (
-                    <Form className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-4">
-                                <Input label="Full Name *" name="name" placeholder="Tushar Imran" />
-                                <Input label="Email Address *" name="email" type="email" placeholder="tushar@bacbonltd.com" disabled={isEditing} />
-                                <div className="grid grid-cols-2 gap-4">
-                                    <Input label="Employee Code *" name="employee_code" placeholder="SFT-EMP-1002" />
-                                    <Input label="HRM ID" name="hrm_id" placeholder="HRM-1002" />
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <Select label="Department" name="department_id" options={depts} />
-                                    <Select label="Designation" name="designation_id" options={desigs} />
-                                </div>
-                                <Input label="Phone" name="phone" placeholder="01712345678" />
-                            </div>
+                {({ isSubmitting, values }) => (
+                    <Form className="flex flex-col h-full max-h-[80vh]">
+                        <div className="flex-1 overflow-y-auto p-2 ">
+                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                                {/* Left Side: Profile Picture & Secondary Info */}
+                                <div className="lg:col-span-4 space-y-6">
+                                    <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex flex-col items-center">
+                                        <ImageUpload
+                                            label="Profile Photo"
+                                            name="profile_picture"
+                                            className="w-full"
+                                            helperText="Upload a professional photo. Max 2MB."
+                                        />
+                                        <div className="mt-6 flex items-center justify-between w-full p-3 bg-white rounded-xl border border-slate-200">
+                                            <span className="text-sm font-medium text-slate-600">Account Active</span>
+                                            <Switch name="is_active" />
+                                        </div>
+                                    </div>
 
-                            <div className="space-y-4">
-                                <ImageUpload label="Profile Picture" name="profile_picture" helperText="Max 2MB" />
-                                <Input label={isEditing ? "New Password" : "Password *"} name="password" type="password" placeholder="••••••••" />
-                                <div className="grid grid-cols-2 gap-4">
-                                    <Input label="Wing" name="wing" placeholder="SFT" />
-                                    <Switch label="Active Status" name="is_active" className="mt-8" />
+                                    <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
+                                        <div className="flex items-center gap-2 text-slate-900 font-semibold mb-2">
+                                            <Shield className="w-4 h-4 text-indigo-500" />
+                                            <span>Access Control</span>
+                                        </div>
+                                        <Radio
+                                            label="User Role"
+                                            name="user_type"
+                                            options={[
+                                                { label: 'Admin', value: 'Admin' },
+                                                { label: 'Developer', value: 'Developer' },
+                                            ]}
+                                        />
+                                        <Radio
+                                            label="Gender"
+                                            name="gender"
+                                            options={[
+                                                { label: 'Male', value: 'male' },
+                                                { label: 'Female', value: 'female' },
+                                                { label: 'Other', value: 'other' },
+                                            ]}
+                                        />
+                                    </div>
                                 </div>
-                                <Radio
-                                    label="Gender"
-                                    name="gender"
-                                    options={[
-                                        { label: 'Male', value: 'male' },
-                                        { label: 'Female', value: 'female' },
-                                        { label: 'Other', value: 'other' },
-                                    ]}
-                                />
+
+                                {/* Right Side: Primary Info Form */}
+                                <div className="lg:col-span-8 space-y-8 pb-4">
+                                    {/* Personal Info Section */}
+                                    <section className="space-y-4">
+                                        <div className="flex items-center gap-2 text-lg font-bold text-slate-900 border-b border-slate-100 pb-2">
+                                            <User className="w-5 h-5 text-indigo-500" />
+                                            <span>Personal Identification</span>
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <Input label="Full Name" name="name" placeholder="John Doe" />
+                                            <Input label="Email Address" name="email" type="email" placeholder="john@example.com" disabled={isEditing} />
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <Input label="Phone Number" name="phone" placeholder="+880 17xx-xxxxxx" />
+                                            <Input
+                                                label={isEditing ? "Set New Password" : "Account Password"}
+                                                name="password"
+                                                type="password"
+                                                placeholder="••••••••"
+                                                helperText={isEditing ? "Leave blank to keep existing password" : ""}
+                                            />
+                                        </div>
+                                    </section>
+
+                                    {/* Employment Section */}
+                                    <section className="space-y-4">
+                                        <div className="flex items-center gap-2 text-lg font-bold text-slate-900 border-b border-slate-100 pb-2">
+                                            <Briefcase className="w-5 h-5 text-indigo-500" />
+                                            <span>Employment Details</span>
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <Input label="Employee Code" name="employee_code" placeholder="SFT-EMP-001" />
+                                            <Input label="HRM ID" name="hrm_id" placeholder="HRM-1020" />
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <Select label="Department" name="department_id" options={depts} placeholder="Search Department..." />
+                                            <Select label="Designation" name="designation_id" options={desigs} placeholder="Search Designation..." />
+                                        </div>
+                                        <Input label="Wing / Group" name="wing" placeholder="SFT, Admin, etc." />
+                                    </section>
+
+                                    {/* Address Section */}
+                                    <section className="space-y-4">
+                                        <div className="flex items-center gap-2 text-lg font-bold text-slate-900 border-b border-slate-100 pb-2">
+                                            <MapPin className="w-5 h-5 text-indigo-500" />
+                                            <span>Residence Info</span>
+                                        </div>
+                                        <Input label="Full Address" name="address" placeholder="Enter complete residential address" />
+                                    </section>
+                                </div>
                             </div>
                         </div>
 
-                        <Input label="Address" name="address" placeholder="House-13, Block-C, Banasree, Dhaka" />
-
-                        <div className="flex justify-end gap-3 pt-4 border-t">
-                            <Button variant="secondary" onClick={onClose} type="button">Cancel</Button>
-                            <Button type="submit" isLoading={isSubmitting || isCreating || isUpdating}>
-                                {isEditing ? 'Update User' : 'Create User'}
+                        {/* Sticky Footer */}
+                        <div className="flex justify-end gap-3 p-6 bg-slate-50 border-t border-slate-200 rounded-b-xl -mx-6 -mb-6 mt-4">
+                            <Button variant="ghost" onClick={onClose} type="button">Discard Changes</Button>
+                            <Button type="submit" isLoading={isSubmitting || isCreating || isUpdating} className="px-8">
+                                {isEditing ? 'Save Profile' : 'Register User'}
                             </Button>
                         </div>
                     </Form>
