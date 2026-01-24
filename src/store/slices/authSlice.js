@@ -38,33 +38,7 @@ const authSlice = createSlice({
 
 export const { loginSuccess, logout, updateUser, finishRestoring } = authSlice.actions;
 
-// Thunk for login
-export const login = (credentials) => (dispatch) => {
-    const { email, password } = credentials;
-
-    // Find user in mock data
-    const user = mockUsers.find(
-        (u) => u.email === email && u.password === password
-    );
-
-    if (user) {
-        // Remove password from user object
-        const { password: _, ...userWithoutPassword } = user;
-
-        // Generate a mock token
-        const token = `mock-token-${user.id}-${Date.now()}`;
-
-        dispatch(loginSuccess({ user: userWithoutPassword, token }));
-
-        // Store in localStorage for persistence
-        localStorage.setItem('auth_token', token);
-        localStorage.setItem('user', JSON.stringify(userWithoutPassword));
-
-        return { success: true, user: userWithoutPassword };
-    } else {
-        return { success: false, error: 'Invalid email or password' };
-    }
-};
+// Logout thunk remains used internally for clearing storage
 
 // Thunk for logout
 export const performLogout = () => (dispatch) => {
