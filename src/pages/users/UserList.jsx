@@ -128,14 +128,14 @@ const UserList = () => {
                     >
                         <Edit className="h-4 w-4" />
                     </Button>
-                    <Button
+                    {/* <Button
                         variant="ghost"
                         size="sm"
                         className="p-1.5 text-red-500 hover:bg-red-50 hover:text-red-600"
                         onClick={() => handleDeleteClick(row.original)}
                     >
                         <Trash2 className="h-4 w-4" />
-                    </Button>
+                    </Button> */}
                 </div>
             )
         }
