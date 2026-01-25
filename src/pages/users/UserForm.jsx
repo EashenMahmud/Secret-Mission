@@ -168,8 +168,8 @@ const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
                                             <span>Personal Identification</span>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <Input label="Full Name" name="name" placeholder="John Doe" />
-                                            <Input label="Email Address" name="email" type="email" placeholder="john@example.com" disabled={isEditing} />
+                                            <Input label="Full Name" name="name" placeholder="John Doe" required />
+                                            <Input label="Email Address" name="email" type="email" placeholder="john@example.com" disabled={isEditing} required />
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <Input label="Phone Number" name="phone" placeholder="+880 17xx-xxxxxx" />
@@ -178,6 +178,7 @@ const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
                                                 name="password"
                                                 type="password"
                                                 placeholder="••••••••"
+                                                required={!isEditing}
                                                 helperText={isEditing ? "Leave blank to keep existing password" : ""}
                                             />
                                         </div>
@@ -190,7 +191,7 @@ const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
                                             <span>Employment Details</span>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <Input label="Employee Code" name="employee_code" placeholder="SFT-EMP-001" />
+                                            <Input label="Employee Code" name="employee_code" placeholder="SFT-EMP-001" required />
                                             <Input label="HRM ID" name="hrm_id" placeholder="HRM-1020" />
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

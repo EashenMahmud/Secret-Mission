@@ -2,7 +2,7 @@ import React from 'react';
 import { useField } from 'formik';
 import { cn } from '../../lib/utils';
 
-const Radio = ({ label, options = [], helperText, className, ...props }) => {
+const Radio = ({ label, options = [], helperText, className, required, ...props }) => {
     const [field, meta] = useField(props);
     const isError = meta.touched && meta.error;
 
@@ -11,6 +11,7 @@ const Radio = ({ label, options = [], helperText, className, ...props }) => {
             {label && (
                 <label className="text-sm font-medium leading-6 text-gray-900">
                     {label}
+                    {required && <span className="text-red-500 ml-1">*</span>}
                 </label>
             )}
             <div className="space-y-2">

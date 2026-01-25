@@ -3,7 +3,7 @@ import { useField } from 'formik';
 import { cn, getImageUrl } from '../../lib/utils';
 import { X, ImageIcon } from 'lucide-react';
 
-const ImageUpload = ({ label, helperText, className, ...props }) => {
+const ImageUpload = ({ label, helperText, className, required, ...props }) => {
     const [field, meta, helpers] = useField(props);
     const [preview, setPreview] = useState(null);
     const fileInputRef = useRef(null);
@@ -43,6 +43,7 @@ const ImageUpload = ({ label, helperText, className, ...props }) => {
             {label && (
                 <label className="block text-sm font-medium leading-6 text-gray-900">
                     {label}
+                    {required && <span className="text-red-500 ml-1">*</span>}
                 </label>
             )}
             <div

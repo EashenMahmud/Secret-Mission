@@ -3,7 +3,7 @@ import ReactSelect from 'react-select';
 import { useField } from 'formik';
 import { cn } from '../../lib/utils';
 
-const Select = ({ label, options = [], helperText, className, placeholder, ...props }) => {
+const Select = ({ label, options = [], helperText, className, placeholder, required, ...props }) => {
     const [field, meta, helpers] = useField(props);
     const isError = meta.touched && meta.error;
 
@@ -59,9 +59,9 @@ const Select = ({ label, options = [], helperText, className, placeholder, ...pr
             {label && (
                 <label htmlFor={props.id || props.name} className="block text-sm font-medium leading-6 text-slate-700">
                     {label}
+                    {required && <span className="text-red-500 ml-1">*</span>}
                 </label>
-            )
-            }
+            )}
             <div className="relative">
                 <ReactSelect
                     {...props}
