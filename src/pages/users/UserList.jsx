@@ -6,10 +6,11 @@ import {
 import Table from '../../components/ui/Table';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
-import { Plus, Edit, Trash2, User } from 'lucide-react';
+import { Plus, Edit, Trash2, User, Eye } from 'lucide-react';
 import { toast } from 'react-toastify';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import UserForm from './UserForm';
+import UserProfileModal from './UserProfileModal';
 import { Card, CardHeader, CardBody } from '../../components/ui/Card';
 import { cn, getImageUrl } from '../../lib/utils';
 
@@ -18,6 +19,8 @@ const UserList = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+    const [userToView, setUserToView] = useState(null);
     const [page, setPage] = useState(0);
 
     // Fetch users (using the endpoint you specified)
@@ -34,6 +37,11 @@ const UserList = () => {
     const handleEdit = (user) => {
         setSelectedUser(user);
         setIsFormOpen(true);
+    };
+
+    const handleView = (user) => {
+        setUserToView(user);
+        setIsProfileModalOpen(true);
     };
 
     const handleDeleteClick = (user) => {
@@ -123,8 +131,18 @@ const UserList = () => {
                     <Button
                         variant="ghost"
                         size="sm"
+                        className="p-1.5 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                        onClick={() => handleView(row.original)}
+                        title="View Profile"
+                    >
+                        <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="sm"
                         className="p-1.5"
                         onClick={() => handleEdit(row.original)}
+                        title="Edit User"
                     >
                         <Edit className="h-4 w-4" />
                     </Button>
@@ -173,6 +191,13 @@ const UserList = () => {
                     />
                 </CardBody>
             </Card>
+
+            {/* User Profile Modal */}
+            <UserProfileModal
+                isOpen={isProfileModalOpen}
+                onClose={() => setIsProfileModalOpen(false)}
+                user={userToView}
+            />
 
             {/* User Form Modal */}
             <UserForm
