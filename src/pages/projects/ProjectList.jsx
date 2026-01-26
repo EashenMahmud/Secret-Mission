@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useGetApiQuery, useDeleteApiMutation } from '../../store/api/commonApi';
-import { Link } from 'react-router-dom';
-import { FolderKanban, Plus, Building2, Calendar, TrendingUp, Edit, Trash2 } from 'lucide-react';
-import CreateProjectModal from './CreateProjectModal';
-import EditProjectModal from './EditProjectModal';
+import { Link, useNavigate } from 'react-router-dom';
+import { FolderKanban, Plus, Building2, Calendar, TrendingUp, Eye, Edit, Trash2 } from 'lucide-react';
+import ProjectFormModal from './ProjectFormModal';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import Badge from '../../components/ui/Badge';
 import { format } from 'date-fns';
@@ -11,9 +10,12 @@ import { toast } from 'react-toastify';
 
 
 
+
+
 const ProjectList = () => {
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const navigate = useNavigate();
+    const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+    const [formMode, setFormMode] = useState('create'); // 'create' or 'edit'
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedProjectId, setSelectedProjectId] = useState(null);
     const [projectToDelete, setProjectToDelete] = useState(null);
@@ -29,6 +31,7 @@ const ProjectList = () => {
 
     const projects = response?.data?.data || [];
     const paginationData = response?.data || {};
+
 
 
     const getPriorityColor = (priority) => {
@@ -59,11 +62,18 @@ const ProjectList = () => {
         }
     };
 
+    const handleView = (e, projectId) => {
+        e.preventDefault();
+        e.stopPropagation();
+        navigate(`/projects/${projectId}`);
+    };
+
     const handleEdit = (e, projectId) => {
         e.preventDefault();
         e.stopPropagation();
         setSelectedProjectId(projectId);
-        setIsEditModalOpen(true);
+        setFormMode('edit');
+        setIsFormModalOpen(true);
     };
 
     const handleDeleteClick = (e, project) => {
@@ -97,7 +107,11 @@ const ProjectList = () => {
                 </div>
                 <button 
                     className="btn-primary flex items-center gap-2"
-                    onClick={() => setIsCreateModalOpen(true)}
+                    onClick={() => {
+                        setFormMode('create');
+                        setSelectedProjectId(null);
+                        setIsFormModalOpen(true);
+                    }}
                 >
                     <Plus className="w-5 h-5" />
                     New Project
@@ -119,7 +133,11 @@ const ProjectList = () => {
                     <p className="text-slate-400 mb-4">Get started by creating your first project</p>
                     <button 
                         className="btn-primary inline-flex items-center gap-2"
-                        onClick={() => setIsCreateModalOpen(true)}
+                        onClick={() => {
+                            setFormMode('create');
+                            setSelectedProjectId(null);
+                            setIsFormModalOpen(true);
+                        }}
                     >
                         <Plus className="w-5 h-5" />
                         Create Project
@@ -133,18 +151,25 @@ const ProjectList = () => {
                             to={`/projects/${project.id}`}
                             className="card card-hover group relative"
                         >
-                            {/* Action Buttons */}
-                            <div className="absolute top-4 right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            {/* Action Buttons - Always Visible */}
+                            <div className="absolute top-4 right-4 flex items-center gap-1 z-10">
+                                <button
+                                    onClick={(e) => handleView(e, project.id)}
+                                    className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors shadow-lg"
+                                    title="View Details"
+                                >
+                                    <Eye className="w-4 h-4" />
+                                </button>
                                 <button
                                     onClick={(e) => handleEdit(e, project.id)}
-                                    className="p-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors"
+                                    className="p-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors shadow-lg"
                                     title="Edit Project"
                                 >
                                     <Edit className="w-4 h-4" />
                                 </button>
                                 <button
                                     onClick={(e) => handleDeleteClick(e, project)}
-                                    className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                                    className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-lg"
                                     title="Delete Project"
                                 >
                                     <Trash2 className="w-4 h-4" />
@@ -252,18 +277,12 @@ const ProjectList = () => {
                 </div>
             )}
 
-            {/* Create Project Modal */}
-            <CreateProjectModal
-                isOpen={isCreateModalOpen}
-                onClose={() => setIsCreateModalOpen(false)}
-                onSuccess={refetch}
-            />
-
-            {/* Edit Project Modal */}
-            <EditProjectModal
-                isOpen={isEditModalOpen}
-                onClose={() => setIsEditModalOpen(false)}
+            {/* Project Form Modal (Create/Edit) */}
+            <ProjectFormModal
+                isOpen={isFormModalOpen}
+                onClose={() => setIsFormModalOpen(false)}
                 projectId={selectedProjectId}
+                mode={formMode}
                 onSuccess={refetch}
             />
 

@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
-import EditProjectModal from './EditProjectModal';
+import ProjectFormModal from './ProjectFormModal';
 import { format } from 'date-fns';
 
 const ProjectDetail = () => {
@@ -274,10 +274,11 @@ const ProjectDetail = () => {
             </div>
 
             {/* Edit Modal */}
-            <EditProjectModal
+            <ProjectFormModal
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 projectId={id}
+                mode="edit"
                 onSuccess={refetch}
             />
         </div>
