@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import ClientForm from './VendorForm';
 import ClientProfile from './ClientProfile';
+import Tooltip from '../../components/ui/Tooltip';
 import { Card, CardBody } from '../../components/ui/Card';
 
 const ClientList = () => {
@@ -120,32 +121,36 @@ const ClientList = () => {
             id: 'actions',
             cell: ({ row }) => (
                 <div className="flex items-center gap-2">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="p-1.5 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
-                        onClick={() => handleView(row.original)}
-                        title="View Profile"
-                    >
-                        <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50"
-                        onClick={() => handleEdit(row.original)}
-                        title="Edit Client"
-                    >
-                        <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50"
-                        onClick={() => handleDeleteClick(row.original)}
-                    >
-                        <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <Tooltip content="View Profile">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="p-1.5 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                            onClick={() => handleView(row.original)}
+                        >
+                            <Eye className="h-4 w-4" />
+                        </Button>
+                    </Tooltip>
+                    <Tooltip content="Edit Client">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50"
+                            onClick={() => handleEdit(row.original)}
+                        >
+                            <Edit className="h-4 w-4" />
+                        </Button>
+                    </Tooltip>
+                    <Tooltip content="Delete Client">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50"
+                            onClick={() => handleDeleteClick(row.original)}
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </Tooltip>
                 </div>
             )
         }
