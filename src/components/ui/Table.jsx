@@ -43,10 +43,12 @@ const Table = ({
             }
         },
         state: {
-            pagination: manualPagination ? {
-                pageIndex: currentPage,
-                pageSize: pageSize,
-            } : undefined,
+            ...(manualPagination && {
+                pagination: {
+                    pageIndex: currentPage,
+                    pageSize: pageSize,
+                }
+            }),
         },
     });
 
