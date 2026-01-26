@@ -54,6 +54,13 @@ export const menuItems = [
                 icon: Users,
                 roles: ['admin'],
             },
+            {
+                id: 'project-types',
+                label: 'Project Types',
+                path: '/organization/project-types',
+                icon: ListTodo,
+                roles: ['admin'],
+            },
         ],
     },
     {

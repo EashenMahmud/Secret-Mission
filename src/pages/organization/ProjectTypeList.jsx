@@ -1,58 +1,71 @@
 import React, { useState, useMemo } from 'react';
 import {
     useGetApiQuery,
+    useDeleteApiMutation
 } from '../../store/api/commonApi';
 import Table from '../../components/ui/Table';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import Tooltip from '../../components/ui/Tooltip';
-import { Plus, Edit, Trash2, Building2 } from 'lucide-react';
-import DepartmentForm from './DepartmentForm';
+import { Plus, Edit, Trash2, ListTodo } from 'lucide-react';
+import { toast } from 'react-toastify';
+import ConfirmationModal from '../../components/ui/ConfirmationModal';
+import ProjectTypeForm from './ProjectTypeForm';
 import { Card, CardBody } from '../../components/ui/Card';
 
-const DepartmentList = () => {
+const ProjectTypeList = () => {
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const [selectedDept, setSelectedDept] = useState(null);
+    const [selectedType, setSelectedType] = useState(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [typeToDelete, setTypeToDelete] = useState(null);
+    const [page, setPage] = useState(0);
 
-    // Fetch departments
+    // Fetch planning types (Project Types)
     const { data: response, isLoading, refetch } = useGetApiQuery({
-        url: '/open/get-department-list'
+        url: '/open/get-project-type-list',
+        params: { page: page + 1 }
     });
+    const [deleteType, { isLoading: isDeleting }] = useDeleteApiMutation();
 
-    const depts = response?.data || [];
+    const types = response?.data || [];
+    const paginationData = response?.data || {};
 
-    const handleEdit = (dept) => {
-        setSelectedDept(dept);
+    const handleEdit = (type) => {
+        setSelectedType(type);
         setIsFormOpen(true);
     };
 
-    const handleDeleteClick = (dept) => {
-        alert('Delete endpoint for departments is not documented in Swagger.');
+    const handleDeleteClick = (type) => {
+        setTypeToDelete(type);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        try {
+            await deleteType({ end_point: `/delete-planning-types/${typeToDelete.id}` }).unwrap();
+            toast.success('Project type deleted successfully');
+            setIsDeleteModalOpen(false);
+            setTypeToDelete(null);
+            refetch();
+        } catch (err) {
+            toast.error(err?.data?.message || 'Failed to delete project type');
+        }
     };
 
     const columns = useMemo(() => [
         {
-            header: 'Department',
+            header: 'Type Name',
             accessorKey: 'name',
             cell: ({ row }) => (
                 <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-indigo-50 flex items-center justify-center border border-indigo-100 text-indigo-500">
-                        <Building2 className="h-5 w-5" />
+                    <div className="h-10 w-10 rounded-lg bg-amber-50 flex items-center justify-center border border-amber-100 text-amber-500">
+                        <ListTodo className="h-5 w-5" />
                     </div>
                     <div className="flex flex-col">
                         <span className="font-semibold text-slate-900">{row.original.name}</span>
-                        <span className="text-xs text-slate-400">ID: {row.original.id}</span>
+                        <span className="text-xs text-slate-500">{row.original.description || 'No description'}</span>
                     </div>
                 </div>
-            )
-        },
-        {
-            header: 'Code',
-            accessorKey: 'code',
-            cell: ({ row }) => (
-                <span className="font-mono text-xs bg-slate-100 px-2 py-1 rounded text-slate-600 border border-slate-200">
-                    {row.original.code}
-                </span>
             )
         },
         {
@@ -69,7 +82,7 @@ const DepartmentList = () => {
             id: 'actions',
             cell: ({ row }) => (
                 <div className="flex items-center gap-2">
-                    <Tooltip content="Edit Department">
+                    <Tooltip content="Edit Type">
                         <Button
                             variant="ghost"
                             size="sm"
@@ -79,7 +92,7 @@ const DepartmentList = () => {
                             <Edit className="h-4 w-4" />
                         </Button>
                     </Tooltip>
-                    <Tooltip content="Delete Department">
+                    <Tooltip content="Delete Type">
                         <Button
                             variant="ghost"
                             size="sm"
@@ -98,17 +111,17 @@ const DepartmentList = () => {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Departments</h1>
-                    <p className="text-slate-500 text-sm italic">Manage your organization's structural units.</p>
+                    <h1 className="text-2xl font-bold text-white">Project Types</h1>
+                    <p className="text-slate-500 text-sm italic">Define different categories for your projects.</p>
                 </div>
                 <Button
                     onClick={() => {
-                        setSelectedDept(null);
+                        setSelectedType(null);
                         setIsFormOpen(true);
                     }}
                     leftIcon={<Plus className="h-4 w-4" />}
                 >
-                    Add Department
+                    Add New Type
                 </Button>
             </div>
 
@@ -116,21 +129,34 @@ const DepartmentList = () => {
                 <CardBody className="p-3">
                     <Table
                         columns={columns}
-                        data={depts}
+                        data={types}
                         isLoading={isLoading}
-                        pagination={false}
+                        manualPagination={true}
+                        pageCount={paginationData.last_page || 0}
+                        currentPage={page}
+                        onPageChange={setPage}
+                        pageSize={paginationData.per_page || 10}
                     />
                 </CardBody>
             </Card>
 
-            <DepartmentForm
+            <ProjectTypeForm
                 isOpen={isFormOpen}
                 onClose={() => setIsFormOpen(false)}
-                department={selectedDept}
+                type={selectedType}
                 onSuccess={refetch}
+            />
+
+            <ConfirmationModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={confirmDelete}
+                title="Delete Project Type"
+                message={`Are you sure you want to delete ${typeToDelete?.name}? This action cannot be undone.`}
+                isLoading={isDeleting}
             />
         </div>
     );
 };
 
-export default DepartmentList;
+export default ProjectTypeList;
