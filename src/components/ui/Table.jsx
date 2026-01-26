@@ -9,6 +9,7 @@ import {
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronUp, ChevronDown } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import Button from './Button';
+import TableSkeleton from './TableSkeleton';
 
 const Table = ({
     columns,
@@ -49,6 +50,11 @@ const Table = ({
         },
     });
 
+    // Show skeleton when loading
+    if (isLoading) {
+        return <TableSkeleton columns={columns.length} rows={pageSize} className={className} />;
+    }
+
     return (
         <div className={cn('w-full flex flex-col gap-4', className)}>
             <div className="overflow-x-auto border border-gray-200 rounded-lg">
@@ -77,14 +83,7 @@ const Table = ({
                             </tr>
                         ))}
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200 relative">
-                        {isLoading && (
-                            <tr className="absolute inset-0 bg-white/50 flex items-center justify-center z-10 min-h-[100px]">
-                                <td colSpan={columns.length} className="text-center py-10">
-                                    <span className="text-sm font-medium text-indigo-600">Loading...</span>
-                                </td>
-                            </tr>
-                        )}
+                    <tbody className="bg-white divide-y divide-gray-200">
                         {table.getRowModel().rows.length > 0 ? (
                             table.getRowModel().rows.map(row => (
                                 <tr key={row.id} className="hover:bg-gray-50 transition-colors">
@@ -96,13 +95,11 @@ const Table = ({
                                 </tr>
                             ))
                         ) : (
-                            !isLoading && (
-                                <tr>
-                                    <td colSpan={columns.length} className="px-6 py-10 text-center text-sm text-gray-400">
-                                        No data found
-                                    </td>
-                                </tr>
-                            )
+                            <tr>
+                                <td colSpan={columns.length} className="px-6 py-10 text-center text-sm text-gray-400">
+                                    No data found
+                                </td>
+                            </tr>
                         )}
                     </tbody>
                 </table>
