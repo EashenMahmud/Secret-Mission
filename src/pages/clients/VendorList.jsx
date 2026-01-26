@@ -6,10 +6,11 @@ import {
 import Table from '../../components/ui/Table';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
-import { Plus, Edit, Trash2, Users, Building2, Mail, Phone, Globe } from 'lucide-react';
+import { Plus, Edit, Trash2, Users, Building2, Mail, Phone, Globe, Eye } from 'lucide-react';
 import { toast } from 'react-toastify';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import ClientForm from './VendorForm';
+import ClientProfile from './ClientProfile';
 import { Card, CardBody } from '../../components/ui/Card';
 
 const ClientList = () => {
@@ -17,6 +18,8 @@ const ClientList = () => {
     const [selectedClient, setSelectedClient] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [clientToDelete, setClientToDelete] = useState(null);
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+    const [clientToView, setClientToView] = useState(null);
     const [page, setPage] = useState(0);
 
     // Fetch vendors
@@ -33,6 +36,11 @@ const ClientList = () => {
     const handleEdit = (client) => {
         setSelectedClient(client);
         setIsFormOpen(true);
+    };
+
+    const handleView = (client) => {
+        setClientToView(client);
+        setIsProfileModalOpen(true);
     };
 
     const handleDeleteClick = (client) => {
@@ -115,8 +123,18 @@ const ClientList = () => {
                     <Button
                         variant="ghost"
                         size="sm"
+                        className="p-1.5 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                        onClick={() => handleView(row.original)}
+                        title="View Profile"
+                    >
+                        <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="sm"
                         className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50"
                         onClick={() => handleEdit(row.original)}
+                        title="Edit Client"
                     >
                         <Edit className="h-4 w-4" />
                     </Button>
@@ -165,6 +183,12 @@ const ClientList = () => {
                     />
                 </CardBody>
             </Card>
+
+            <ClientProfile
+                isOpen={isProfileModalOpen}
+                onClose={() => setIsProfileModalOpen(false)}
+                client={clientToView}
+            />
 
             <ClientForm
                 isOpen={isFormOpen}
