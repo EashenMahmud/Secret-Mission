@@ -57,6 +57,13 @@ export const menuItems = [
         ],
     },
     {
+        id: 'clients',
+        label: 'Clients',
+        path: '/clients',
+        icon: Users,
+        roles: ['admin'],
+    },
+    {
         id: 'projects',
         label: 'Projects',
         path: '/projects',
