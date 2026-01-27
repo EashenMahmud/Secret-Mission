@@ -3,7 +3,7 @@ import Modal from '../../components/ui/Modal';
 import Badge from '../../components/ui/Badge';
 import { useGetApiWithIdQuery } from '../../store/api/commonApi';
 import { Calendar, Building2, TrendingUp, User, Clock, Archive } from 'lucide-react';
-import { format } from 'date-fns';
+import DateTime from '../../components/ui/DateTime';
 
 const ProjectDetailModal = ({ isOpen, onClose, projectId }) => {
     const { data: response, isLoading } = useGetApiWithIdQuery(
@@ -117,9 +117,7 @@ const ProjectDetailModal = ({ isOpen, onClose, projectId }) => {
                             <Calendar className="w-5 h-5 text-slate-500 mt-0.5" />
                             <div>
                                 <p className="text-xs text-slate-500 mb-1">Start Date</p>
-                                <p className="text-sm font-medium text-slate-900">
-                                    {format(new Date(project.start_date), 'MMM dd, yyyy')}
-                                </p>
+                                <DateTime date={project.start_date} variant="dateOnly" className="text-sm font-medium text-slate-900" />
                             </div>
                         </div>
                     )}
@@ -130,9 +128,7 @@ const ProjectDetailModal = ({ isOpen, onClose, projectId }) => {
                             <Calendar className="w-5 h-5 text-slate-500 mt-0.5" />
                             <div>
                                 <p className="text-xs text-slate-500 mb-1">End Date</p>
-                                <p className="text-sm font-medium text-slate-900">
-                                    {format(new Date(project.end_date), 'MMM dd, yyyy')}
-                                </p>
+                                <DateTime date={project.end_date} variant="dateOnly" className="text-sm font-medium text-slate-900" />
                             </div>
                         </div>
                     )}
@@ -143,9 +139,7 @@ const ProjectDetailModal = ({ isOpen, onClose, projectId }) => {
                             <Clock className="w-5 h-5 text-slate-500 mt-0.5" />
                             <div>
                                 <p className="text-xs text-slate-500 mb-1">On Hold/Postponed Date</p>
-                                <p className="text-sm font-medium text-slate-900">
-                                    {format(new Date(project.onhold_postponed_date), 'MMM dd, yyyy')}
-                                </p>
+                                <DateTime date={project.onhold_postponed_date} variant="dateOnly" className="text-sm font-medium text-slate-900" />
                             </div>
                         </div>
                     )}
@@ -181,11 +175,11 @@ const ProjectDetailModal = ({ isOpen, onClose, projectId }) => {
                     <div className="grid grid-cols-2 gap-4 text-xs text-slate-500">
                         <div>
                             <span className="font-medium">Created:</span>{' '}
-                            {project.created_at && format(new Date(project.created_at), 'MMM dd, yyyy HH:mm')}
+                            <DateTime date={project.created_at} variant="full" />
                         </div>
                         <div>
                             <span className="font-medium">Updated:</span>{' '}
-                            {project.updated_at && format(new Date(project.updated_at), 'MMM dd, yyyy HH:mm')}
+                            <DateTime date={project.updated_at} variant="full" />
                         </div>
                     </div>
                 </div>

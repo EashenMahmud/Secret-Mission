@@ -15,7 +15,7 @@ import {
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import ProjectFormModal from './ProjectFormModal';
-import { format } from 'date-fns';
+import DateTime from '../../components/ui/DateTime';
 
 const ProjectDetail = () => {
     const { id } = useParams();
@@ -211,9 +211,7 @@ const ProjectDetail = () => {
                             <Calendar className="w-5 h-5 text-slate-400 mt-0.5" />
                             <div>
                                 <p className="text-xs text-slate-500 mb-1">Start Date</p>
-                                <p className="text-sm font-medium text-white">
-                                    {format(new Date(project.start_date), 'MMMM dd, yyyy')}
-                                </p>
+                                <DateTime date={project.start_date} variant="dateOnly" className="text-sm font-medium text-white" />
                             </div>
                         </div>
                     )}
@@ -224,9 +222,7 @@ const ProjectDetail = () => {
                             <Calendar className="w-5 h-5 text-slate-400 mt-0.5" />
                             <div>
                                 <p className="text-xs text-slate-500 mb-1">End Date</p>
-                                <p className="text-sm font-medium text-white">
-                                    {format(new Date(project.end_date), 'MMMM dd, yyyy')}
-                                </p>
+                                <DateTime date={project.end_date} variant="dateOnly" className="text-sm font-medium text-white" />
                             </div>
                         </div>
                     )}
@@ -237,9 +233,7 @@ const ProjectDetail = () => {
                             <Clock className="w-5 h-5 text-slate-400 mt-0.5" />
                             <div>
                                 <p className="text-xs text-slate-500 mb-1">On Hold/Postponed</p>
-                                <p className="text-sm font-medium text-white">
-                                    {format(new Date(project.onhold_postponed_date), 'MMMM dd, yyyy')}
-                                </p>
+                                <DateTime date={project.onhold_postponed_date} variant="dateOnly" className="text-sm font-medium text-white" />
                             </div>
                         </div>
                     )}
@@ -252,15 +246,11 @@ const ProjectDetail = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                         <span className="text-slate-500">Created:</span>{' '}
-                        <span className="text-slate-300">
-                            {project.created_at && format(new Date(project.created_at), 'MMM dd, yyyy HH:mm')}
-                        </span>
+                        <DateTime date={project.created_at} variant="full" className="text-slate-300" />
                     </div>
                     <div>
                         <span className="text-slate-500">Last Updated:</span>{' '}
-                        <span className="text-slate-300">
-                            {project.updated_at && format(new Date(project.updated_at), 'MMM dd, yyyy HH:mm')}
-                        </span>
+                        <DateTime date={project.updated_at} variant="full" className="text-slate-300" />
                     </div>
                     <div>
                         <span className="text-slate-500">Project ID:</span>{' '}

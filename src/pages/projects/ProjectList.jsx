@@ -5,8 +5,8 @@ import { FolderKanban, Plus, Building2, Calendar, TrendingUp, Eye, Edit, Trash2 
 import ProjectFormModal from './ProjectFormModal';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import Badge from '../../components/ui/Badge';
-import { format } from 'date-fns';
 import { toast } from 'react-toastify';
+import DateTime from '../../components/ui/DateTime';
 
 
 
@@ -225,9 +225,9 @@ const ProjectList = () => {
                                     <div className="flex items-center gap-2 text-sm">
                                         <Calendar className="w-4 h-4 text-slate-500" />
                                         <span className="text-slate-400">
-                                            {format(new Date(project.start_date), 'MMM dd, yyyy')}
+                                            <DateTime date={project.start_date} variant="dateOnly" className="text-slate-400" />
                                             {project.end_date && (
-                                                <> - {format(new Date(project.end_date), 'MMM dd, yyyy')}</>
+                                                <> - <DateTime date={project.end_date} variant="dateOnly" className="text-slate-400" /></>
                                             )}
                                         </span>
                                     </div>
