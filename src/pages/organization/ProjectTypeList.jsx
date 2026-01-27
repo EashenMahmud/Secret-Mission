@@ -63,7 +63,7 @@ const ProjectTypeList = () => {
                     </div>
                     <div className="flex flex-col">
                         <span className="font-semibold text-slate-900">{row.original.name}</span>
-                        <span className="text-xs text-slate-500">{row.original.description || 'No description'}</span>
+                        <span className="text-xs text-slate-400">ID: {row.original.id}</span>
                     </div>
                 </div>
             )

@@ -3,7 +3,6 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import Modal from '../../components/ui/Modal';
 import Input from '../../components/ui/Input';
-import TextArea from '../../components/ui/TextArea';
 import Switch from '../../components/ui/Switch';
 import Button from '../../components/ui/Button';
 import { usePostApiMutation } from '../../store/api/commonApi';
@@ -12,7 +11,6 @@ import { ListTodo, FileText } from 'lucide-react';
 
 const typeSchema = Yup.object().shape({
     name: Yup.string().required('Type name is required'),
-    description: Yup.string().nullable(),
 });
 
 const ProjectTypeForm = ({ isOpen, onClose, type, onSuccess }) => {
@@ -21,7 +19,6 @@ const ProjectTypeForm = ({ isOpen, onClose, type, onSuccess }) => {
 
     const initialValues = {
         name: type?.name || '',
-        description: type?.description || '',
         is_active: type?.is_active ?? true,
     };
 
@@ -29,13 +26,13 @@ const ProjectTypeForm = ({ isOpen, onClose, type, onSuccess }) => {
         try {
             if (isEditing) {
                 await saveType({
-                    end_point: `/update-planning-types/${type.id}`,
+                    end_point: `/update-project-type/${type.id}`,
                     body: values
                 }).unwrap();
                 toast.success('Project type updated successfully');
             } else {
                 await saveType({
-                    end_point: '/add-planning-types',
+                    end_point: '/add-project-type',
                     body: values
                 }).unwrap();
                 toast.success('Project type created successfully');
@@ -70,7 +67,7 @@ const ProjectTypeForm = ({ isOpen, onClose, type, onSuccess }) => {
                             </div>
                             <h3 className="text-lg font-bold text-slate-900">Type Configuration</h3>
                             <p className="text-xs text-slate-500 text-center mt-1">
-                                Define how this project category should behave.
+                                Define the project category name and status.
                             </p>
                         </div>
 
@@ -79,13 +76,6 @@ const ProjectTypeForm = ({ isOpen, onClose, type, onSuccess }) => {
                             name="name"
                             placeholder="e.g. Web Development, Maintenance"
                             required
-                        />
-
-                        <TextArea
-                            label="Description"
-                            name="description"
-                            placeholder="Briefly describe what this project type covers..."
-                            rows={3}
                         />
 
                         <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
