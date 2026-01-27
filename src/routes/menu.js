@@ -8,7 +8,8 @@ import {
     Calendar,
     GanttChart,
     Timer,
-    UserPlus
+    UserPlus,
+    Settings
 } from 'lucide-react';
 
 // Menu configuration with role-based access
@@ -59,6 +60,13 @@ export const menuItems = [
                 label: 'Project Types',
                 path: '/organization/project-types',
                 icon: ListTodo,
+                roles: ['admin'],
+            },
+            {
+                id: 'project-planning-types',
+                label: 'Project Planning Types',
+                path: '/organization/project-planning-types',
+                icon: Settings,
                 roles: ['admin'],
             },
         ],
