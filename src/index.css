@@ -135,6 +135,19 @@
   .custom-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-dark-700 rounded-full hover:bg-dark-600;
   }
+
+  /* Thin scrollbar for compact lists */
+  .custom-scrollbar-thin::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+
+  .custom-scrollbar-thin::-webkit-scrollbar-track {
+    @apply bg-dark-900;
+  }
+
+  .custom-scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-dark-700 rounded-full hover:bg-dark-600;
+  }
 }
 
 @layer utilities {

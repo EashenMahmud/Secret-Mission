@@ -18,6 +18,7 @@ import Button from '../../components/ui/Button';
 import ProjectFormModal from './ProjectFormModal';
 import ProjectPlanningSection from './planning/ProjectPlanningSection';
 import ProjectManpowerSection from './planning/ProjectManpowerSection';
+import ProjectGanttGoogle from './planning/ProjectGanttGoogle';
 import DateTime from '../../components/ui/DateTime';
 
 const ProjectDetail = () => {
@@ -184,19 +185,41 @@ const ProjectDetail = () => {
                 </div>
             </div>
 
-            {/* Planning phase: Gantt + list + add/edit/delete */}
+            {/* Planning & Manpower: one section, 50/50 width, compact */}
+            <div className="card overflow-hidden">
+                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-dark-700">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-500/15 border border-primary-500/25">
+                        <FolderKanban className="h-4 w-4 text-primary-400" />
+                    </div>
+                    <div>
+                        <h2 className="text-base font-semibold text-white">Planning & Manpower</h2>
+                        <p className="text-xs text-slate-400">Tasks and team on this project</p>
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-8">
+                    <div className="min-w-0 lg:border-r border-dark-700 lg:pr-8">
+                        <ProjectPlanningSection
+                            projectId={id}
+                            projectStart={project.start_date}
+                            projectEnd={project.end_date}
+                            onRefresh={refetch}
+                            showGantt={false}
+                            compact
+                        />
+                    </div>
+                    <div className="min-w-0 pt-4 lg:pt-0">
+                        <ProjectManpowerSection projectId={id} onRefresh={refetch} compact />
+                    </div>
+                </div>
+            </div>
+
+            {/* Gantt chart: react-google-charts (next section) */}
             <div className="card">
-                <ProjectPlanningSection
+                <ProjectGanttGoogle
                     projectId={id}
                     projectStart={project.start_date}
                     projectEnd={project.end_date}
-                    onRefresh={refetch}
                 />
-            </div>
-
-            {/* Manpower: add/remove users */}
-            <div className="card">
-                <ProjectManpowerSection projectId={id} onRefresh={refetch} />
             </div>
 
             <ProjectFormModal
