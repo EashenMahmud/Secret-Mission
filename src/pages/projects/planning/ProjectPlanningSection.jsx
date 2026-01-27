@@ -8,7 +8,15 @@ import ProjectPlanningFormModal from './ProjectPlanningFormModal';
 import DateTime from '../../../components/ui/DateTime';
 import { toast } from 'react-toastify';
 
-const ProjectPlanningSection = ({ projectId, projectStart, projectEnd, onRefresh, showGantt = true, compact = false }) => {
+const ProjectPlanningSection = ({
+    projectId,
+    projectStart,
+    projectEnd,
+    onRefresh,
+    showGantt = true,
+    compact = false,
+    scrollHeightClass = 'h-[320px]',
+}) => {
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editItem, setEditItem] = useState(null);
     const [deleteItem, setDeleteItem] = useState(null);
@@ -79,11 +87,17 @@ const ProjectPlanningSection = ({ projectId, projectStart, projectEnd, onRefresh
                     Planning items
                 </div>
                 {!planningList.length ? (
-                    <div className={compact ? 'p-5 text-center text-slate-500 text-xs h-[320px] flex items-center justify-center' : 'p-8 text-center text-slate-400'}>
+                    <div
+                        className={
+                            compact
+                                ? `p-5 text-center text-slate-500 text-xs ${scrollHeightClass} flex items-center justify-center`
+                                : 'p-8 text-center text-slate-400'
+                        }
+                    >
                         No items yet. Add one.
                     </div>
                 ) : (
-                    <ul className="divide-y divide-dark-700/80 h-[320px] overflow-y-auto custom-scrollbar-thin">
+                    <ul className={`divide-y divide-dark-700/80 ${scrollHeightClass} overflow-y-auto custom-scrollbar-thin`}>
                         {planningList.map((item) => (
                             <li key={item.id} className={`flex items-center justify-between gap-2 hover:bg-slate-800/30 ${compact ? 'px-3 py-2' : 'px-4 py-3'}`}>
                                 <div className="min-w-0 flex-1">

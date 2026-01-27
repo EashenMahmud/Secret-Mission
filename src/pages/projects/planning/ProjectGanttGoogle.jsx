@@ -3,7 +3,14 @@ import { Chart } from 'react-google-charts';
 import { GanttChart } from 'lucide-react';
 import { useGetApiWithIdQuery } from '../../../store/api/commonApi';
 
-const ProjectGanttGoogle = ({ projectId, projectStart, projectEnd, items: itemsProp, className = '' }) => {
+const ProjectGanttGoogle = ({
+    projectId,
+    projectStart,
+    projectEnd,
+    items: itemsProp,
+    className = '',
+    minHeight = 420,
+}) => {
     const { data: planningRes } = useGetApiWithIdQuery(
         { url: '/project-planning-list', id: projectId },
         { skip: !projectId || itemsProp !== undefined }
@@ -33,7 +40,7 @@ const ProjectGanttGoogle = ({ projectId, projectStart, projectEnd, items: itemsP
 
     const options = useMemo(
         () => ({
-            height: Math.max(120, items.length * 42 + 40),
+            height: Math.max(minHeight, items.length * 42 + 40),
             gantt: {
                 trackHeight: 36,
                 barHeight: 24,
@@ -56,7 +63,7 @@ const ProjectGanttGoogle = ({ projectId, projectStart, projectEnd, items: itemsP
                 gridlines: { color: '#334155' },
             },
         }),
-        [items.length, projectStart, projectEnd]
+        [items.length, projectStart, projectEnd, minHeight]
     );
 
     if (!items.length) {
@@ -71,7 +78,10 @@ const ProjectGanttGoogle = ({ projectId, projectStart, projectEnd, items: itemsP
                         <p className="text-xs text-slate-400">Project schedule at a glance</p>
                     </div>
                 </div>
-                <div className="flex flex-col items-center justify-center rounded-xl border border-dark-700 bg-dark-900/50 py-14">
+                <div
+                    className="flex flex-col items-center justify-center rounded-xl border border-dark-700 bg-dark-900/50 py-14"
+                    style={{ minHeight }}
+                >
                     <div className="rounded-full bg-dark-800 p-4 mb-3 ring-1 ring-dark-600">
                         <GanttChart className="w-8 h-8 text-slate-500" />
                     </div>
@@ -93,7 +103,10 @@ const ProjectGanttGoogle = ({ projectId, projectStart, projectEnd, items: itemsP
                     <p className="text-xs text-slate-400">Project schedule at a glance</p>
                 </div>
             </div>
-            <div className="rounded-xl border border-dark-700 bg-dark-900/50 overflow-hidden min-h-[200px] [&_.google-visualization-tooltip]:!bg-dark-800 [&_.google-visualization-tooltip]:!text-slate-200 [&_.google-visualization-tooltip]:!border-dark-600 [&_.google-visualization-tooltip]:!rounded-lg [&_svg]:max-w-full">
+            <div
+                className="rounded-xl border border-dark-700 bg-dark-900/50 overflow-hidden [&_.google-visualization-tooltip]:!bg-dark-800 [&_.google-visualization-tooltip]:!text-slate-200 [&_.google-visualization-tooltip]:!border-dark-600 [&_.google-visualization-tooltip]:!rounded-lg [&_svg]:max-w-full"
+                style={{ minHeight }}
+            >
                 <Chart
                     chartType="Gantt"
                     data={chartData}
@@ -101,7 +114,7 @@ const ProjectGanttGoogle = ({ projectId, projectStart, projectEnd, items: itemsP
                     width="100%"
                     height={options.height}
                     loader={
-                        <div className="flex items-center justify-center h-48 text-slate-500">
+                        <div className="flex items-center justify-center text-slate-500" style={{ minHeight }}>
                             <span className="text-sm">Loading chart…</span>
                         </div>
                     }

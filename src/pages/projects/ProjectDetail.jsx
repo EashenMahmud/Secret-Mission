@@ -104,100 +104,100 @@ const ProjectDetail = () => {
                 </Button>
             </div>
 
-            {/* Intro: project dashboard header */}
-            <div className="card overflow-hidden">
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/10 border border-primary-500/20">
-                                <FolderKanban className="h-6 w-6 text-primary-400" />
-                            </div>
-                            <div>
-                                <h1 className="text-2xl font-bold text-white truncate">{project.name}</h1>
-                                <div className="flex items-center gap-2 flex-wrap mt-1">
-                                    <Badge variant={getStatusColor(project.status)}>
-                                        {project.status?.replace('_', ' ')}
-                                    </Badge>
-                                    <Badge variant={getPriorityColor(project.priority)}>
-                                        {project.priority}
-                                    </Badge>
-                                    {project.is_archived && (
-                                        <Badge variant="gray">
-                                            <Archive className="w-3 h-3 mr-1 inline" />
-                                            Archived
+            {/* Top: Project details + Manpower (50/50) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Project details */}
+                <div className="card overflow-hidden">
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/10 border border-primary-500/20">
+                                    <FolderKanban className="h-6 w-6 text-primary-400" />
+                                </div>
+                                <div className="min-w-0">
+                                    <h1 className="text-2xl font-bold text-white truncate">{project.name}</h1>
+                                    <div className="flex items-center gap-2 flex-wrap mt-1">
+                                        <Badge variant={getStatusColor(project.status)}>
+                                            {project.status?.replace('_', ' ')}
                                         </Badge>
-                                    )}
+                                        <Badge variant={getPriorityColor(project.priority)}>
+                                            {project.priority}
+                                        </Badge>
+                                        {project.is_archived && (
+                                            <Badge variant="gray">
+                                                <Archive className="w-3 h-3 mr-1 inline" />
+                                                Archived
+                                            </Badge>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
+                            {project.description && (
+                                <p className="text-slate-300 text-sm leading-relaxed mt-2 line-clamp-3">
+                                    {project.description}
+                                </p>
+                            )}
                         </div>
-                        {project.description && (
-                            <p className="text-slate-300 text-sm leading-relaxed mt-2 line-clamp-2">
-                                {project.description}
-                            </p>
-                        )}
+                        <div className="flex-shrink-0 md:w-56">
+                            <div className="flex justify-between items-center mb-1.5">
+                                <span className="text-xs font-medium text-slate-400">Progress</span>
+                                <span className="text-lg font-bold text-white">{project.progress ?? 0}%</span>
+                            </div>
+                            <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
+                                <div
+                                    className="bg-gradient-to-r from-primary-500 to-primary-400 h-3 rounded-full transition-all duration-300"
+                                    style={{ width: `${project.progress ?? 0}%` }}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex-shrink-0 md:w-48">
-                        <div className="flex justify-between items-center mb-1.5">
-                            <span className="text-xs font-medium text-slate-400">Progress</span>
-                            <span className="text-lg font-bold text-white">{project.progress ?? 0}%</span>
-                        </div>
-                        <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
-                            <div
-                                className="bg-gradient-to-r from-primary-500 to-primary-400 h-3 rounded-full transition-all duration-300"
-                                style={{ width: `${project.progress ?? 0}%` }}
-                            />
-                        </div>
+
+                    {/* Meta row: vendor, type, dates, created */}
+                    <div className="mt-4 pt-4 border-t border-slate-700/50 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                        {project.vendor && (
+                            <div className="flex items-center gap-2 text-slate-400">
+                                <Building2 className="h-4 w-4 flex-shrink-0 text-slate-500" />
+                                <span className="truncate" title={project.vendor.name}>{project.vendor.name}</span>
+                            </div>
+                        )}
+                        {project.project_type && (
+                            <div className="flex items-center gap-2 text-slate-400">
+                                <TrendingUp className="h-4 w-4 flex-shrink-0 text-slate-500" />
+                                <span className="truncate">{project.project_type.name}</span>
+                            </div>
+                        )}
+                        {(project.start_date || project.end_date) && (
+                            <div className="flex items-center gap-2 text-slate-400">
+                                <Calendar className="h-4 w-4 flex-shrink-0 text-slate-500" />
+                                <span className="truncate">
+                                    {project.start_date && <DateTime date={project.start_date} variant="dateOnly" />}
+                                    {project.start_date && project.end_date && ' – '}
+                                    {project.end_date && <DateTime date={project.end_date} variant="dateOnly" />}
+                                </span>
+                            </div>
+                        )}
+                        {project.created_by && (
+                            <div className="flex items-center gap-2 text-slate-400">
+                                <User className="h-4 w-4 flex-shrink-0 text-slate-500" />
+                                <span className="truncate">
+                                    {project.created_by.name || project.created_by.email || `User #${project.created_by.id ?? project.created_by}`}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                {/* Meta row: vendor, type, dates, created */}
-                <div className="mt-4 pt-4 border-t border-slate-700/50 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-                    {project.vendor && (
-                        <div className="flex items-center gap-2 text-slate-400">
-                            <Building2 className="h-4 w-4 flex-shrink-0 text-slate-500" />
-                            <span className="truncate" title={project.vendor.name}>{project.vendor.name}</span>
-                        </div>
-                    )}
-                    {project.project_type && (
-                        <div className="flex items-center gap-2 text-slate-400">
-                            <TrendingUp className="h-4 w-4 flex-shrink-0 text-slate-500" />
-                            <span className="truncate">{project.project_type.name}</span>
-                        </div>
-                    )}
-                    {(project.start_date || project.end_date) && (
-                        <div className="flex items-center gap-2 text-slate-400">
-                            <Calendar className="h-4 w-4 flex-shrink-0 text-slate-500" />
-                            <span className="truncate">
-                                {project.start_date && <DateTime date={project.start_date} variant="dateOnly" />}
-                                {project.start_date && project.end_date && ' – '}
-                                {project.end_date && <DateTime date={project.end_date} variant="dateOnly" />}
-                            </span>
-                        </div>
-                    )}
-                    {project.created_by && (
-                        <div className="flex items-center gap-2 text-slate-400">
-                            <User className="h-4 w-4 flex-shrink-0 text-slate-500" />
-                            <span className="truncate">
-                                {project.created_by.name || project.created_by.email || `User #${project.created_by.id ?? project.created_by}`}
-                            </span>
-                        </div>
-                    )}
+                {/* Manpower */}
+                <div className="card overflow-hidden">
+                    <ProjectManpowerSection projectId={id} onRefresh={refetch} compact />
                 </div>
             </div>
 
-            {/* Planning & Manpower: one section, 50/50 width, compact */}
+            {/* Planning + Gantt (20/80): sidebar list + timeline */}
             <div className="card overflow-hidden">
-                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-dark-700">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-500/15 border border-primary-500/25">
-                        <FolderKanban className="h-4 w-4 text-primary-400" />
-                    </div>
-                    <div>
-                        <h2 className="text-base font-semibold text-white">Planning & Manpower</h2>
-                        <p className="text-xs text-slate-400">Tasks and team on this project</p>
-                    </div>
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-8">
-                    <div className="min-w-0 lg:border-r border-dark-700 lg:pr-8">
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-0">
+                    {/* Planning sidebar (20%) */}
+                    <div className="min-w-0 lg:col-span-1 lg:border-r border-dark-700 lg:pr-6">
                         <ProjectPlanningSection
                             projectId={id}
                             projectStart={project.start_date}
@@ -205,21 +205,20 @@ const ProjectDetail = () => {
                             onRefresh={refetch}
                             showGantt={false}
                             compact
+                            scrollHeightClass="h-[420px]"
                         />
                     </div>
-                    <div className="min-w-0 pt-4 lg:pt-0">
-                        <ProjectManpowerSection projectId={id} onRefresh={refetch} compact />
+
+                    {/* Gantt (80%) */}
+                    <div className="min-w-0 pt-6 lg:pt-0 lg:pl-6 lg:col-span-4">
+                        <ProjectGanttGoogle
+                            projectId={id}
+                            projectStart={project.start_date}
+                            projectEnd={project.end_date}
+                            minHeight={420}
+                        />
                     </div>
                 </div>
-            </div>
-
-            {/* Gantt chart: react-google-charts (next section) */}
-            <div className="card">
-                <ProjectGanttGoogle
-                    projectId={id}
-                    projectStart={project.start_date}
-                    projectEnd={project.end_date}
-                />
             </div>
 
             <ProjectFormModal

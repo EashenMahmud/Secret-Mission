@@ -3,7 +3,7 @@ import ReactSelect from 'react-select';
 import { useField } from 'formik';
 import { cn } from '../../lib/utils';
 
-const Select = ({ label, options = [], helperText, className, placeholder, required, ...props }) => {
+const Select = ({ label, options = [], helperText, className, placeholder, required, menuPortalTarget, ...props }) => {
     const [field, meta, helpers] = useField(props);
     const isError = meta.touched && meta.error;
 
@@ -24,11 +24,15 @@ const Select = ({ label, options = [], helperText, className, placeholder, requi
         }),
         menu: (base) => ({
             ...base,
-            zIndex: 50,
+            zIndex: 9999,
             borderRadius: '0.5rem',
             boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
             border: '1px border-slate-200',
             overflow: 'hidden',
+        }),
+        menuPortal: (base) => ({
+            ...base,
+            zIndex: 9999,
         }),
         option: (base, state) => ({
             ...base,
@@ -73,6 +77,7 @@ const Select = ({ label, options = [], helperText, className, placeholder, requi
                     placeholder={placeholder || 'Select...'}
                     isClearable
                     classNamePrefix="react-select"
+                    menuPortalTarget={menuPortalTarget}
                 />
             </div>
             {
