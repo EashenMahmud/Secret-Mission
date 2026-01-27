@@ -50,6 +50,7 @@ const AddUserToProjectModal = ({ isOpen, onClose, projectId, assignedUserIds = [
                             options={options}
                             placeholder="Select user"
                             required
+                            menuPortalTarget={document.body}
                         />
                         {options.length === 0 && (
                             <p className="text-sm text-slate-400">No more users available to add.</p>

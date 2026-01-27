@@ -135,6 +135,61 @@
   .custom-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-dark-700 rounded-full hover:bg-dark-600;
   }
+
+  /* Thin scrollbar for compact lists */
+  .custom-scrollbar-thin::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+
+  .custom-scrollbar-thin::-webkit-scrollbar-track {
+    @apply bg-dark-900;
+  }
+
+  .custom-scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-dark-700 rounded-full hover:bg-dark-600;
+  }
+
+  /* Extra thin scrollbar for Gantt chart */
+  .custom-scrollbar-thin-gantt::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+
+  .custom-scrollbar-thin-gantt::-webkit-scrollbar-track {
+    @apply bg-dark-900;
+  }
+
+  .custom-scrollbar-thin-gantt::-webkit-scrollbar-thumb {
+    @apply bg-dark-700 rounded-full hover:bg-dark-600;
+  }
+
+  /* Ultra thin horizontal scrollbar for Gantt X-axis */
+  .gantt-x-scrollbar::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  .gantt-x-scrollbar::-webkit-scrollbar-track {
+    @apply bg-dark-900;
+  }
+
+  .gantt-x-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-dark-600 rounded-full hover:bg-dark-500;
+  }
+
+  .gantt-x-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(51 65 85) rgb(15 23 42);
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer utilities {

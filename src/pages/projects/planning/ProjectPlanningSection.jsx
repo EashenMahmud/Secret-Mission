@@ -8,7 +8,15 @@ import ProjectPlanningFormModal from './ProjectPlanningFormModal';
 import DateTime from '../../../components/ui/DateTime';
 import { toast } from 'react-toastify';
 
-const ProjectPlanningSection = ({ projectId, projectStart, projectEnd, onRefresh }) => {
+const ProjectPlanningSection = ({
+    projectId,
+    projectStart,
+    projectEnd,
+    onRefresh,
+    showGantt = true,
+    compact = false,
+    scrollHeightClass = 'h-[320px]',
+}) => {
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editItem, setEditItem] = useState(null);
     const [deleteItem, setDeleteItem] = useState(null);
@@ -46,69 +54,79 @@ const ProjectPlanningSection = ({ projectId, projectStart, projectEnd, onRefresh
     };
 
     return (
-        <section className="space-y-4">
-            <div className="flex items-center justify-between">
-                <h2 className="flex items-center gap-2 text-xl font-semibold text-white">
-                    <GanttChart className="h-5 w-5 text-primary-400" />
-                    Planning phase
+        <section className={compact ? 'space-y-2' : 'space-y-4'}>
+            <div className="flex items-center justify-between gap-2">
+                <h2 className={`flex items-center gap-2 font-semibold text-white ${compact ? 'text-sm' : 'text-xl'}`}>
+                    <GanttChart className={compact ? 'h-4 w-4 text-primary-400' : 'h-5 w-5 text-primary-400'} />
+                    Planning
                 </h2>
                 <Button
-                    leftIcon={<Plus className="h-4 w-4" />}
+                    size={compact ? 'sm' : undefined}
+                    leftIcon={<Plus className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />}
                     onClick={() => {
                         setEditItem(null);
                         setAddModalOpen(true);
                     }}
+                    className={compact ? '!px-2.5 !py-1.5 text-xs' : ''}
                 >
-                    Add planning
+                    Add
                 </Button>
             </div>
 
-            <ProjectGantt
-                items={planningList}
-                projectStart={projectStart}
-                projectEnd={projectEnd}
-                className="mb-4"
-            />
+            {showGantt && (
+                <ProjectGantt
+                    items={planningList}
+                    projectStart={projectStart}
+                    projectEnd={projectEnd}
+                    className="mb-4"
+                />
+            )}
 
-            <div className="rounded-xl border border-slate-700/50 bg-slate-900/50 overflow-hidden">
-                <div className="border-b border-slate-700/50 bg-slate-800/30 px-4 py-3 text-sm font-medium text-slate-300">
+            <div className={`rounded-lg border border-dark-700 bg-dark-900/50 overflow-hidden ${compact ? 'min-h-[160px]' : ''}`}>
+                <div className={`border-b border-dark-700 bg-dark-800/50 px-3 py-2 text-slate-300 font-medium ${compact ? 'text-xs' : 'text-sm px-4 py-3'}`}>
                     Planning items
                 </div>
                 {!planningList.length ? (
-                    <div className="p-8 text-center text-slate-400">
-                        No planning items yet. Add one to define phases or milestones.
+                    <div
+                        className={
+                            compact
+                                ? `p-5 text-center text-slate-500 text-xs ${scrollHeightClass} flex items-center justify-center`
+                                : 'p-8 text-center text-slate-400'
+                        }
+                    >
+                        No items yet. Add one.
                     </div>
                 ) : (
-                    <ul className="divide-y divide-slate-800/50">
+                    <ul className={`divide-y divide-dark-700/80 ${scrollHeightClass} overflow-y-auto custom-scrollbar-thin`}>
                         {planningList.map((item) => (
-                            <li key={item.id} className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-slate-800/30">
+                            <li key={item.id} className={`flex items-center justify-between gap-2 hover:bg-slate-800/30 ${compact ? 'px-3 py-2' : 'px-4 py-3'}`}>
                                 <div className="min-w-0 flex-1">
-                                    <p className="font-medium text-white truncate">{item.description || item.title || item.name || 'Untitled'}</p>
+                                    <p className={`font-medium text-white truncate ${compact ? 'text-xs' : ''}`}>{item.description || item.title || item.name || 'Untitled'}</p>
                                     <p className="text-xs text-slate-400">
                                         {item.start_date && <DateTime date={item.start_date} variant="dateOnly" />}
                                         {item.start_date && item.end_date && ' → '}
                                         {item.end_date && <DateTime date={item.end_date} variant="dateOnly" />}
                                     </p>
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1 flex-shrink-0">
                                     <button
                                         type="button"
                                         onClick={() => {
                                             setEditItem(item);
                                             setAddModalOpen(true);
                                         }}
-                                        className="p-2 rounded-lg text-slate-400 hover:bg-slate-700/50 hover:text-white transition-colors"
+                                        className="p-1.5 rounded text-slate-400 hover:bg-slate-700/50 hover:text-white transition-colors"
                                         title="Edit"
                                     >
-                                        <Edit className="h-4 w-4" />
+                                        <Edit className="h-3.5 w-3.5" />
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setDeleteItem(item)}
-                                        className="p-2 rounded-lg text-slate-400 hover:bg-red-500/20 hover:text-red-400 transition-colors"
+                                        className="p-1.5 rounded text-slate-400 hover:bg-red-500/20 hover:text-red-400 transition-colors"
                                         title="Remove"
                                     >
-                                        <Trash2 className="h-4 w-4" />
+                                        <Trash2 className="h-3.5 w-3.5" />
                                     </button>
                                 </div>
                             </li>
