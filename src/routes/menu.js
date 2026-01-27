@@ -61,6 +61,13 @@ export const menuItems = [
                 icon: ListTodo,
                 roles: ['admin'],
             },
+            {
+                id: 'holidays',
+                label: 'Holidays & Weekends',
+                path: '/organization/holidays',
+                icon: Calendar,
+                roles: ['admin'],
+            },
         ],
     },
     {

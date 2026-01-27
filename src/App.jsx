@@ -34,6 +34,7 @@ const GanttView = lazy(() => import('./pages/views/GanttView'));
 const ComponentLibrary = lazy(() => import('./pages/dev/ComponentLibrary'));
 const UserList = lazy(() => import('./pages/users/UserList'));
 const ProjectTypes = lazy(() => import('./pages/organization/ProjectTypeList'));
+const WeekendList = lazy(() => import('./pages/organization/WeekendList'));
 const ClientList = lazy(() => import('./pages/clients/VendorList'));
 
 // Loading component
@@ -137,6 +138,16 @@ function App() {
                   <ProtectedRoute allowedRoles={['admin']}>
                     <Suspense fallback={<PageLoader />}>
                       <ProjectTypes />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="organization/holidays"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Suspense fallback={<PageLoader />}>
+                      <WeekendList />
                     </Suspense>
                   </ProtectedRoute>
                 }
