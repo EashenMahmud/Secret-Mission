@@ -71,8 +71,8 @@ const ClientList = () => {
                         <Building2 className="h-5 w-5" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="font-semibold text-slate-900">{row.original.name}</span>
-                        <span className="text-xs text-slate-500">{row.original.company_name}</span>
+                        <span className="font-semibold text-[var(--text-main)]">{row.original.name}</span>
+                        <span className="text-xs text-[var(--text-muted)]">{row.original.company_name}</span>
                     </div>
                 </div>
             )
@@ -83,14 +83,14 @@ const ClientList = () => {
             cell: ({ row }) => (
                 <div className="space-y-1">
                     {row.original.email && (
-                        <div className="flex items-center gap-2 text-xs text-slate-600">
-                            <Mail className="h-3 w-3 text-indigo-500" />
+                        <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
+                            <Mail className="h-3 w-3 text-primary-500" />
                             {row.original.email}
                         </div>
                     )}
                     {row.original.phone && (
-                        <div className="flex items-center gap-2 text-xs text-slate-600">
-                            <Phone className="h-3 w-3 text-emerald-500" />
+                        <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
+                            <Phone className="h-3 w-3 text-secondary-500" />
                             {row.original.phone}
                         </div>
                     )}
@@ -102,8 +102,8 @@ const ClientList = () => {
             id: 'location',
             cell: ({ row }) => (
                 <div className="text-xs">
-                    <div className="font-medium text-slate-900">{row.original.city || 'N/A'}</div>
-                    <div className="text-slate-500">{row.original.country || ''}</div>
+                    <div className="font-medium text-[var(--text-main)]">{row.original.city || 'N/A'}</div>
+                    <div className="text-[var(--text-muted)]">{row.original.country || ''}</div>
                 </div>
             )
         },
@@ -160,8 +160,8 @@ const ClientList = () => {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Clients</h1>
-                    <p className="text-slate-500 text-sm italic">Manage external partners and client accounts.</p>
+                    <h1 className="text-2xl font-bold text-[var(--text-main)]">Clients</h1>
+                    <p className="text-[var(--text-muted)] text-sm italic">Manage external partners and client accounts.</p>
                 </div>
                 <Button
                     onClick={() => {

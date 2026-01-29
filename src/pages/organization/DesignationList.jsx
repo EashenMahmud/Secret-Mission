@@ -40,8 +40,8 @@ const DesignationList = () => {
                         <Briefcase className="h-5 w-5" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="font-semibold text-slate-900">{row.original.name}</span>
-                        <span className="text-xs text-slate-400">ID: {row.original.id}</span>
+                        <span className="font-semibold text-[var(--text-main)]">{row.original.name}</span>
+                        <span className="text-xs text-[var(--text-muted)]">ID: {row.original.id}</span>
                     </div>
                 </div>
             )
@@ -50,7 +50,7 @@ const DesignationList = () => {
             header: 'Code',
             accessorKey: 'code',
             cell: ({ row }) => (
-                <span className="font-mono text-xs bg-slate-100 px-2 py-1 rounded text-slate-600 border border-slate-200">
+                <span className="font-mono text-xs bg-[var(--bg-app)] px-2 py-1 rounded text-[var(--text-main)] border border-[var(--border-main)]">
                     {row.original.code}
                 </span>
             )
@@ -98,8 +98,8 @@ const DesignationList = () => {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Designations</h1>
-                    <p className="text-slate-500 text-sm italic">Manage job titles and roles within the organization.</p>
+                    <h1 className="text-2xl font-bold text-[var(--text-main)]">Designations</h1>
+                    <p className="text-[var(--text-muted)] text-sm italic">Manage job titles and roles within the organization.</p>
                 </div>
                 <Button
                     onClick={() => {

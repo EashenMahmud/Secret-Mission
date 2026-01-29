@@ -71,9 +71,9 @@ const ProjectPlanningTypeList = () => {
             accessorKey: 'name',
             cell: ({ row }) => (
                 <div className="flex flex-col">
-                    <span className="font-semibold text-slate-900">{row.original.name}</span>
+                    <span className="font-semibold text-[var(--text-main)]">{row.original.name}</span>
                     {row.original.description && (
-                        <span className="text-xs text-slate-500">{row.original.description}</span>
+                        <span className="text-xs text-[var(--text-muted)]">{row.original.description}</span>
                     )}
                 </div>
             )
@@ -91,9 +91,9 @@ const ProjectPlanningTypeList = () => {
             header: 'Created',
             accessorKey: 'created_at',
             cell: ({ row }) => (
-                <div className="text-sm text-slate-600">
-                    {row.original.created_at ? 
-                        new Date(row.original.created_at).toLocaleDateString() : 
+                <div className="text-sm text-[var(--text-muted)]">
+                    {row.original.created_at ?
+                        new Date(row.original.created_at).toLocaleDateString() :
                         'N/A'
                     }
                 </div>
@@ -140,8 +140,8 @@ const ProjectPlanningTypeList = () => {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Project Planning Types</h1>
-                    <p className="text-slate-500 text-sm italic">Manage different types of project planning methodologies.</p>
+                    <h1 className="text-2xl font-bold text-[var(--text-main)]">Project Planning Types</h1>
+                    <p className="text-[var(--text-muted)] text-sm italic">Manage different types of project planning methodologies.</p>
                 </div>
                 <Button
                     onClick={handleAdd}

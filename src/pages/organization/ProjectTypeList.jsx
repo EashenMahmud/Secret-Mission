@@ -62,8 +62,8 @@ const ProjectTypeList = () => {
                         <ListTodo className="h-5 w-5" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="font-semibold text-slate-900">{row.original.name}</span>
-                        <span className="text-xs text-slate-400">ID: {row.original.id}</span>
+                        <span className="font-semibold text-[var(--text-main)]">{row.original.name}</span>
+                        <span className="text-xs text-[var(--text-muted)]">ID: {row.original.id}</span>
                     </div>
                 </div>
             )
@@ -111,8 +111,8 @@ const ProjectTypeList = () => {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Project Types</h1>
-                    <p className="text-slate-500 text-sm italic">Define different categories for your projects.</p>
+                    <h1 className="text-2xl font-bold text-[var(--text-main)]">Project Types</h1>
+                    <p className="text-[var(--text-muted)] text-sm italic">Define different categories for your projects.</p>
                 </div>
                 <Button
                     onClick={() => {

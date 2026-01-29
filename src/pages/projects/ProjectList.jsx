@@ -85,8 +85,8 @@ const ProjectList = () => {
 
     const confirmDelete = async () => {
         try {
-            await deleteProject({ 
-                end_point: `/projects/${projectToDelete.id}` 
+            await deleteProject({
+                end_point: `/projects/${projectToDelete.id}`
             }).unwrap();
             toast.success('Project deleted successfully');
             setIsDeleteModalOpen(false);
@@ -102,10 +102,10 @@ const ProjectList = () => {
         <div className="space-y-6 animate-fade-in">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Projects</h1>
-                    <p className="text-slate-400">Manage your projects and track progress</p>
+                    <h1 className="text-3xl font-bold text-[var(--text-main)] mb-2">Projects</h1>
+                    <p className="text-[var(--text-muted)]">Manage your projects and track progress</p>
                 </div>
-                <button 
+                <button
                     className="btn-primary flex items-center gap-2"
                     onClick={() => {
                         setFormMode('create');
@@ -128,10 +128,10 @@ const ProjectList = () => {
                 </div>
             ) : projects.length === 0 ? (
                 <div className="card text-center py-12">
-                    <FolderKanban className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold text-white mb-2">No projects yet</h3>
-                    <p className="text-slate-400 mb-4">Get started by creating your first project</p>
-                    <button 
+                    <FolderKanban className="w-16 h-16 text-[var(--text-muted)] mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-[var(--text-main)] mb-2">No projects yet</h3>
+                    <p className="text-[var(--text-muted)] mb-4">Get started by creating your first project</p>
+                    <button
                         className="btn-primary inline-flex items-center gap-2"
                         onClick={() => {
                             setFormMode('create');
@@ -181,7 +181,7 @@ const ProjectList = () => {
                                     <FolderKanban className="w-6 h-6 text-white" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <h3 className="text-lg font-semibold text-white mb-1 truncate">
+                                    <h3 className="text-lg font-semibold text-[var(--text-main)] mb-1 truncate">
                                         {project.name}
                                     </h3>
                                     <div className="flex items-center gap-2 flex-wrap">
@@ -195,7 +195,7 @@ const ProjectList = () => {
                                 </div>
                             </div>
 
-                            <p className="text-slate-400 text-sm mb-4 line-clamp-2">
+                            <p className="text-[var(--text-muted)] text-sm mb-4 line-clamp-2">
                                 {project.description || 'No description provided'}
                             </p>
 
@@ -203,8 +203,8 @@ const ProjectList = () => {
                                 {/* Vendor Info */}
                                 {project.vendor && (
                                     <div className="flex items-center gap-2 text-sm">
-                                        <Building2 className="w-4 h-4 text-slate-500" />
-                                        <span className="text-slate-400 truncate">
+                                        <Building2 className="w-4 h-4 text-[var(--text-muted)]" />
+                                        <span className="text-[var(--text-muted)] truncate">
                                             {project.vendor.name}
                                         </span>
                                     </div>
@@ -213,8 +213,8 @@ const ProjectList = () => {
                                 {/* Project Type */}
                                 {project.project_type && (
                                     <div className="flex items-center gap-2 text-sm">
-                                        <TrendingUp className="w-4 h-4 text-slate-500" />
-                                        <span className="text-slate-400 truncate">
+                                        <TrendingUp className="w-4 h-4 text-[var(--text-muted)]" />
+                                        <span className="text-[var(--text-muted)] truncate">
                                             {project.project_type.name}
                                         </span>
                                     </div>
@@ -223,11 +223,11 @@ const ProjectList = () => {
                                 {/* Dates */}
                                 {project.start_date && (
                                     <div className="flex items-center gap-2 text-sm">
-                                        <Calendar className="w-4 h-4 text-slate-500" />
-                                        <span className="text-slate-400">
-                                            <DateTime date={project.start_date} variant="dateOnly" className="text-slate-400" />
+                                        <Calendar className="w-4 h-4 text-[var(--text-muted)]" />
+                                        <span className="text-[var(--text-muted)]">
+                                            <DateTime date={project.start_date} variant="dateOnly" className="text-[var(--text-muted)]" />
                                             {project.end_date && (
-                                                <> - <DateTime date={project.end_date} variant="dateOnly" className="text-slate-400" /></>
+                                                <> - <DateTime date={project.end_date} variant="dateOnly" className="text-[var(--text-muted)]" /></>
                                             )}
                                         </span>
                                     </div>
@@ -236,12 +236,12 @@ const ProjectList = () => {
                                 {/* Progress */}
                                 <div className="space-y-1">
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-slate-500">Progress</span>
-                                        <span className="text-slate-300 font-medium">
+                                        <span className="text-[var(--text-muted)]">Progress</span>
+                                        <span className="text-[var(--text-main)] font-medium">
                                             {project.progress || 0}%
                                         </span>
                                     </div>
-                                    <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                                    <div className="w-full bg-[var(--bg-app)] rounded-full h-2 overflow-hidden">
                                         <div
                                             className="bg-gradient-to-r from-primary-500 to-secondary-500 h-2 rounded-full transition-all duration-300"
                                             style={{ width: `${project.progress || 0}%` }}
@@ -264,7 +264,7 @@ const ProjectList = () => {
                     >
                         Previous
                     </button>
-                    <span className="flex items-center px-4 text-slate-400">
+                    <span className="flex items-center px-4 text-[var(--text-muted)]">
                         Page {page} of {paginationData.last_page}
                     </span>
                     <button

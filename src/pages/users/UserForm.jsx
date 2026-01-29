@@ -121,22 +121,22 @@ const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
                             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                                 {/* Left Side: Profile Picture & Secondary Info */}
                                 <div className="lg:col-span-4 space-y-6">
-                                    <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex flex-col items-center">
+                                    <div className="bg-[var(--bg-app)] p-6 rounded-2xl border border-[var(--border-main)] flex flex-col items-center">
                                         <ImageUpload
                                             label="Profile Photo"
                                             name="profile_picture"
                                             className="w-full"
                                             helperText="Upload a professional photo. Max 2MB."
                                         />
-                                        <div className="mt-6 flex items-center justify-between w-full p-3 bg-white rounded-xl border border-slate-200">
-                                            <span className="text-sm font-medium text-slate-600">Account Active</span>
+                                        <div className="mt-6 flex items-center justify-between w-full p-3 bg-[var(--bg-card)] rounded-xl border border-[var(--border-main)]">
+                                            <span className="text-sm font-medium text-[var(--text-muted)]">Account Active</span>
                                             <Switch name="is_active" />
                                         </div>
                                     </div>
 
-                                    <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
-                                        <div className="flex items-center gap-2 text-slate-900 font-semibold mb-2">
-                                            <Shield className="w-4 h-4 text-indigo-500" />
+                                    <div className="bg-[var(--bg-app)] p-6 rounded-2xl border border-[var(--border-main)] space-y-4">
+                                        <div className="flex items-center gap-2 text-[var(--text-main)] font-semibold mb-2">
+                                            <Shield className="w-4 h-4 text-primary-500" />
                                             <span>Access Control</span>
                                         </div>
                                         <Radio
@@ -163,8 +163,8 @@ const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
                                 <div className="lg:col-span-8 space-y-8 pb-4">
                                     {/* Personal Info Section */}
                                     <section className="space-y-4">
-                                        <div className="flex items-center gap-2 text-lg font-bold text-slate-900 border-b border-slate-100 pb-2">
-                                            <User className="w-5 h-5 text-indigo-500" />
+                                        <div className="flex items-center gap-2 text-lg font-bold text-[var(--text-main)] border-b border-[var(--border-main)] pb-2">
+                                            <User className="w-5 h-5 text-primary-500" />
                                             <span>Personal Identification</span>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -186,8 +186,8 @@ const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
 
                                     {/* Employment Section */}
                                     <section className="space-y-4">
-                                        <div className="flex items-center gap-2 text-lg font-bold text-slate-900 border-b border-slate-100 pb-2">
-                                            <Briefcase className="w-5 h-5 text-indigo-500" />
+                                        <div className="flex items-center gap-2 text-lg font-bold text-[var(--text-main)] border-b border-[var(--border-main)] pb-2">
+                                            <Briefcase className="w-5 h-5 text-primary-500" />
                                             <span>Employment Details</span>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -203,8 +203,8 @@ const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
 
                                     {/* Address Section */}
                                     <section className="space-y-4">
-                                        <div className="flex items-center gap-2 text-lg font-bold text-slate-900 border-b border-slate-100 pb-2">
-                                            <MapPin className="w-5 h-5 text-indigo-500" />
+                                        <div className="flex items-center gap-2 text-lg font-bold text-[var(--text-main)] border-b border-[var(--border-main)] pb-2">
+                                            <MapPin className="w-5 h-5 text-primary-500" />
                                             <span>Residence Info</span>
                                         </div>
                                         <Input label="Full Address" name="address" placeholder="Enter complete residential address" />
@@ -214,7 +214,7 @@ const UserForm = ({ isOpen, onClose, user, onSuccess }) => {
                         </div>
 
                         {/* Sticky Footer */}
-                        <div className="flex justify-end gap-3 p-6 bg-slate-50 border-t border-slate-200 rounded-b-xl -mx-6 -mb-6 mt-4 ">
+                        <div className="flex justify-end gap-3 p-6 bg-[var(--bg-app)] border-t border-[var(--border-main)] rounded-b-xl -mx-6 -mb-6 mt-4 ">
                             <Button variant="ghost" onClick={onClose} type="button">Discard Changes</Button>
                             <Button type="submit" isLoading={isSubmitting || isCreating || isUpdating} className="px-8">
                                 {isEditing ? 'Save Profile' : 'Register User'}

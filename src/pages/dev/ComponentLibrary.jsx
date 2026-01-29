@@ -90,11 +90,11 @@ const ComponentLibrary = () => {
     });
 
     return (
-        <div className="p-8 max-w-7xl mx-auto space-y-12 bg-gray-50 min-h-screen">
-            <div className="flex items-center justify-between border-b pb-4">
+        <div className="p-8 max-w-7xl mx-auto space-y-12 bg-[var(--bg-app)] min-h-screen">
+            <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">UI Component Library</h1>
-                    <p className="text-gray-500">Centralized UI components documentation and preview.</p>
+                    <h1 className="text-3xl font-bold text-[var(--text-main)]">UI Component Library</h1>
+                    <p className="text-[var(--text-muted)]">Centralized UI components documentation and preview.</p>
                 </div>
                 <BackButton />
             </div>
@@ -111,7 +111,7 @@ const ComponentLibrary = () => {
                         <Button variant="ghost">Ghost</Button>
                         <Button variant="primary" isLoading>Loading</Button>
                         <Button variant="primary" leftIcon={<Plus className="h-4 w-4" />}>With Icon</Button>
-                        <div className="h-8 w-px bg-gray-200 mx-2" />
+                        <div className="h-8 w-px bg-[var(--border-main)] mx-2" />
                         <Badge variant="success">Success</Badge>
                         <Badge variant="error">Error</Badge>
                         <Badge variant="warning">Warning</Badge>
@@ -177,21 +177,21 @@ const ComponentLibrary = () => {
                         <CardHeader title="Dates & Progress" />
                         <CardBody className="space-y-6">
                             <div className="flex flex-col gap-2">
-                                <p className="text-sm text-gray-500">DateTime Formatting:</p>
+                                <p className="text-sm text-[var(--text-muted)]">DateTime Formatting:</p>
                                 <div className="flex gap-4">
                                     <DateTime date={new Date()} variant="full" />
                                     <DateTime date={new Date()} variant="relative" />
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <p className="text-sm text-gray-500">Progress Indicators:</p>
+                                <p className="text-sm text-[var(--text-muted)]">Progress Indicators:</p>
                                 <ProgressBar value={65} showValue variant="primary" />
                                 <ProgressBar value={40} variant="success" />
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="text-sm">Hover for info:</span>
+                                <span className="text-sm text-[var(--text-muted)]">Hover for info:</span>
                                 <Tooltip content="This is a helpful tooltip message!">
-                                    <ExternalLink className="h-4 w-4 text-indigo-600" />
+                                    <ExternalLink className="h-4 w-4 text-primary-500" />
                                 </Tooltip>
                             </div>
                         </CardBody>

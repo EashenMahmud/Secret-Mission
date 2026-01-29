@@ -56,7 +56,7 @@ const ProjectPlanningSection = ({
     return (
         <section className={compact ? 'space-y-2' : 'space-y-4'}>
             <div className="flex items-center justify-between gap-2">
-                <h2 className={`flex items-center gap-2 font-semibold text-white ${compact ? 'text-sm' : 'text-xl'}`}>
+                <h2 className={`flex items-center gap-2 font-semibold text-[var(--text-main)] ${compact ? 'text-sm' : 'text-xl'}`}>
                     <GanttChart className={compact ? 'h-4 w-4 text-primary-400' : 'h-5 w-5 text-primary-400'} />
                     Planning
                 </h2>
@@ -82,27 +82,27 @@ const ProjectPlanningSection = ({
                 />
             )}
 
-            <div className={`rounded-lg border border-dark-700 bg-dark-900/50 overflow-hidden ${compact ? 'min-h-[160px]' : ''}`}>
-                <div className={`border-b border-dark-700 bg-dark-800/50 px-3 py-2 text-slate-300 font-medium ${compact ? 'text-xs' : 'text-sm px-4 py-3'}`}>
+            <div className={`rounded-lg border border-[var(--border-main)] bg-[var(--bg-app)]/50 overflow-hidden ${compact ? 'min-h-[160px]' : ''}`}>
+                <div className={`border-b border-[var(--border-main)] bg-[var(--bg-app)] px-3 py-2 text-[var(--text-main)] font-medium ${compact ? 'text-xs' : 'text-sm px-4 py-3'}`}>
                     Planning items
                 </div>
                 {!planningList.length ? (
                     <div
                         className={
                             compact
-                                ? `p-5 text-center text-slate-500 text-xs ${scrollHeightClass} flex items-center justify-center`
-                                : 'p-8 text-center text-slate-400'
+                                ? `p-5 text-center text-[var(--text-muted)] text-xs ${scrollHeightClass} flex items-center justify-center`
+                                : 'p-8 text-center text-[var(--text-muted)]'
                         }
                     >
                         No items yet. Add one.
                     </div>
                 ) : (
-                    <ul className={`divide-y divide-dark-700/80 ${scrollHeightClass} overflow-y-auto custom-scrollbar-thin`}>
+                    <ul className={`divide-y divide-[var(--border-main)] ${scrollHeightClass} overflow-y-auto custom-scrollbar-thin`}>
                         {planningList.map((item) => (
-                            <li key={item.id} className={`flex items-center justify-between gap-2 hover:bg-slate-800/30 ${compact ? 'px-3 py-2' : 'px-4 py-3'}`}>
+                            <li key={item.id} className={`flex items-center justify-between gap-2 hover:bg-[var(--bg-card)]/50 ${compact ? 'px-3 py-2' : 'px-4 py-3'}`}>
                                 <div className="min-w-0 flex-1">
-                                    <p className={`font-medium text-white truncate ${compact ? 'text-xs' : ''}`}>{item.description || item.title || item.name || 'Untitled'}</p>
-                                    <p className="text-xs text-slate-400">
+                                    <p className={`font-medium text-[var(--text-main)] truncate ${compact ? 'text-xs' : ''}`}>{item.description || item.title || item.name || 'Untitled'}</p>
+                                    <p className="text-xs text-[var(--text-muted)]">
                                         {item.start_date && <DateTime date={item.start_date} variant="dateOnly" />}
                                         {item.start_date && item.end_date && ' → '}
                                         {item.end_date && <DateTime date={item.end_date} variant="dateOnly" />}
@@ -115,7 +115,7 @@ const ProjectPlanningSection = ({
                                             setEditItem(item);
                                             setAddModalOpen(true);
                                         }}
-                                        className="p-1.5 rounded text-slate-400 hover:bg-slate-700/50 hover:text-white transition-colors"
+                                        className="p-1.5 rounded text-[var(--text-muted)] hover:bg-[var(--bg-card)] hover:text-primary-500 transition-colors"
                                         title="Edit"
                                     >
                                         <Edit className="h-3.5 w-3.5" />

@@ -67,7 +67,7 @@ const UserList = () => {
             accessorKey: 'name',
             cell: ({ row }) => (
                 <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden border border-slate-300">
+                    <div className="h-10 w-10 rounded-full bg-[var(--bg-app)] flex items-center justify-center overflow-hidden border border-[var(--border-main)]">
                         {row.original.profile_picture ? (
                             <img
                                 src={getImageUrl(row.original.profile_picture)}
@@ -75,12 +75,12 @@ const UserList = () => {
                                 className="h-full w-full object-cover"
                             />
                         ) : (
-                            <User className="h-6 w-6 text-slate-400" />
+                            <User className="h-6 w-6 text-[var(--text-muted)]" />
                         )}
                     </div>
                     <div className="flex flex-col">
-                        <span className="font-semibold text-slate-900">{row.original.name}</span>
-                        <span className="text-xs text-slate-500">{row.original.email}</span>
+                        <span className="font-semibold text-[var(--text-main)]">{row.original.name}</span>
+                        <span className="text-xs text-[var(--text-muted)]">{row.original.email}</span>
                     </div>
                 </div>
             )
@@ -89,9 +89,9 @@ const UserList = () => {
             header: 'ID / Code',
             accessorKey: 'employee_code',
             cell: ({ row }) => (
-                <div className="text-xs text-slate-600">
-                    <div className="font-medium text-slate-900">{row.original.employee_code}</div>
-                    <div className="text-slate-400">HRM: {row.original.hrm_id || 'N/A'}</div>
+                <div className="text-xs text-[var(--text-muted)]">
+                    <div className="font-medium text-[var(--text-main)]">{row.original.employee_code}</div>
+                    <div className="opacity-70">HRM: {row.original.hrm_id || 'N/A'}</div>
                 </div>
             )
         },
@@ -100,8 +100,8 @@ const UserList = () => {
             id: 'org_info',
             cell: ({ row }) => (
                 <div className="text-xs">
-                    <div className="font-medium text-slate-900">{row.original.department?.name || 'No Dept'}</div>
-                    <div className="text-slate-500">{row.original.designation?.name || 'No Desig'}</div>
+                    <div className="font-medium text-[var(--text-main)]">{row.original.department?.name || 'No Dept'}</div>
+                    <div className="text-[var(--text-muted)]">{row.original.designation?.name || 'No Desig'}</div>
                 </div>
             )
         },
@@ -163,8 +163,8 @@ const UserList = () => {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">User Management</h1>
-                    <p className="text-slate-500 text-sm italic">Manage system users and their permissions.</p>
+                    <h1 className="text-2xl font-bold text-[var(--text-main)]">User Management</h1>
+                    <p className="text-[var(--text-muted)] text-sm italic">Manage system users and their permissions.</p>
                 </div>
                 <Button
                     onClick={() => {

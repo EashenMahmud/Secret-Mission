@@ -44,7 +44,7 @@ const ProjectGanttCustom = ({
 
         const start = new Date(Math.min(...dates));
         const end = new Date(Math.max(...dates));
-        
+
         // Extend range a bit for better visibility
         const paddingDays = 7;
         start.setDate(start.getDate() - paddingDays);
@@ -150,9 +150,9 @@ const ProjectGanttCustom = ({
     // Synchronize all horizontal scrolling using class selector
     useEffect(() => {
         if (!items.length) return;
-        
+
         const scrollContainers = document.querySelectorAll(`.${scrollSyncClass}`);
-        
+
         if (scrollContainers.length === 0) return;
 
         const syncAllScrolls = (sourceScrollLeft, source) => {
@@ -181,9 +181,9 @@ const ProjectGanttCustom = ({
     // Synchronize vertical scrolling between left column and timeline
     useEffect(() => {
         if (!items.length) return;
-        
+
         const verticalScrollContainers = document.querySelectorAll(`.${verticalScrollSyncClass}`);
-        
+
         if (verticalScrollContainers.length === 0) return;
 
         const syncVerticalScrolls = (sourceScrollTop, source) => {
@@ -217,19 +217,19 @@ const ProjectGanttCustom = ({
                         <GanttChart className="h-5 w-5 text-primary-400" />
                     </div>
                     <div>
-                        <h3 className="text-base font-semibold text-white">Timeline (Gantt)</h3>
-                        <p className="text-xs text-slate-400">Project schedule at a glance</p>
+                        <h3 className="text-base font-semibold text-[var(--text-main)]">Timeline (Gantt)</h3>
+                        <p className="text-xs text-[var(--text-muted)]">Project schedule at a glance</p>
                     </div>
                 </div>
                 <div
-                    className="flex flex-col items-center justify-center rounded-xl border border-dark-700 bg-dark-900/50 py-14"
+                    className="flex flex-col items-center justify-center rounded-xl border border-[var(--border-main)] bg-[var(--bg-app)]/50 py-14"
                     style={{ minHeight }}
                 >
-                    <div className="rounded-full bg-dark-800 p-4 mb-3 ring-1 ring-dark-600">
-                        <GanttChart className="w-8 h-8 text-slate-500" />
+                    <div className="rounded-full bg-[var(--bg-card)] p-4 mb-3 ring-1 ring-[var(--border-main)]">
+                        <GanttChart className="w-8 h-8 text-[var(--text-muted)]" />
                     </div>
-                    <p className="text-slate-300 font-medium">No planning items yet</p>
-                    <p className="text-slate-500 text-sm mt-1">Add planning items above to see the Gantt chart here.</p>
+                    <p className="text-[var(--text-main)] font-medium">No planning items yet</p>
+                    <p className="text-[var(--text-muted)] text-sm mt-1">Add planning items above to see the Gantt chart here.</p>
                 </div>
             </div>
         );
@@ -242,13 +242,13 @@ const ProjectGanttCustom = ({
                     <GanttChart className="h-5 w-5 text-primary-400" />
                 </div>
                 <div>
-                    <h3 className="text-base font-semibold text-white">Timeline (Gantt)</h3>
-                    <p className="text-xs text-slate-400">Project schedule at a glance</p>
+                    <h3 className="text-base font-semibold text-[var(--text-main)]">Timeline (Gantt)</h3>
+                    <p className="text-xs text-[var(--text-muted)]">Project schedule at a glance</p>
                 </div>
             </div>
 
             <div
-                className="rounded-xl border border-dark-700 bg-dark-900/50 overflow-hidden flex flex-col"
+                className="rounded-xl border border-[var(--border-main)] bg-[var(--bg-app)]/50 overflow-hidden flex flex-col"
                 style={{ minHeight: totalHeight, maxHeight: totalHeight }}
             >
                 {/* Fixed header */}
@@ -256,7 +256,7 @@ const ProjectGanttCustom = ({
                     {/* Month headers */}
                     <div className="flex border-b border-dark-700">
                         <div className="w-48 border-r border-dark-700 px-4 py-2 bg-dark-800/70 flex-shrink-0"></div>
-                        <div 
+                        <div
                             className={`flex overflow-x-auto hide-scrollbar ${scrollSyncClass}`}
                             style={{ width: 'calc(100% - 12rem)' }}
                         >
@@ -266,7 +266,7 @@ const ProjectGanttCustom = ({
                                     return (
                                         <div
                                             key={idx}
-                                            className="px-2 py-2 text-xs font-semibold text-slate-300 text-center border-r border-dark-700 last:border-r-0"
+                                            className="px-2 py-2 text-xs font-semibold text-[var(--text-main)] text-center border-r border-[var(--border-main)] last:border-r-0"
                                             style={{
                                                 width: `${group.days.length * dayWidth}px`,
                                                 flexShrink: 0,
@@ -282,8 +282,8 @@ const ProjectGanttCustom = ({
 
                     {/* Day headers */}
                     <div className="flex">
-                        <div className="w-48 border-r border-dark-700 px-4 py-2 bg-dark-800/70 flex-shrink-0"></div>
-                        <div 
+                        <div className="w-48 border-r border-[var(--border-main)] px-4 py-2 bg-[var(--bg-app)] flex-shrink-0"></div>
+                        <div
                             className={`flex overflow-x-auto hide-scrollbar ${scrollSyncClass}`}
                             style={{ width: 'calc(100% - 12rem)' }}
                         >
@@ -294,12 +294,11 @@ const ProjectGanttCustom = ({
                                     return (
                                         <div
                                             key={idx}
-                                            className={`flex-shrink-0 px-1 py-2 text-center border-r border-dark-700 last:border-r-0 ${
-                                                isWeekendDay ? 'bg-dark-800/30' : 'bg-dark-800/50'
-                                            } ${isTodayDay ? 'ring-1 ring-primary-500/50' : ''}`}
+                                            className={`flex-shrink-0 px-1 py-2 text-center border-r border-[var(--border-main)] last:border-r-0 ${isWeekendDay ? 'bg-[var(--bg-app)]/30' : 'bg-[var(--bg-app)]/50'
+                                                } ${isTodayDay ? 'ring-1 ring-primary-500/50' : ''}`}
                                             style={{ width: `${dayWidth}px`, flexShrink: 0 }}
                                         >
-                                            <div className={`text-xs font-medium ${isTodayDay ? 'text-primary-400' : 'text-slate-400'}`}>
+                                            <div className={`text-xs font-medium ${isTodayDay ? 'text-primary-400' : 'text-[var(--text-muted)]'}`}>
                                                 {format(day, 'd')}
                                             </div>
                                             <div className="text-[10px] text-slate-500 mt-0.5">
@@ -316,7 +315,7 @@ const ProjectGanttCustom = ({
                 {/* Gantt Rows - Proper structure: fixed left + scrollable right */}
                 <div className="flex-1 flex min-h-0" style={{ height: totalHeight - headerHeight }}>
                     {/* Fixed left column - NEVER scrolls horizontally */}
-                    <div className="w-48 border-r border-dark-700 flex-shrink-0 flex flex-col bg-dark-800/30">
+                    <div className="w-48 border-r border-[var(--border-main)] flex-shrink-0 flex flex-col bg-[var(--bg-app)]/30">
                         <div className={`flex-1 overflow-y-auto custom-scrollbar-thin-gantt ${verticalScrollSyncClass}`}>
                             <div className="flex flex-col">
                                 {Array.from({ length: totalRows }).map((_, rowIdx) => {
@@ -324,16 +323,16 @@ const ProjectGanttCustom = ({
                                     return (
                                         <div
                                             key={bar ? bar.id : `empty-${rowIdx}`}
-                                            className="flex items-center border-b border-dark-700 px-4 py-2"
+                                            className="flex items-center border-b border-[var(--border-main)] px-4 py-2"
                                             style={{ height: rowHeight, minHeight: rowHeight }}
                                         >
                                             {bar ? (
                                                 <div className="flex items-center gap-2 w-full">
                                                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${getStatusColor(bar.status)}`}></div>
                                                     <div className="min-w-0 flex-1">
-                                                        <p className="text-sm font-medium text-white truncate">{bar.name}</p>
+                                                        <p className="text-sm font-medium text-[var(--text-main)] truncate">{bar.name}</p>
                                                         {bar.planningType && (
-                                                            <p className="text-xs text-slate-400 truncate">{bar.planningType}</p>
+                                                            <p className="text-xs text-[var(--text-muted)] truncate">{bar.planningType}</p>
                                                         )}
                                                     </div>
                                                 </div>
@@ -350,9 +349,9 @@ const ProjectGanttCustom = ({
                     {/* Scrollable timeline area */}
                     <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden">
                         {/* Horizontal scroll container - scrollbar visible at bottom */}
-                        <div 
+                        <div
                             className={`gantt-x-scrollbar overflow-x-auto flex-1 ${scrollSyncClass}`}
-                            style={{ 
+                            style={{
                                 width: '100%',
                                 height: '100%'
                             }}
@@ -367,7 +366,7 @@ const ProjectGanttCustom = ({
                                             return (
                                                 <div
                                                     key={`empty-${rowIdx}`}
-                                                    className="flex items-center border-b border-dark-700"
+                                                    className="flex items-center border-b border-[var(--border-main)]"
                                                     style={{ height: rowHeight, minHeight: rowHeight }}
                                                 >
                                                     {/* Timeline area with grid lines */}
@@ -379,9 +378,8 @@ const ProjectGanttCustom = ({
                                                                 return (
                                                                     <div
                                                                         key={dayIdx}
-                                                                        className={`border-r border-dark-700 last:border-r-0 ${
-                                                                            isWeekendDay ? 'bg-dark-800/10' : ''
-                                                                        }`}
+                                                                        className={`border-r border-[var(--border-main)] last:border-r-0 ${isWeekendDay ? 'bg-[var(--bg-app)]/10' : ''
+                                                                            }`}
                                                                         style={{ width: `${dayWidth}px`, flexShrink: 0 }}
                                                                     />
                                                                 );
@@ -396,7 +394,7 @@ const ProjectGanttCustom = ({
                                         return (
                                             <div
                                                 key={bar.id}
-                                                className="flex items-center border-b border-dark-700 hover:bg-dark-800/30 transition-colors"
+                                                className="flex items-center border-b border-[var(--border-main)] hover:bg-[var(--bg-card)]/30 transition-colors"
                                                 style={{ height: rowHeight, minHeight: rowHeight }}
                                             >
                                                 {/* Timeline area */}
@@ -408,9 +406,8 @@ const ProjectGanttCustom = ({
                                                             return (
                                                                 <div
                                                                     key={dayIdx}
-                                                                    className={`border-r border-dark-700 last:border-r-0 ${
-                                                                        isWeekendDay ? 'bg-dark-800/10' : ''
-                                                                    }`}
+                                                                    className={`border-r border-[var(--border-main)] last:border-r-0 ${isWeekendDay ? 'bg-[var(--bg-app)]/10' : ''
+                                                                        }`}
                                                                     style={{ width: `${dayWidth}px`, flexShrink: 0 }}
                                                                 />
                                                             );
@@ -419,7 +416,7 @@ const ProjectGanttCustom = ({
 
                                                     {/* Gantt bar */}
                                                     <div
-                                                        className="absolute top-1/2 -translate-y-1/2 h-8 rounded-md overflow-hidden shadow-sm border border-dark-600 z-20"
+                                                        className="absolute top-1/2 -translate-y-1/2 h-8 rounded-md overflow-hidden shadow-sm border border-[var(--border-main)] z-20"
                                                         style={{
                                                             left: `${bar.left}px`,
                                                             width: `${bar.width}px`,
@@ -436,7 +433,7 @@ const ProjectGanttCustom = ({
                                                             )}
                                                             {/* Task label overlay */}
                                                             <div className="absolute inset-0 flex items-center px-2">
-                                                                <span className="text-xs font-medium text-white truncate">
+                                                                <span className="text-xs font-medium text-white truncate shadow-sm">
                                                                     {bar.progress > 0 ? `${bar.progress}%` : ''}
                                                                 </span>
                                                             </div>

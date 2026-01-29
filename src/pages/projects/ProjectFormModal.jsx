@@ -6,11 +6,11 @@ import Input from '../../components/ui/Input';
 import TextArea from '../../components/ui/TextArea';
 import Select from '../../components/ui/Select';
 import Button from '../../components/ui/Button';
-import { 
-    usePostApiMutation, 
+import {
+    usePostApiMutation,
     useUpdateApiJsonMutation,
-    useGetApiQuery, 
-    useGetApiWithIdQuery 
+    useGetApiQuery,
+    useGetApiWithIdQuery
 } from '../../store/api/commonApi';
 import { toast } from 'react-toastify';
 
@@ -161,22 +161,22 @@ const ProjectFormModal = ({ isOpen, onClose, projectId = null, onSuccess, mode =
     };
 
     // Show loading state when fetching data
-    const isLoadingData = isEditMode 
+    const isLoadingData = isEditMode
         ? (isLoadingProject || !project || isLoadingVendors || isLoadingProjectTypes)
         : (isLoadingVendors || isLoadingProjectTypes);
 
     if (isLoadingData) {
         return (
-            <Modal 
-                isOpen={isOpen} 
-                onClose={onClose} 
-                title={isEditMode ? 'Edit Project' : 'Create New Project'} 
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+                title={isEditMode ? 'Edit Project' : 'Create New Project'}
                 size="lg"
             >
                 <div className="animate-pulse space-y-4">
-                    <div className="h-10 bg-slate-200 rounded"></div>
-                    <div className="h-10 bg-slate-200 rounded"></div>
-                    <div className="h-20 bg-slate-200 rounded"></div>
+                    <div className="h-10 bg-[var(--bg-app)] rounded"></div>
+                    <div className="h-10 bg-[var(--bg-app)] rounded"></div>
+                    <div className="h-20 bg-[var(--bg-app)] rounded"></div>
                 </div>
             </Modal>
         );

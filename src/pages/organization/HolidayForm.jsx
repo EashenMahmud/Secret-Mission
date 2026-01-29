@@ -52,12 +52,12 @@ const HolidayForm = ({ isOpen, onClose, onSuccess, initialDate }) => {
             >
                 {({ isSubmitting }) => (
                     <Form className="space-y-6 pt-2">
-                        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex flex-col items-center mb-4">
-                            <div className="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center mb-4 border border-indigo-100">
-                                <CalendarDays className="w-8 h-8 text-indigo-500" />
+                        <div className="bg-[var(--bg-app)] p-6 rounded-2xl border border-[var(--border-main)] flex flex-col items-center mb-4">
+                            <div className="w-16 h-16 rounded-2xl bg-primary-500/10 flex items-center justify-center mb-4 border border-primary-500/20">
+                                <CalendarDays className="w-8 h-8 text-primary-500" />
                             </div>
-                            <h3 className="text-lg font-bold text-slate-900">Holiday Details</h3>
-                            <p className="text-xs text-slate-500 text-center mt-1">
+                            <h3 className="text-lg font-bold text-[var(--text-main)]">Holiday Details</h3>
+                            <p className="text-xs text-[var(--text-muted)] text-center mt-1">
                                 Add a recurring or one-time holiday to the calendar.
                             </p>
                         </div>
@@ -79,7 +79,7 @@ const HolidayForm = ({ isOpen, onClose, onSuccess, initialDate }) => {
                             />
                         </div>
 
-                        <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 -mx-6 px-6 -mb-6 pb-6 bg-slate-50 rounded-b-xl">
+                        <div className="flex justify-end gap-3 pt-4 border-t border-[var(--border-main)] -mx-6 px-6 -mb-6 pb-6 bg-[var(--bg-app)] rounded-b-xl">
                             <Button variant="ghost" onClick={onClose} type="button">Cancel</Button>
                             <Button type="submit" isLoading={isSubmitting || isLoading} className="px-8">
                                 Save Holiday

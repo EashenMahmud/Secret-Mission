@@ -32,8 +32,8 @@ const TaskList = () => {
         <div className="space-y-6 animate-fade-in">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-dark-50 mb-2">Tasks</h1>
-                    <p className="text-dark-400">{role === 'admin' ? 'All tasks' : 'My assigned tasks'}</p>
+                    <h1 className="text-3xl font-bold text-[var(--text-main)] mb-2">Tasks</h1>
+                    <p className="text-[var(--text-muted)]">{role === 'admin' ? 'All tasks' : 'My assigned tasks'}</p>
                 </div>
                 <button className="btn-primary flex items-center gap-2">
                     <Plus className="w-5 h-5" />
@@ -59,8 +59,8 @@ const TaskList = () => {
                                 <tr key={task.id}>
                                     <td>
                                         <div>
-                                            <p className="font-medium text-dark-200">{task.title}</p>
-                                            <p className="text-xs text-dark-500">{task.description?.substring(0, 50)}...</p>
+                                            <p className="font-medium text-[var(--text-main)]">{task.title}</p>
+                                            <p className="text-xs text-[var(--text-muted)]">{task.description?.substring(0, 50)}...</p>
                                         </div>
                                     </td>
                                     <td>
@@ -75,20 +75,20 @@ const TaskList = () => {
                                     </td>
                                     <td>
                                         <div className="flex items-center gap-2">
-                                            <div className="w-20 bg-dark-700 rounded-full h-2">
+                                            <div className="w-20 bg-[var(--bg-app)] rounded-full h-2">
                                                 <div
                                                     className="bg-primary-500 h-2 rounded-full"
                                                     style={{ width: `${task.progress}%` }}
                                                 ></div>
                                             </div>
-                                            <span className="text-xs text-dark-400">{task.progress}%</span>
+                                            <span className="text-xs text-[var(--text-muted)]">{task.progress}%</span>
                                         </div>
                                     </td>
-                                    <td className="text-dark-400">{task.deadline}</td>
+                                    <td className="text-[var(--text-muted)]">{task.deadline}</td>
                                     <td>
                                         <Link
                                             to={`/tasks/${task.id}`}
-                                            className="text-primary-400 hover:text-primary-300 text-sm"
+                                            className="text-primary-500 dark:text-primary-400 hover:opacity-80 text-sm"
                                         >
                                             View
                                         </Link>

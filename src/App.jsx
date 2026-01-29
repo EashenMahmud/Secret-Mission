@@ -45,7 +45,7 @@ const PageLoader = () => (
   <div className="flex items-center justify-center h-full">
     <div className="text-center">
       <div className="w-16 h-16 border-4 border-primary-500/30 border-t-primary-500 rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-dark-400">Loading...</p>
+      <p className="text-[var(--text-muted)]">Loading...</p>
     </div>
   </div>
 );
@@ -261,24 +261,31 @@ function App() {
             </Routes>
 
             {/* Toast Notifications */}
-            <ToastContainer
-              position="top-right"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-              toastClassName="bg-dark-800 border border-dark-700"
-            />
+            <ThemeAwareToast />
           </div>
         </DataProvider>
       </ThemeProvider>
     </BrowserRouter>
   );
 }
+
+const ThemeAwareToast = () => {
+  const { theme } = useTheme();
+  return (
+    <ToastContainer
+      position="top-right"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme={theme === 'dark' ? 'dark' : 'light'}
+      toastClassName="!bg-[var(--bg-card)] !text-[var(--text-main)] !border !border-[var(--border-main)] shadow-xl"
+    />
+  );
+};
 
 export default App;

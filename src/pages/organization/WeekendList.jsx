@@ -50,10 +50,10 @@ const CustomToolbar = (toolbar) => {
         const date = toolbar.date;
         return (
             <div className="flex flex-col">
-                <span className="text-2xl font-black text-slate-800 tracking-tight">
+                <span className="text-2xl font-black text-[var(--text-main)] tracking-tight">
                     {format(date, 'MMMM')}
                 </span>
-                <span className="text-sm font-bold text-indigo-500 uppercase tracking-widest leading-none">
+                <span className="text-sm font-bold text-primary-500 uppercase tracking-widest leading-none">
                     {format(date, 'yyyy')}
                 </span>
             </div>
@@ -61,25 +61,25 @@ const CustomToolbar = (toolbar) => {
     };
 
     return (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-white/50 backdrop-blur-md p-4 rounded-3xl border border-white/20 shadow-xl shadow-indigo-500/5">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-[var(--bg-card)]/50 backdrop-blur-md p-4 rounded-3xl border border-[var(--border-main)]/50 shadow-xl shadow-primary-500/5">
             <div className="flex items-center gap-6">
                 {label()}
-                <div className="flex items-center bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/50">
+                <div className="flex items-center bg-[var(--bg-app)]/80 p-1.5 rounded-2xl border border-[var(--border-main)]/50">
                     <button
                         onClick={goToBack}
-                        className="p-2 hover:bg-white hover:text-indigo-600 rounded-xl transition-all duration-300 text-slate-500 hover:shadow-lg active:scale-90"
+                        className="p-2 hover:bg-[var(--bg-card)] hover:text-primary-600 rounded-xl transition-all duration-300 text-[var(--text-muted)] hover:shadow-lg active:scale-90"
                     >
                         <ChevronLeft className="h-5 w-5" />
                     </button>
                     <button
                         onClick={goToToday}
-                        className="px-4 py-2 hover:bg-white hover:text-indigo-600 rounded-xl transition-all duration-300 text-sm font-bold text-slate-600 hover:shadow-lg"
+                        className="px-4 py-2 hover:bg-[var(--bg-card)] hover:text-primary-600 rounded-xl transition-all duration-300 text-sm font-bold text-[var(--text-main)] hover:shadow-lg"
                     >
                         Today
                     </button>
                     <button
                         onClick={goToNext}
-                        className="p-2 hover:bg-white hover:text-indigo-600 rounded-xl transition-all duration-300 text-slate-500 hover:shadow-lg active:scale-90"
+                        className="p-2 hover:bg-[var(--bg-card)] hover:text-primary-600 rounded-xl transition-all duration-300 text-[var(--text-muted)] hover:shadow-lg active:scale-90"
                     >
                         <ChevronRight className="h-5 w-5" />
                     </button>
@@ -87,7 +87,7 @@ const CustomToolbar = (toolbar) => {
             </div>
 
             <div className="flex items-center gap-3">
-                <div className="h-10 w-[1px] bg-slate-200 mx-2 hidden sm:block"></div>
+                <div className="h-10 w-[1px] bg-[var(--border-main)] mx-2 hidden sm:block"></div>
                 <div className="flex items-center gap-2">
                     {/* <div className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center text-white shadow-lg shadow-slate-900/20 cursor-pointer hover:scale-105 transition-transform">
                         <LayoutGrid className="h-5 w-5" />
@@ -192,14 +192,14 @@ const WeekendList = () => {
             >
                 <div>
                     <div className="flex items-center gap-3 mb-1">
-                        <div className="p-2.5 bg-indigo-600 rounded-2xl shadow-lg shadow-indigo-200">
+                        <div className="p-2.5 bg-primary-600 rounded-2xl shadow-lg shadow-primary-500/20">
                             <CalendarClock className="h-6 w-6 text-white" />
                         </div>
-                        <h1 className="text-3xl font-black text-white tracking-tight">
-                            Holiday <span className="text-indigo-600">&</span> Weekends
+                        <h1 className="text-3xl font-black text-[var(--text-main)] tracking-tight">
+                            Holiday <span className="text-primary-600">&</span> Weekends
                         </h1>
                     </div>
-                    <p className="text-slate-500 text-sm font-medium ml-12">Organization-wide schedule and leave management.</p>
+                    <p className="text-[var(--text-muted)] text-sm font-medium ml-12">Organization-wide schedule and leave management.</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <Button
@@ -222,45 +222,45 @@ const WeekendList = () => {
                     transition={{ delay: 0.1 }}
                     className="xl:col-span-1 space-y-6"
                 >
-                    <Card className="border-none shadow-2xl shadow-indigo-500/5 bg-white rounded-[2rem] overflow-hidden">
+                    <Card className="border-none shadow-2xl shadow-indigo-500/5 bg-[var(--bg-card)] rounded-[2rem] overflow-hidden">
                         <CardBody className="p-8 space-y-8">
                             <div>
-                                <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                                    <span className="w-8 h-[2px] bg-slate-200"></span>
+                                <h3 className="text-xs font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                                    <span className="w-8 h-[2px] bg-[var(--border-main)]"></span>
                                     Legend
                                 </h3>
                                 <div className="space-y-4">
-                                    <div className="group flex items-center gap-4 p-3 rounded-2xl hover:bg-blue-50 transition-colors cursor-default border border-transparent hover:border-blue-100">
-                                        <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform">
+                                    <div className="group flex items-center gap-4 p-3 rounded-2xl hover:bg-blue-500/10 transition-colors cursor-default border border-transparent hover:border-blue-500/20">
+                                        <div className="w-12 h-12 rounded-2xl bg-primary-600 flex items-center justify-center text-white shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform">
                                             <CalendarIcon className="h-6 w-6" />
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-sm font-bold text-slate-700">Public Holiday</span>
-                                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Leave Day</span>
+                                            <span className="text-sm font-bold text-[var(--text-main)]">Public Holiday</span>
+                                            <span className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-wider">Leave Day</span>
                                         </div>
                                     </div>
-                                    <div className="group flex items-center gap-4 p-3 rounded-2xl hover:bg-emerald-50 transition-colors cursor-default border border-transparent hover:border-emerald-100">
-                                        <div className="w-12 h-12 rounded-2xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-200 group-hover:scale-110 transition-transform">
+                                    <div className="group flex items-center gap-4 p-3 rounded-2xl hover:bg-emerald-500/10 transition-colors cursor-default border border-transparent hover:border-emerald-500/20">
+                                        <div className="w-12 h-12 rounded-2xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
                                             <CalendarIcon className="h-6 w-6" />
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-sm font-bold text-slate-700">Weekly Weekend</span>
-                                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Recurring</span>
+                                            <span className="text-sm font-bold text-[var(--text-main)]">Weekly Weekend</span>
+                                            <span className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-wider">Recurring</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="relative overflow-hidden bg-slate-900 rounded-[2rem] p-6 text-white group cursor-pointer active:scale-[0.98] transition-transform shadow-2xl shadow-slate-900/20">
+                            <div className="relative overflow-hidden bg-[var(--bg-card)] rounded-[2rem] p-6 text-[var(--text-main)] group cursor-pointer active:scale-[0.98] transition-transform shadow-2xl shadow-primary-500/5">
                                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                     <Info className="h-20 w-20 rotate-12" />
                                 </div>
                                 <div className="relative z-10 space-y-3">
-                                    <div className="flex items-center gap-2 text-indigo-400 font-black text-[10px] uppercase tracking-widest">
+                                    <div className="flex items-center gap-2 text-primary-400 font-black text-[10px] uppercase tracking-widest">
                                         <Info className="h-3 w-3" />
                                         <span>Pro Tip</span>
                                     </div>
-                                    <p className="text-sm font-medium leading-relaxed text-slate-300 italic">
+                                    <p className="text-sm font-medium leading-relaxed text-[var(--text-muted)] italic">
                                         Select any date slot on the calendar grid to instantly open the holiday creation form.
                                     </p>
                                 </div>
@@ -275,7 +275,7 @@ const WeekendList = () => {
                     transition={{ delay: 0.2 }}
                     className="xl:col-span-3"
                 >
-                    <Card className="border-none shadow-2xl shadow-indigo-500/5 bg-white rounded-[2.5rem] overflow-hidden border border-slate-100">
+                    <Card className="border-none shadow-2xl shadow-primary-500/5 bg-[var(--bg-card)] rounded-[2.5rem] overflow-hidden border border-[var(--border-main)]">
                         <CardBody className="p-2 sm:p-6 pb-2">
                             <div style={{ height: '750px' }} className="calendar-container">
                                 <Calendar

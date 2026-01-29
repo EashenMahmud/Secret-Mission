@@ -66,7 +66,7 @@ const ProjectDetail = () => {
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center">
                     <Loader2 className="w-12 h-12 text-primary-500 animate-spin mx-auto mb-4" />
-                    <p className="text-slate-400">Loading project details...</p>
+                    <p className="text-[var(--text-muted)]">Loading project details...</p>
                 </div>
             </div>
         );
@@ -75,8 +75,8 @@ const ProjectDetail = () => {
     if (!project) {
         return (
             <div className="card text-center py-12">
-                <h2 className="text-2xl font-bold text-white mb-2">Project not found</h2>
-                <p className="text-slate-400 mb-6">The project you're looking for doesn't exist.</p>
+                <h2 className="text-2xl font-bold text-[var(--text-main)] mb-2">Project not found</h2>
+                <p className="text-[var(--text-muted)] mb-6">The project you're looking for doesn't exist.</p>
                 <Button onClick={() => navigate('/projects')}>
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Back to Projects
@@ -91,7 +91,7 @@ const ProjectDetail = () => {
             <div className="flex items-center justify-between">
                 <button
                     onClick={() => navigate('/projects')}
-                    className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+                    className="flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
                 >
                     <ArrowLeft className="w-5 h-5" />
                     Back to Projects
@@ -113,7 +113,7 @@ const ProjectDetail = () => {
                             <FolderKanban className="h-5 w-5 text-primary-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <h1 className="text-xl font-bold text-white truncate mb-1.5">{project.name}</h1>
+                            <h1 className="text-xl font-bold text-[var(--text-main)] truncate mb-1.5">{project.name}</h1>
                             <div className="flex items-center gap-2 flex-wrap mb-2">
                                 <Badge variant={getStatusColor(project.status)}>
                                     {project.status?.replace('_', ' ')}
@@ -129,17 +129,17 @@ const ProjectDetail = () => {
                                 )}
                             </div>
                             {project.description && (
-                                <p className="text-slate-300 text-xs leading-relaxed line-clamp-2 mb-3">
+                                <p className="text-[var(--text-muted)] text-xs leading-relaxed line-clamp-2 mb-3">
                                     {project.description}
                                 </p>
                             )}
                         </div>
                         <div className="flex-shrink-0 w-32">
                             <div className="flex justify-between items-center mb-1">
-                                <span className="text-xs font-medium text-slate-400">Progress</span>
-                                <span className="text-sm font-bold text-white">{project.progress ?? 0}%</span>
+                                <span className="text-xs font-medium text-[var(--text-muted)]">Progress</span>
+                                <span className="text-sm font-bold text-[var(--text-main)]">{project.progress ?? 0}%</span>
                             </div>
-                            <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                            <div className="w-full bg-[var(--bg-app)] rounded-full h-2 overflow-hidden">
                                 <div
                                     className="bg-gradient-to-r from-primary-500 to-primary-400 h-2 rounded-full transition-all duration-300"
                                     style={{ width: `${project.progress ?? 0}%` }}
@@ -149,22 +149,22 @@ const ProjectDetail = () => {
                     </div>
 
                     {/* Meta row: vendor, type, dates, created - compact */}
-                    <div className="mt-auto pt-3 border-t border-slate-700/50 grid grid-cols-2 gap-2 text-xs">
+                    <div className="mt-auto pt-3 border-t border-[var(--border-main)]/50 grid grid-cols-2 gap-2 text-xs">
                         {project.vendor && (
-                            <div className="flex items-center gap-1.5 text-slate-400">
-                                <Building2 className="h-3.5 w-3.5 flex-shrink-0 text-slate-500" />
+                            <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
+                                <Building2 className="h-3.5 w-3.5 flex-shrink-0 text-[var(--text-muted)]" />
                                 <span className="truncate" title={project.vendor.name}>{project.vendor.name}</span>
                             </div>
                         )}
                         {project.project_type && (
-                            <div className="flex items-center gap-1.5 text-slate-400">
-                                <TrendingUp className="h-3.5 w-3.5 flex-shrink-0 text-slate-500" />
+                            <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
+                                <TrendingUp className="h-3.5 w-3.5 flex-shrink-0 text-[var(--text-muted)]" />
                                 <span className="truncate">{project.project_type.name}</span>
                             </div>
                         )}
                         {(project.start_date || project.end_date) && (
-                            <div className="flex items-center gap-1.5 text-slate-400">
-                                <Calendar className="h-3.5 w-3.5 flex-shrink-0 text-slate-500" />
+                            <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
+                                <Calendar className="h-3.5 w-3.5 flex-shrink-0 text-[var(--text-muted)]" />
                                 <span className="truncate">
                                     {project.start_date && <DateTime date={project.start_date} variant="dateOnly" />}
                                     {project.start_date && project.end_date && ' – '}
@@ -173,8 +173,8 @@ const ProjectDetail = () => {
                             </div>
                         )}
                         {project.created_by && (
-                            <div className="flex items-center gap-1.5 text-slate-400">
-                                <User className="h-3.5 w-3.5 flex-shrink-0 text-slate-500" />
+                            <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
+                                <User className="h-3.5 w-3.5 flex-shrink-0 text-[var(--text-muted)]" />
                                 <span className="truncate">
                                     {project.created_by.name || project.created_by.email || `User #${project.created_by.id ?? project.created_by}`}
                                 </span>
@@ -193,7 +193,7 @@ const ProjectDetail = () => {
             <div className="card overflow-hidden">
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-0">
                     {/* Planning sidebar (20%) */}
-                    <div className="min-w-0 lg:col-span-1 lg:border-r border-dark-700 lg:pr-6">
+                    <div className="min-w-0 lg:col-span-1 lg:border-r border-[var(--border-main)] lg:pr-6">
                         <ProjectPlanningSection
                             projectId={id}
                             projectStart={project.start_date}
