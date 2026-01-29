@@ -4,7 +4,7 @@ import { cn } from '../../lib/utils';
 const Card = ({ children, className, ...props }) => {
     return (
         <div
-            className={cn('bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden', className)}
+            className={cn('bg-[var(--bg-card)] rounded-xl border border-[var(--border-main)] shadow-sm overflow-hidden transition-colors duration-300', className)}
             {...props}
         >
             {children}
@@ -14,10 +14,10 @@ const Card = ({ children, className, ...props }) => {
 
 const CardHeader = ({ title, subtitle, action, className, ...props }) => {
     return (
-        <div className={cn('px-6 py-4 border-b border-gray-100 flex items-center justify-between', className)} {...props}>
+        <div className={cn('px-6 py-4 border-b border-[var(--border-main)]/50 flex items-center justify-between', className)} {...props}>
             <div>
-                {title && <h3 className="text-lg font-semibold text-gray-900 leading-none">{title}</h3>}
-                {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+                {title && <h3 className="text-lg font-semibold text-[var(--text-main)] leading-none">{title}</h3>}
+                {subtitle && <p className="text-sm text-[var(--text-muted)] mt-1">{subtitle}</p>}
             </div>
             {action && <div>{action}</div>}
         </div>
@@ -34,7 +34,7 @@ const CardBody = ({ children, className, ...props }) => {
 
 const CardFooter = ({ children, className, ...props }) => {
     return (
-        <div className={cn('px-6 py-4 bg-gray-50 border-t border-gray-100', className)} {...props}>
+        <div className={cn('px-6 py-4 bg-[var(--bg-app)]/50 border-t border-[var(--border-main)]', className)} {...props}>
             {children}
         </div>
     );

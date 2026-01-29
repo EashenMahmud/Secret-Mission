@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { restoreSession } from './store/slices/authSlice';
 import { DataProvider } from './context/DataContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 
 // Layouts
 import MainLayout from './components/layout/MainLayout';
@@ -60,220 +61,222 @@ function App() {
 
   return (
     <BrowserRouter>
-      <DataProvider>
-        <div className="App">
-          <Routes>
-            {/* Public Routes */}
-            <Route
-              path="/login"
-              element={
-                isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
-              }
+      <ThemeProvider>
+        <DataProvider>
+          <div className="App">
+            <Routes>
+              {/* Public Routes */}
+              <Route
+                path="/login"
+                element={
+                  isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
+                }
+              />
+
+              {/* Protected Routes */}
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <MainLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route
+                  path="users"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <Suspense fallback={<PageLoader />}>
+                        <UserList />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="clients"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <Suspense fallback={<PageLoader />}>
+                        <ClientList />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Organization Routes (Admin Only) */}
+                <Route
+                  path="organization/departments"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <Suspense fallback={<PageLoader />}>
+                        <DepartmentList />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="organization/designations"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <Suspense fallback={<PageLoader />}>
+                        <DesignationList />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="organization/employees"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <Suspense fallback={<PageLoader />}>
+                        <EmployeeList />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="organization/project-types"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <Suspense fallback={<PageLoader />}>
+                        <ProjectTypes />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="organization/holidays"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <Suspense fallback={<PageLoader />}>
+                        <WeekendList />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="organization/project-planning-types"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <Suspense fallback={<PageLoader />}>
+                        <ProjectPlanningTypes />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Project Routes */}
+                <Route
+                  path="projects"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <ProjectList />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="projects/:id"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <ProjectDetail />
+                    </Suspense>
+                  }
+                />
+
+                {/* Task Routes */}
+                <Route
+                  path="tasks"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <TaskList />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="tasks/:id"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <TaskDetail />
+                    </Suspense>
+                  }
+                />
+
+                {/* Sprint Routes */}
+                <Route
+                  path="sprints"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <SprintList />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="sprints/:id"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <SprintDashboard />
+                    </Suspense>
+                  }
+                />
+
+                {/* View Routes */}
+                <Route
+                  path="views/calendar"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <CalendarView />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="views/gantt"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <GanttView />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="dev/components"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <ComponentLibrary />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="profile"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <MyProfile />
+                    </Suspense>
+                  }
+                />
+              </Route>
+
+              {/* 404 Route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+
+            {/* Toast Notifications */}
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+              toastClassName="bg-dark-800 border border-dark-700"
             />
-
-            {/* Protected Routes */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route
-                path="users"
-                element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <Suspense fallback={<PageLoader />}>
-                      <UserList />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="clients"
-                element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <Suspense fallback={<PageLoader />}>
-                      <ClientList />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* Organization Routes (Admin Only) */}
-              <Route
-                path="organization/departments"
-                element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <Suspense fallback={<PageLoader />}>
-                      <DepartmentList />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organization/designations"
-                element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <Suspense fallback={<PageLoader />}>
-                      <DesignationList />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organization/employees"
-                element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <Suspense fallback={<PageLoader />}>
-                      <EmployeeList />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organization/project-types"
-                element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <Suspense fallback={<PageLoader />}>
-                      <ProjectTypes />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organization/holidays"
-                element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <Suspense fallback={<PageLoader />}>
-                      <WeekendList />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organization/project-planning-types"
-                element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <Suspense fallback={<PageLoader />}>
-                      <ProjectPlanningTypes />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* Project Routes */}
-              <Route
-                path="projects"
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <ProjectList />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="projects/:id"
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <ProjectDetail />
-                  </Suspense>
-                }
-              />
-
-              {/* Task Routes */}
-              <Route
-                path="tasks"
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <TaskList />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="tasks/:id"
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <TaskDetail />
-                  </Suspense>
-                }
-              />
-
-              {/* Sprint Routes */}
-              <Route
-                path="sprints"
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <SprintList />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="sprints/:id"
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <SprintDashboard />
-                  </Suspense>
-                }
-              />
-
-              {/* View Routes */}
-              <Route
-                path="views/calendar"
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <CalendarView />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="views/gantt"
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <GanttView />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="dev/components"
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <ComponentLibrary />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="profile"
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <MyProfile />
-                  </Suspense>
-                }
-              />
-            </Route>
-
-            {/* 404 Route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-
-          {/* Toast Notifications */}
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-            toastClassName="bg-dark-800 border border-dark-700"
-          />
-        </div>
-      </DataProvider>
+          </div>
+        </DataProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

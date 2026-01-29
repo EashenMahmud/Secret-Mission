@@ -104,8 +104,8 @@ const MyProfile = () => {
                         <UserCheck className="h-7 w-7 text-white" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-black text-dark-100 tracking-tight">Personal <span className="text-primary-500">Profile</span></h1>
-                        <p className="text-dark-400 text-sm font-medium">Manage your personal information and account settings.</p>
+                        <h1 className="text-3xl font-black text-[var(--text-main)] tracking-tight">Personal <span className="text-primary-500">Profile</span></h1>
+                        <p className="text-[var(--text-muted)] text-sm font-medium">Manage your personal information and account settings.</p>
                     </div>
                 </div>
             </motion.div>
@@ -125,10 +125,10 @@ const MyProfile = () => {
                             transition={{ delay: 0.1 }}
                             className="lg:col-span-4 space-y-6"
                         >
-                            <Card className="border-dark-700 bg-dark-900/50 backdrop-blur-xl shadow-2xl rounded-[2.5rem] overflow-hidden">
+                            <Card className="border-[var(--border-main)] bg-[var(--bg-card)] shadow-2xl rounded-[2.5rem] overflow-hidden transition-colors duration-300">
                                 <CardBody className="p-8 flex flex-col items-center">
                                     <div className="relative group mb-6">
-                                        <div className="w-40 h-40 rounded-[2.5rem] overflow-hidden border-4 border-dark-700 shadow-2xl relative">
+                                        <div className="w-40 h-40 rounded-[2.5rem] overflow-hidden border-4 border-[var(--border-main)] shadow-2xl relative">
                                             {userData.profile_picture ? (
                                                 <img
                                                     src={getImageUrl(userData.profile_picture)}
@@ -136,7 +136,7 @@ const MyProfile = () => {
                                                     className="w-full h-full object-cover"
                                                 />
                                             ) : (
-                                                <div className="w-full h-full bg-dark-800 flex items-center justify-center italic text-dark-500">
+                                                <div className="w-full h-full bg-[var(--bg-app)] flex items-center justify-center italic text-[var(--text-muted)]">
                                                     No Avatar
                                                 </div>
                                             )}
@@ -144,20 +144,20 @@ const MyProfile = () => {
                                     </div>
 
                                     <div className="text-center space-y-2 mb-8">
-                                        <h2 className="text-2xl font-black text-dark-100 uppercase tracking-tight">{userData.name}</h2>
-                                        <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-black uppercase tracking-[0.2em]">
+                                        <h2 className="text-2xl font-black text-[var(--text-main)] uppercase tracking-tight">{userData.name}</h2>
+                                        <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-600 dark:text-primary-400 text-[10px] font-black uppercase tracking-[0.2em]">
                                             {userData.user_type}
                                         </div>
                                     </div>
 
-                                    <div className="w-full pt-8 border-t border-dark-700 space-y-4">
+                                    <div className="w-full pt-8 border-t border-[var(--border-main)] space-y-4">
                                         <div className="flex items-center justify-between text-xs">
-                                            <span className="text-dark-400 font-bold uppercase tracking-wider">Employee Code</span>
-                                            <span className="text-primary-400 font-black">{userData.employee_code}</span>
+                                            <span className="text-[var(--text-muted)] font-bold uppercase tracking-wider">Employee Code</span>
+                                            <span className="text-primary-500 dark:text-primary-400 font-black">{userData.employee_code}</span>
                                         </div>
                                         <div className="flex items-center justify-between text-xs">
-                                            <span className="text-dark-400 font-bold uppercase tracking-wider">Department</span>
-                                            <span className="text-dark-100 font-bold">{userData.department?.name || 'N/A'}</span>
+                                            <span className="text-[var(--text-muted)] font-bold uppercase tracking-wider">Department</span>
+                                            <span className="text-[var(--text-main)] font-bold">{userData.department?.name || 'N/A'}</span>
                                         </div>
                                     </div>
                                 </CardBody>
@@ -181,44 +181,44 @@ const MyProfile = () => {
                             transition={{ delay: 0.2 }}
                             className="lg:col-span-8 space-y-8"
                         >
-                            <Card className="border-dark-700 bg-dark-900 shadow-xl rounded-[2.5rem]">
+                            <Card className="border-[var(--border-main)] bg-[var(--bg-card)] shadow-xl rounded-[2.5rem] transition-colors duration-300">
                                 <CardBody className="p-8 space-y-10">
                                     {/* Section 1: Basic Info */}
                                     <div className="space-y-6">
                                         <div className="flex items-center gap-3 mb-2">
-                                            <div className="p-2 bg-dark-800 rounded-xl">
-                                                <User className="w-5 h-5 text-primary-400" />
+                                            <div className="p-2 bg-[var(--bg-app)] rounded-xl">
+                                                <User className="w-5 h-5 text-primary-500" />
                                             </div>
-                                            <h3 className="text-lg font-bold text-dark-100 tracking-tight underline underline-offset-8 decoration-primary-500/30">Basic Identification</h3>
+                                            <h3 className="text-lg font-bold text-[var(--text-main)] tracking-tight underline underline-offset-8 decoration-primary-500/30">Basic Identification</h3>
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <Input label="Display Name" labelClassName="text-white" name="name" icon={<User size={18} />} placeholder="Your Name" />
-                                            <Input label="Email Address" labelClassName="text-white" name="email" type="email" icon={<Mail size={18} />} disabled />
+                                            <Input label="Display Name" labelClassName="text-[var(--text-main)]" name="name" icon={<User size={18} />} placeholder="Your Name" />
+                                            <Input label="Email Address" labelClassName="text-[var(--text-main)]" name="email" type="email" icon={<Mail size={18} />} disabled />
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <Input label="Phone Number" labelClassName="text-white" name="phone" icon={<Phone size={18} />} placeholder="+880..." />
-                                            <Input label="Home Address" labelClassName="text-white" name="address" icon={<MapPin size={18} />} placeholder="Dhaka, Bangladesh" />
+                                            <Input label="Phone Number" labelClassName="text-[var(--text-main)]" name="phone" icon={<Phone size={18} />} placeholder="+880..." />
+                                            <Input label="Home Address" labelClassName="text-[var(--text-main)]" name="address" icon={<MapPin size={18} />} placeholder="Dhaka, Bangladesh" />
                                         </div>
                                     </div>
 
                                     {/* Section 2: Account Security */}
-                                    <div className="space-y-6 pt-10 border-t border-dark-800">
+                                    <div className="space-y-6 pt-10 border-t border-[var(--border-main)]">
                                         <div className="flex items-center gap-3 mb-2">
-                                            <div className="p-2 bg-dark-800 rounded-xl">
-                                                <Lock className="w-5 h-5 text-primary-400" />
+                                            <div className="p-2 bg-[var(--bg-app)] rounded-xl">
+                                                <Lock className="w-5 h-5 text-primary-500" />
                                             </div>
-                                            <h3 className="text-lg font-bold text-dark-100 tracking-tight underline underline-offset-8 decoration-primary-500/30">Account Security</h3>
+                                            <h3 className="text-lg font-bold text-[var(--text-main)] tracking-tight underline underline-offset-8 decoration-primary-500/30">Account Security</h3>
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <Input label="Update Password" labelClassName="text-white" name="password" type="password" icon={<Lock size={18} />} placeholder="••••••••" helperText="Leave blank if you don't want to change it." />
+                                            <Input label="Update Password" labelClassName="text-[var(--text-main)]" name="password" type="password" icon={<Lock size={18} />} placeholder="••••••••" helperText="Leave blank if you don't want to change it." />
                                             <div className="max-w-md">
                                                 <ImageUpload
                                                     name="profile_picture"
                                                     label="Change Profile Photo"
-                                                    labelClassName="text-white"
+                                                    labelClassName="text-[var(--text-main)]"
                                                 />
                                             </div>
 

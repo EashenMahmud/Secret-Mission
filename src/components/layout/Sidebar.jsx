@@ -43,14 +43,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             <aside
                 className={`
           fixed lg:static inset-y-0 left-0 z-40
-          w-64 bg-dark-900 border-r border-dark-700
-          transform transition-transform duration-300 ease-in-out
+          w-64 bg-[var(--bg-sidebar)] border-r border-[var(--border-main)]
+          transform transition-all duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           flex flex-col
         `}
             >
                 {/* Logo */}
-                <div className="h-16 flex items-center justify-between px-6 border-b border-dark-700">
+                <div className="h-16 flex items-center justify-between px-6 border-b border-[var(--border-main)]">
                     <Link to="/dashboard" className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-sm">SM</span>
@@ -83,8 +83,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         w-full flex items-center justify-between px-4 py-3 rounded-lg
                         transition-all duration-200
                         ${active
-                                                    ? 'bg-primary-500/20 text-primary-300 border border-primary-500/30'
-                                                    : 'text-dark-300 hover:bg-dark-800 hover:text-dark-100'
+                                                    ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20 dark:bg-primary-500/20 dark:text-primary-300 dark:border-primary-500/30'
+                                                    : 'text-[var(--text-muted)] hover:bg-[var(--bg-app)] hover:text-[var(--text-main)]'
                                                 }
                       `}
                                         >
@@ -110,9 +110,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                                             className={`
                                 flex items-center gap-3 px-4 py-2 rounded-lg
                                 transition-all duration-200
-                                ${childActive
-                                                                    ? 'bg-primary-500/20 text-primary-300 border border-primary-500/30'
-                                                                    : 'text-dark-400 hover:bg-dark-800 hover:text-dark-200'
+                                 ${childActive
+                                                                    ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20 dark:bg-primary-500/20 dark:text-primary-300 dark:border-primary-500/30'
+                                                                    : 'text-[var(--text-muted)] hover:bg-[var(--bg-app)] hover:text-[var(--text-main)]'
                                                                 }
                               `}
                                                         >
@@ -130,9 +130,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                         className={`
                       flex items-center gap-3 px-4 py-3 rounded-lg
                       transition-all duration-200
-                      ${active
-                                                ? 'bg-primary-500/20 text-primary-300 border border-primary-500/30 shadow-glow'
-                                                : 'text-dark-300 hover:bg-dark-800 hover:text-dark-100'
+                       ${active
+                                                ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20 shadow-sm dark:bg-primary-500/20 dark:text-primary-300 dark:border-primary-500/30 dark:shadow-glow'
+                                                : 'text-[var(--text-muted)] hover:bg-[var(--bg-app)] hover:text-[var(--text-main)]'
                                             }
                     `}
                                     >
@@ -146,9 +146,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 </nav>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-dark-700">
-                    <div className="px-4 py-3 bg-dark-800/50 rounded-lg">
-                        <p className="text-xs text-dark-400">Version 1.0.0</p>
+                <div className="p-4 border-t border-[var(--border-main)]">
+                    <div className="px-4 py-3 bg-[var(--bg-app)] rounded-lg">
+                        <p className="text-xs text-[var(--text-muted)]">Version 1.0.0</p>
                     </div>
                 </div>
             </aside>

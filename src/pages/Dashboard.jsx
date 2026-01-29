@@ -83,17 +83,17 @@ const Dashboard = () => {
             <div className="card">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold text-dark-50 mb-2">
+                        <h1 className="text-3xl font-bold text-[var(--text-main)] mb-2">
                             Welcome back, {user?.name}! 👋
                         </h1>
-                        <p className="text-dark-400">
+                        <p className="text-[var(--text-muted)]">
                             Here's what's happening with your projects today.
                         </p>
                     </div>
                     <div className="hidden md:block">
                         <div className="text-right">
-                            <p className="text-sm text-dark-400">Role</p>
-                            <p className="text-lg font-semibold text-primary-400 capitalize">{role}</p>
+                            <p className="text-sm text-[var(--text-muted)]">Role</p>
+                            <p className="text-lg font-semibold text-primary-500 dark:text-primary-400 capitalize">{role}</p>
                         </div>
                     </div>
                 </div>
@@ -111,8 +111,8 @@ const Dashboard = () => {
                         >
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-dark-400 text-sm mb-1">{stat.label}</p>
-                                    <p className="text-3xl font-bold text-dark-50">{stat.value}</p>
+                                    <p className="text-[var(--text-muted)] text-sm mb-1">{stat.label}</p>
+                                    <p className="text-3xl font-bold text-[var(--text-main)]">{stat.value}</p>
                                 </div>
                                 <div className={`w-14 h-14 bg-gradient-to-br ${colorClasses[stat.color]} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                                     <Icon className="w-7 h-7 text-white" />
@@ -128,10 +128,10 @@ const Dashboard = () => {
                 {/* Recent Tasks */}
                 <div className="card">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-semibold text-dark-50">
+                        <h2 className="text-xl font-semibold text-[var(--text-main)]">
                             {role === 'admin' ? 'Recent Tasks' : 'My Active Tasks'}
                         </h2>
-                        <Link to="/tasks" className="text-primary-400 hover:text-primary-300 text-sm font-medium">
+                        <Link to="/tasks" className="text-primary-500 dark:text-primary-400 hover:opacity-80 text-sm font-medium">
                             View All →
                         </Link>
                     </div>
@@ -139,15 +139,15 @@ const Dashboard = () => {
                         {(role === 'admin' ? tasks.slice(0, 5) : myActiveTasks.slice(0, 5)).map((task) => (
                             <div
                                 key={task.id}
-                                className="flex items-center gap-3 p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors"
+                                className="flex items-center gap-3 p-3 bg-[var(--bg-app)] rounded-lg hover:bg-[var(--border-muted)] transition-colors"
                             >
                                 <div className={`w-2 h-2 rounded-full ${task.priority === 'high' ? 'bg-red-500' :
                                     task.priority === 'medium' ? 'bg-yellow-500' :
                                         'bg-green-500'
                                     }`}></div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-dark-200 font-medium truncate">{task.title}</p>
-                                    <p className="text-dark-500 text-xs">
+                                    <p className="text-[var(--text-main)] font-medium truncate">{task.title}</p>
+                                    <p className="text-[var(--text-muted)] text-xs">
                                         {task.status.replace('_', ' ').toUpperCase()}
                                     </p>
                                 </div>
@@ -172,8 +172,8 @@ const Dashboard = () => {
                 {/* Active Projects */}
                 <div className="card">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-semibold text-dark-50">Active Projects</h2>
-                        <Link to="/projects" className="text-primary-400 hover:text-primary-300 text-sm font-medium">
+                        <h2 className="text-xl font-semibold text-[var(--text-main)]">Active Projects</h2>
+                        <Link to="/projects" className="text-primary-500 dark:text-primary-400 hover:opacity-80 text-sm font-medium">
                             View All →
                         </Link>
                     </div>
@@ -181,13 +181,13 @@ const Dashboard = () => {
                         {projects.filter(p => p.status === 'in_progress').slice(0, 5).map((project) => (
                             <div
                                 key={project.id}
-                                className="p-4 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors"
+                                className="p-4 bg-[var(--bg-app)] rounded-lg hover:bg-[var(--border-muted)] transition-colors"
                             >
                                 <div className="flex items-center justify-between mb-2">
-                                    <h3 className="text-dark-200 font-medium">{project.name}</h3>
+                                    <h3 className="text-[var(--text-main)] font-medium">{project.name}</h3>
                                     <span className="badge badge-primary">{project.progress}%</span>
                                 </div>
-                                <div className="w-full bg-dark-700 rounded-full h-2">
+                                <div className="w-full bg-[var(--border-main)] rounded-full h-2">
                                     <div
                                         className="bg-gradient-to-r from-primary-500 to-secondary-500 h-2 rounded-full transition-all duration-300"
                                         style={{ width: `${project.progress}%` }}
