@@ -19,6 +19,7 @@ import ProjectFormModal from './ProjectFormModal';
 import ProjectPlanningSection from './planning/ProjectPlanningSection';
 import ProjectManpowerSection from './planning/ProjectManpowerSection';
 import ProjectGanttCustom from './planning/ProjectGanttCustom';
+import ProjectModuleKanban from './modules/ProjectModuleKanban';
 import DateTime from '../../components/ui/DateTime';
 
 const ProjectDetail = () => {
@@ -216,6 +217,9 @@ const ProjectDetail = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Project Modules Kanban Board */}
+            <ProjectModuleKanban projectId={id} onRefresh={refetch} />
 
             <ProjectFormModal
                 isOpen={isEditModalOpen}

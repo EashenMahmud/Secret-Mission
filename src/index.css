@@ -164,15 +164,21 @@
 
   /* Thin scrollbar for compact lists */
   .custom-scrollbar-thin::-webkit-scrollbar {
-    @apply w-1.5;
+    width: 6px;
   }
 
   .custom-scrollbar-thin::-webkit-scrollbar-track {
-    @apply bg-dark-900;
+    background: var(--bg-app);
+    border-radius: 3px;
   }
 
   .custom-scrollbar-thin::-webkit-scrollbar-thumb {
-    @apply bg-dark-700 rounded-full hover:bg-dark-600;
+    background: var(--border-main);
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
   }
 
   /* Extra thin scrollbar for Gantt chart */

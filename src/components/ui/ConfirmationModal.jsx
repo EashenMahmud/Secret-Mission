@@ -26,12 +26,14 @@ const ConfirmationModal = ({
             <div className="flex flex-col items-center text-center">
                 <div className={cn(
                     'p-3 rounded-full mb-4',
-                    variant === 'danger' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'
+                    variant === 'danger' 
+                        ? 'bg-red-500/20 text-red-500 dark:bg-red-500/30 dark:text-red-400' 
+                        : 'bg-yellow-500/20 text-yellow-500 dark:bg-yellow-500/30 dark:text-yellow-400'
                 )}>
                     <AlertTriangle className="h-6 w-6" />
                 </div>
 
-                <p className="text-gray-600 mb-8">{message}</p>
+                <p className="text-[var(--text-main)] mb-8">{message}</p>
 
                 <div className="flex items-center gap-3 w-full">
                     <Button

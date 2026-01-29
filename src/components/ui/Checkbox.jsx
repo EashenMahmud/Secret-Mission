@@ -14,22 +14,26 @@ const Checkbox = ({ label, helperText, className, ...props }) => {
                     {...props}
                     type="checkbox"
                     className={cn(
-                        'h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 transition-all cursor-pointer',
-                        isError && 'border-red-500 focus:ring-red-500',
-                        props.disabled && 'bg-gray-50 cursor-not-allowed'
+                        'h-4 w-4 rounded border-[var(--border-main)] text-primary-600 focus:ring-primary-600 focus:ring-2 transition-all cursor-pointer bg-[var(--bg-card)]',
+                        'dark:border-dark-600 dark:bg-dark-800 dark:checked:bg-primary-500 dark:checked:border-primary-500',
+                        isError && 'border-red-500 focus:ring-red-500 dark:border-red-500',
+                        props.disabled && 'opacity-50 cursor-not-allowed'
                     )}
                 />
                 {label && (
-                    <label htmlFor={props.id || props.name} className="text-sm font-medium text-gray-900 cursor-pointer select-none">
+                    <label 
+                        htmlFor={props.id || props.name} 
+                        className="text-sm font-medium text-[var(--text-main)] cursor-pointer select-none"
+                    >
                         {label}
                     </label>
                 )}
             </div>
             {isError && (
-                <p className="mt-1 text-xs text-red-600">{meta.error}</p>
+                <p className="mt-1 text-xs text-red-500 dark:text-red-400 ml-7">{meta.error}</p>
             )}
             {helperText && !isError && (
-                <p className="mt-1 text-xs text-gray-500 ml-7">{helperText}</p>
+                <p className="mt-1 text-xs text-[var(--text-muted)] ml-7">{helperText}</p>
             )}
         </div>
     );
