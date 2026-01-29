@@ -61,12 +61,12 @@ const ProjectTypeForm = ({ isOpen, onClose, type, onSuccess }) => {
             >
                 {({ isSubmitting }) => (
                     <Form className="space-y-6 pt-2">
-                        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex flex-col items-center mb-4">
-                            <div className="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center mb-4 border border-amber-100">
-                                <ListTodo className="w-8 h-8 text-amber-500" />
+                        <div className="bg-[var(--bg-app)] p-6 rounded-2xl border border-[var(--border-main)] flex flex-col items-center mb-4">
+                            <div className="w-16 h-16 rounded-2xl bg-yellow-500/10 flex items-center justify-center mb-4 border border-yellow-500/20">
+                                <ListTodo className="w-8 h-8 text-yellow-500" />
                             </div>
-                            <h3 className="text-lg font-bold text-slate-900">Type Configuration</h3>
-                            <p className="text-xs text-slate-500 text-center mt-1">
+                            <h3 className="text-lg font-bold text-[var(--text-main)]">Type Configuration</h3>
+                            <p className="text-xs text-[var(--text-muted)] text-center mt-1">
                                 Define the project category name and status.
                             </p>
                         </div>
@@ -78,15 +78,15 @@ const ProjectTypeForm = ({ isOpen, onClose, type, onSuccess }) => {
                             required
                         />
 
-                        <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div className="flex items-center justify-between p-4 bg-[var(--bg-app)] rounded-xl border border-[var(--border-main)]">
                             <div className="flex flex-col">
-                                <span className="text-sm font-semibold text-slate-900">Active Status</span>
-                                <span className="text-xs text-slate-500">Enable or disable this type</span>
+                                <span className="text-sm font-semibold text-[var(--text-main)]">Active Status</span>
+                                <span className="text-xs text-[var(--text-muted)]">Enable or disable this type</span>
                             </div>
                             <Switch name="is_active" />
                         </div>
 
-                        <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 -mx-6 px-6 -mb-6 pb-6 bg-slate-50 rounded-b-xl">
+                        <div className="flex justify-end gap-3 pt-4 border-t border-[var(--border-main)] -mx-6 px-6 -mb-6 pb-6 bg-[var(--bg-app)] rounded-b-xl">
                             <Button variant="ghost" onClick={onClose} type="button">Discard</Button>
                             <Button type="submit" isLoading={isSubmitting || isLoading} className="px-8">
                                 {isEditing ? 'Update Type' : 'Create Type'}

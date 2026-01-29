@@ -43,7 +43,7 @@ const PlanningTypeModal = ({ isOpen, onClose, planningType, onSuccess }) => {
                 }).unwrap();
                 toast.success('Planning type created successfully');
             }
-            
+
             onSuccess();
             onClose();
         } catch (err) {
@@ -74,7 +74,7 @@ const PlanningTypeModal = ({ isOpen, onClose, planningType, onSuccess }) => {
                             placeholder="Enter planning type name"
                             required
                         />
-                        
+
                         <TextArea
                             label="Description"
                             name="description"
@@ -83,8 +83,8 @@ const PlanningTypeModal = ({ isOpen, onClose, planningType, onSuccess }) => {
                             required
                         />
 
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <span className="text-sm font-medium text-gray-700">Active Status</span>
+                        <div className="flex items-center justify-between p-3 bg-[var(--bg-app)] rounded-lg">
+                            <span className="text-sm font-medium text-[var(--text-main)]">Active Status</span>
                             <Switch name="is_active" />
                         </div>
 

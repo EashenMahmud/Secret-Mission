@@ -68,12 +68,12 @@ const DesignationForm = ({ isOpen, onClose, designation, onSuccess }) => {
             >
                 {({ isSubmitting }) => (
                     <Form className="space-y-6 pt-2">
-                        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex flex-col items-center mb-4">
-                            <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mb-4 border border-emerald-100">
-                                <Briefcase className="w-8 h-8 text-emerald-500" />
+                        <div className="bg-[var(--bg-app)] p-6 rounded-2xl border border-[var(--border-main)] flex flex-col items-center mb-4">
+                            <div className="w-16 h-16 rounded-2xl bg-green-500/10 flex items-center justify-center mb-4 border border-green-500/20">
+                                <Briefcase className="w-8 h-8 text-green-500" />
                             </div>
-                            <h3 className="text-lg font-bold text-slate-900">Designation Details</h3>
-                            <p className="text-xs text-slate-500 text-center mt-1">
+                            <h3 className="text-lg font-bold text-[var(--text-main)]">Designation Details</h3>
+                            <p className="text-xs text-[var(--text-muted)] text-center mt-1">
                                 Define the role title and identification code.
                             </p>
                         </div>
@@ -94,15 +94,15 @@ const DesignationForm = ({ isOpen, onClose, designation, onSuccess }) => {
                             />
                         </div>
 
-                        <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div className="flex items-center justify-between p-4 bg-[var(--bg-app)] rounded-xl border border-[var(--border-main)]">
                             <div className="flex flex-col">
-                                <span className="text-sm font-semibold text-slate-900">Active Status</span>
-                                <span className="text-xs text-slate-500">Enable or disable this role</span>
+                                <span className="text-sm font-semibold text-[var(--text-main)]">Active Status</span>
+                                <span className="text-xs text-[var(--text-muted)]">Enable or disable this role</span>
                             </div>
                             <Switch name="is_active" />
                         </div>
 
-                        <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 -mx-6 px-6 -mb-6 pb-6 bg-slate-50 rounded-b-xl">
+                        <div className="flex justify-end gap-3 pt-4 border-t border-[var(--border-main)] -mx-6 px-6 -mb-6 pb-6 bg-[var(--bg-app)] rounded-b-xl">
                             <Button variant="ghost" onClick={onClose} type="button">Discard</Button>
                             <Button type="submit" isLoading={isSubmitting || isLoading} className="px-8">
                                 {isEditing ? 'Update Designation' : 'Create Designation'}
