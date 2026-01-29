@@ -319,31 +319,33 @@ const WeekendList = () => {
                     font-family: inherit;
                 }
                 .calendar-container .rbc-month-view {
-                    border: 1px solid #9fc7f0ff !important;
+                    border: 1px solid var(--border-main) !important;
                     border-radius: 0 !important;
+                    background-color: var(--bg-card) !important;
                 }
                 .calendar-container .rbc-header {
-                    border-bottom: 1px solid #9fc7f0ff !important;
-                    border-left: 1px solid #9fc7f0ff !important;
+                    border-bottom: 1px solid var(--border-main) !important;
+                    border-left: 1px solid var(--border-main) !important;
                     padding: 16px 0 !important;
                     font-weight: 800 !important;
-                    color: #1e293b !important;
+                    color: var(--text-main) !important;
                     text-transform: uppercase;
                     font-size: 0.75rem;
                     letter-spacing: 0.1em;
+                    background-color: var(--bg-app) !important;
                 }
                 .calendar-container .rbc-day-bg {
-                    border-left: 1px solid #9fc7f0ff !important;
+                    border-left: 1px solid var(--border-main) !important;
                     transition: background-color 0.2s ease;
                 }
                 .calendar-container .rbc-day-bg:hover {
-                    background-color: #f1f5f940 !important;
+                    background-color: var(--bg-app) !important;
                 }
                 .calendar-container .rbc-month-row {
-                    border-top: 1px solid #9fc7f0ff !important;
+                    border-top: 1px solid var(--border-main) !important;
                 }
                 .calendar-container .rbc-today {
-                    background-color: #6366f108 !important;
+                    background-color: var(--primary-500)08 !important;
                     position: relative;
                 }
                 .calendar-container .rbc-today::after {
@@ -353,32 +355,32 @@ const WeekendList = () => {
                     left: 0;
                     right: 0;
                     height: 4px;
-                    background: #6366f1;
+                    background: var(--primary-500, #6366f1);
                     border-radius: 0 0 4px 4px;
                 }
                 .calendar-container .rbc-off-range-bg {
-                    background-color: #fcfdfe !important;
-                    opacity: 0.4;
+                    background-color: var(--bg-app) !important;
+                    opacity: 0.5;
                 }
                 .calendar-container .rbc-date-cell {
                     padding: 12px !important;
                     font-weight: 800 !important;
-                    color: #475569 !important;
+                    color: var(--text-muted) !important;
                     font-size: 0.9rem;
                     text-align: right;
                 }
                 .calendar-container .rbc-now .rbc-date-cell {
-                    color: #6366f1 !important;
+                    color: var(--primary-500, #6366f1) !important;
                     transform: scale(1.1);
                 }
                 .calendar-container .rbc-event {
                     padding: 0 !important;
                 }
                 .calendar-container .rbc-show-more {
-                    color: #6366f1 !important;
+                    color: var(--primary-500, #6366f1) !important;
                     font-weight: 800 !important;
                     font-size: 0.7rem;
-                    background: #6366f115 !important;
+                    background: var(--primary-500)15 !important;
                     padding: 2px 6px !important;
                     border-radius: 6px !important;
                     margin: 4px !important;
