@@ -24,7 +24,7 @@ const Tooltip = ({
             <ReactTooltip
                 id={tooltipId}
                 place={place}
-                className="z-50 !bg-gray-900 !text-white !px-3 !py-2 !rounded-lg !text-xs !shadow-xl !opacity-100"
+                className="z-50 !bg-[var(--bg-card)] !text-[var(--text-main)] !border !border-[var(--border-main)] !px-3 !py-2 !rounded-lg !text-xs !shadow-xl !opacity-100"
             />
         </>
     );

@@ -6,6 +6,7 @@ import ConfirmationModal from '../../../components/ui/ConfirmationModal';
 import AddUserToProjectModal from './AddUserToProjectModal';
 import { toast } from 'react-toastify';
 import { cn, getImageUrl } from '../../../lib/utils';
+import Tooltip from '../../../components/ui/Tooltip';
 
 const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
     const [addModalOpen, setAddModalOpen] = useState(false);
@@ -98,18 +99,19 @@ const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
                                             {u.email && <p className="text-xs text-[var(--text-muted)] truncate">{u.email}</p>}
                                         </div>
                                     </div>
-                                    <button
-                                        type="button"
-                                        onClick={() => setUserToRemove(entry)}
-                                        className={cn(
-                                            'flex items-center gap-1 rounded-lg font-medium transition-colors text-[var(--text-muted)] hover:bg-red-500/10 hover:text-red-400 flex-shrink-0',
-                                            compact ? 'p-1.5 text-xs' : 'px-3 py-2 text-sm'
-                                        )}
-                                        title="Remove from project"
-                                    >
-                                        <UserMinus className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
-                                        {!compact && 'Remove'}
-                                    </button>
+                                    <Tooltip content="Remove from project" place="left" className="cursor-pointer">
+                                        <button
+                                            type="button"
+                                            onClick={() => setUserToRemove(entry)}
+                                            className={cn(
+                                                'flex items-center gap-1 rounded-lg font-medium transition-all duration-200 text-red-500/70 hover:text-red-500 hover:bg-red-500/10 flex-shrink-0',
+                                                compact ? 'p-1.5 text-xs' : 'px-3 py-2 text-sm'
+                                            )}
+                                        >
+                                            <UserMinus className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
+                                            {!compact && 'Remove'}
+                                        </button>
+                                    </Tooltip>
                                 </li>
                             );
                         })}
