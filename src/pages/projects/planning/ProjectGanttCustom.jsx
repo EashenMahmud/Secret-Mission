@@ -252,10 +252,10 @@ const ProjectGanttCustom = ({
                 style={{ minHeight: totalHeight, maxHeight: totalHeight }}
             >
                 {/* Fixed header */}
-                <div className="border-b border-dark-700 bg-dark-800/50 flex-shrink-0">
+                <div className="border-b border-[var(--border-main)] bg-[var(--bg-app)]/80 flex-shrink-0">
                     {/* Month headers */}
-                    <div className="flex border-b border-dark-700">
-                        <div className="w-48 border-r border-dark-700 px-4 py-2 bg-dark-800/70 flex-shrink-0"></div>
+                    <div className="flex border-b border-[var(--border-main)]">
+                        <div className="w-48 border-r border-[var(--border-main)] px-4 py-2 bg-[var(--bg-app)] flex-shrink-0"></div>
                         <div
                             className={`flex overflow-x-auto hide-scrollbar ${scrollSyncClass}`}
                             style={{ width: 'calc(100% - 12rem)' }}
@@ -301,7 +301,7 @@ const ProjectGanttCustom = ({
                                             <div className={`text-xs font-medium ${isTodayDay ? 'text-primary-400' : 'text-[var(--text-muted)]'}`}>
                                                 {format(day, 'd')}
                                             </div>
-                                            <div className="text-[10px] text-slate-500 mt-0.5">
+                                            <div className="text-[10px] text-[var(--text-muted)] mt-0.5">
                                                 {format(day, 'EEE')}
                                             </div>
                                         </div>
