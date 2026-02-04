@@ -7,6 +7,7 @@ import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import Badge from '../../components/ui/Badge';
 import { toast } from 'react-toastify';
 import DateTime from '../../components/ui/DateTime';
+import ProgressBar from '../../components/ui/ProgressBar';
 
 
 
@@ -237,16 +238,12 @@ const ProjectList = () => {
                                 <div className="space-y-1">
                                     <div className="flex justify-between text-sm">
                                         <span className="text-[var(--text-muted)]">Progress</span>
-                                        <span className="text-[var(--text-main)] font-medium">
-                                            {project.progress || 0}%
-                                        </span>
                                     </div>
-                                    <div className="w-full bg-[var(--bg-app)] rounded-full h-2 overflow-hidden">
-                                        <div
-                                            className="bg-gradient-to-r from-primary-500 to-secondary-500 h-2 rounded-full transition-all duration-300"
-                                            style={{ width: `${project.progress || 0}%` }}
-                                        ></div>
-                                    </div>
+                                    <ProgressBar 
+                                        value={project.progress || 0} 
+                                        showValue 
+                                        variant={getStatusColor(project.status)}
+                                    />
                                 </div>
                             </div>
                         </Link>

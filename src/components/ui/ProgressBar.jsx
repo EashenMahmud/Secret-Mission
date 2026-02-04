@@ -21,12 +21,12 @@ const ProgressBar = ({
         <div className={cn('w-full', className)}>
             <div className="flex items-center justify-between mb-1">
                 {showValue && (
-                    <span className="text-xs font-medium text-gray-700">
+                    <span className="text-xs font-medium text-[var(--text-muted)]">
                         {Math.round(percentage)}%
                     </span>
                 )}
             </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--bg-skeleton)] border border-[var(--border-main)]/50">
                 <div
                     className={cn('h-full transition-all duration-300 ease-out', variants[variant])}
                     style={{ width: `${percentage}%` }}

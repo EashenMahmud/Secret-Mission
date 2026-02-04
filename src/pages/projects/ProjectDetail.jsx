@@ -21,6 +21,7 @@ import ProjectManpowerSection from './planning/ProjectManpowerSection';
 import ProjectGanttCustom from './planning/ProjectGanttCustom';
 import ProjectModuleKanban from './modules/ProjectModuleKanban';
 import DateTime from '../../components/ui/DateTime';
+import ProgressBar from '../../components/ui/ProgressBar';
 
 const ProjectDetail = () => {
     const { id } = useParams();
@@ -138,14 +139,12 @@ const ProjectDetail = () => {
                         <div className="flex-shrink-0 w-32">
                             <div className="flex justify-between items-center mb-1">
                                 <span className="text-xs font-medium text-[var(--text-muted)]">Progress</span>
-                                <span className="text-sm font-bold text-[var(--text-main)]">{project.progress ?? 0}%</span>
                             </div>
-                            <div className="w-full bg-[var(--bg-app)] rounded-full h-2 overflow-hidden">
-                                <div
-                                    className="bg-gradient-to-r from-primary-500 to-primary-400 h-2 rounded-full transition-all duration-300"
-                                    style={{ width: `${project.progress ?? 0}%` }}
-                                />
-                            </div>
+                            <ProgressBar 
+                                value={project.progress ?? 0} 
+                                showValue 
+                                variant={getStatusColor(project.status)}
+                            />
                         </div>
                     </div>
 
