@@ -30,6 +30,10 @@
   --bg-off-range: #373e66;
 }
 
+.dark input::-webkit-calendar-picker-indicator {
+  @apply invert;
+}
+
 @layer base {
   body {
     @apply bg-[var(--bg-app)] text-[var(--text-main)] font-sans transition-colors duration-300;

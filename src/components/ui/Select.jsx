@@ -28,7 +28,7 @@ const Select = ({ label, labelClassName, options = [], helperText, className, pl
             zIndex: 9999,
             borderRadius: '0.5rem',
             boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-            border: '1px border-[var(--border-main)]',
+            border: '1px solid var(--border-main)',
             overflow: 'hidden',
         }),
         menuPortal: (base) => ({

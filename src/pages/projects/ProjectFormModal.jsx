@@ -174,9 +174,9 @@ const ProjectFormModal = ({ isOpen, onClose, projectId = null, onSuccess, mode =
                 size="lg"
             >
                 <div className="animate-pulse space-y-4">
-                    <div className="h-10 bg-[var(--bg-app)] rounded"></div>
-                    <div className="h-10 bg-[var(--bg-app)] rounded"></div>
-                    <div className="h-20 bg-[var(--bg-app)] rounded"></div>
+                    <div className="h-10 bg-[var(--bg-skeleton)] rounded"></div>
+                    <div className="h-10 bg-[var(--bg-skeleton)] rounded"></div>
+                    <div className="h-20 bg-[var(--bg-skeleton)] rounded"></div>
                 </div>
             </Modal>
         );
@@ -280,10 +280,10 @@ const ProjectFormModal = ({ isOpen, onClose, projectId = null, onSuccess, mode =
                             type="date"
                         />
 
-                        <div className="flex justify-end gap-3 pt-4 border-t">
+                        <div className="flex justify-end gap-3 pt-4 border-t border-[var(--border-main)]">
                             <Button
                                 type="button"
-                                variant="outline"
+                                variant="secondary"
                                 onClick={onClose}
                                 disabled={isSubmitting || isCreating || isUpdating}
                             >
