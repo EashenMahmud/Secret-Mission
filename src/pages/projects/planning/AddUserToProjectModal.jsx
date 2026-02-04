@@ -8,7 +8,7 @@ import { useGetApiQuery, usePostApiMutation } from '../../../store/api/commonApi
 import { toast } from 'react-toastify';
 
 const validationSchema = Yup.object({
-    user_id: Yup.number().required('Select a user'),
+    user_ids: Yup.array().min(1, 'Select at least one user').required('Select a user'),
 });
 
 const AddUserToProjectModal = ({ isOpen, onClose, projectId, assignedUserIds = [], onSuccess }) => {
@@ -23,21 +23,21 @@ const AddUserToProjectModal = ({ isOpen, onClose, projectId, assignedUserIds = [
     const handleSubmit = async (values) => {
         try {
             await postApi({
-                end_point: '/add-user-to-project',
-                body: { project_id: Number(projectId), user_id: values.user_id },
+                end_point: '/add-multiple-users-to-project',
+                body: { project_id: Number(projectId), user_ids: values.user_ids },
             }).unwrap();
-            toast.success('User added to project');
+            toast.success('Users added to project');
             onSuccess?.();
             onClose();
         } catch (e) {
-            toast.error(e?.data?.message || 'Failed to add user');
+            toast.error(e?.data?.message || 'Failed to add users');
         }
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Add user to project" size="md">
+        <Modal isOpen={isOpen} onClose={onClose} title="Add users to project" size="md">
             <Formik
-                initialValues={{ user_id: null }}
+                initialValues={{ user_ids: [] }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
                 enableReinitialize
@@ -45,11 +45,12 @@ const AddUserToProjectModal = ({ isOpen, onClose, projectId, assignedUserIds = [
                 {({ isSubmitting }) => (
                     <Form className="space-y-4">
                         <Select
-                            name="user_id"
-                            label="User"
+                            name="user_ids"
+                            label="Users"
                             options={options}
-                            placeholder="Select user"
+                            placeholder="Select users"
                             required
+                            isMulti
                             menuPortalTarget={document.body}
                         />
                         {options.length === 0 && (

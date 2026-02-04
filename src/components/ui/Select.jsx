@@ -3,7 +3,7 @@ import ReactSelect from 'react-select';
 import { useField } from 'formik';
 import { cn } from '../../lib/utils';
 
-const Select = ({ label, labelClassName, options = [], helperText, className, placeholder, required, menuPortalTarget, ...props }) => {
+const Select = ({ label, labelClassName, options = [], helperText, className, placeholder, required, menuPortalTarget, isMulti, ...props }) => {
     const [field, meta, helpers] = useField(props);
     const isError = meta.touched && meta.error;
 
@@ -51,13 +51,38 @@ const Select = ({ label, labelClassName, options = [], helperText, className, pl
             ...base,
             color: 'var(--text-main)',
         }),
+        multiValue: (base) => ({
+            ...base,
+            backgroundColor: 'var(--bg-app)',
+            borderRadius: '0.375rem',
+            border: '1px solid var(--border-main)',
+        }),
+        multiValueLabel: (base) => ({
+            ...base,
+            color: 'var(--text-main)',
+            paddingLeft: '8px',
+        }),
+        multiValueRemove: (base) => ({
+            ...base,
+            color: 'var(--text-main)',
+            '&:hover': {
+                backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                color: '#ef4444',
+            },
+        }),
     };
 
     const handleChange = (selectedOption) => {
-        helpers.setValue(selectedOption ? selectedOption.value : '');
+        if (isMulti) {
+            helpers.setValue(selectedOption ? selectedOption.map(msg => msg.value) : []);
+        } else {
+            helpers.setValue(selectedOption ? selectedOption.value : '');
+        }
     };
 
-    const currentValue = options.find(option => option.value === field.value) || null;
+    const currentValue = isMulti
+        ? options.filter(option => field.value?.includes(option.value))
+        : options.find(option => option.value === field.value) || null;
 
     return (
         <div className={cn('flex flex-col gap-1 w-full', className)}>
@@ -80,6 +105,7 @@ const Select = ({ label, labelClassName, options = [], helperText, className, pl
                     styles={customStyles}
                     placeholder={placeholder || 'Select...'}
                     isClearable
+                    isMulti={isMulti}
                     classNamePrefix="react-select"
                     menuPortalTarget={menuPortalTarget}
                 />
