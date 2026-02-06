@@ -39,6 +39,7 @@ const WeekendList = lazy(() => import('./pages/organization/WeekendList'));
 const MyProfile = lazy(() => import('./pages/users/MyProfile'));
 const ProjectPlanningTypes = lazy(() => import('./pages/organization/ProjectPlanningTypeList'));
 const ClientList = lazy(() => import('./pages/clients/VendorList'));
+const TaskDetailsPage = lazy(() => import('./pages/projects/Taskmanagement/TaskDetails'));
 
 // Loading component
 const PageLoader = () => (
@@ -181,6 +182,14 @@ function App() {
                   element={
                     <Suspense fallback={<PageLoader />}>
                       <ProjectDetail />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="projects/:projectId/planning/:planningId"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <TaskDetailsPage />
                     </Suspense>
                   }
                 />
