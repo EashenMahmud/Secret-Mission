@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { useGetApiWithIdQuery, usePostApiMutation } from '../../../store/api/commonApi';
-import { UserPlus, Users, UserMinus } from 'lucide-react';
+import { Users, Plus, X, ChevronUp } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import ConfirmationModal from '../../../components/ui/ConfirmationModal';
 import AddUserToProjectModal from './AddUserToProjectModal';
 import { toast } from 'react-toastify';
 import { cn, getImageUrl } from '../../../lib/utils';
-import Tooltip from '../../../components/ui/Tooltip';
 
 const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [userToRemove, setUserToRemove] = useState(null);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     const { data: manpowerRes, refetch } = useGetApiWithIdQuery(
         { url: '/project-manpower-list', id: projectId },
@@ -48,75 +48,130 @@ const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
         };
     };
 
-    return (
-        <section className={`${compact ? 'space-y-2' : 'space-y-4'} flex flex-col h-full`}>
-            <div className="flex items-center justify-between gap-2">
-                <h2 className={`flex items-center gap-2 font-semibold text-[var(--text-main)] ${compact ? 'text-sm' : 'text-xl'}`}>
-                    <Users className={compact ? 'h-4 w-4 text-primary-400' : 'h-5 w-5 text-primary-400'} />
-                    Manpower
-                </h2>
-                <Button
-                    size={compact ? 'sm' : 'md'}
-                    leftIcon={<UserPlus className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />}
+    const MAX_DISPLAY = 5;
+    const remainingCount = Math.max(0, manpower.length - MAX_DISPLAY);
+    
+    // items to show based on state
+    const visibleUsers = isExpanded ? manpower : manpower.slice(0, MAX_DISPLAY);
+
+    const UserAvatar = ({ entry }) => {
+        const u = displayUser(entry);
+        return (
+            <div className="relative group z-10 hover:z-50 cursor-pointer">
+                {/* Avatar Circle */}
+                <div className={cn(
+                    "relative h-9 w-9 rounded-full ring-2 ring-[var(--bg-card)] flex items-center justify-center overflow-hidden transition-all duration-200",
+                    "group-hover:ring-primary-500 group-hover:scale-105"
+                )}>
+                    {u.avatar ? (
+                        <img src={getImageUrl(u.avatar)} alt={u.name} className="h-full w-full object-cover" />
+                    ) : (
+                        <div className="h-full w-full bg-[var(--bg-app)] flex items-center justify-center text-[var(--text-main)] font-semibold text-xs border border-[var(--border-main)]">
+                            {u.name.charAt(0).toUpperCase()}
+                        </div>
+                    )}
+                </div>
+
+                {/* Hover Details Popover */}
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 opacity-0 group-hover:opacity-100 bg-[var(--bg-card)] border border-[var(--border-main)] shadow-xl rounded-lg p-3 touch-none pointer-events-none group-hover:pointer-events-auto transition-all duration-200 translate-y-2 group-hover:translate-y-0 flex flex-col gap-1 z-50">
+                    <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                            <p className="text-xs font-semibold text-[var(--text-main)] truncate">{u.name}</p>
+                            <p className="text-[10px] text-[var(--text-muted)] truncate">{u.email}</p>
+                        </div>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setUserToRemove(entry);
+                            }}
+                            className="text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 p-1 rounded transition-colors flex-shrink-0"
+                            title="Remove User"
+                        >
+                            <X className="h-3 w-3" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    if (manpower.length === 0) {
+        return (
+            <div>
+                 <div className="flex items-center justify-between mb-3">
+                    <h2 className="flex items-center gap-2 font-semibold text-[var(--text-main)] text-sm uppercase tracking-wider">
+                        <Users className="h-4 w-4 text-primary-400" />
+                        Manpower (0)
+                    </h2>
+                </div>
+                <button
                     onClick={() => setAddModalOpen(true)}
-                    className={compact ? '!px-2.5 !py-1.5 text-xs' : ''}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-dashed border-[var(--border-main)] text-xs text-[var(--text-muted)] hover:text-primary-400 hover:border-primary-500/50 hover:bg-primary-500/5 transition-colors"
                 >
-                    Add user
-                </Button>
+                    <Plus className="h-3.5 w-3.5" />
+                    <span>Add Member</span>
+                </button>
+                <AddUserToProjectModal
+                    isOpen={addModalOpen}
+                    onClose={() => setAddModalOpen(false)}
+                    projectId={projectId}
+                    assignedUserIds={assignedIds}
+                    onSuccess={() => { refetch(); onRefresh?.(); }}
+                />
+            </div>
+        );
+    }
+
+    return (
+        <section className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+                <h2 className="flex items-center gap-2 font-semibold text-[var(--text-main)] text-sm uppercase tracking-wider">
+                    <Users className="h-4 w-4 text-primary-400" />
+                    Manpower ({manpower.length})
+                </h2>
+                 {isExpanded && (
+                    <Button
+                        size="sm"
+                        variant="ghost" 
+                        onClick={() => setIsExpanded(false)}
+                        className="h-6 w-6 p-0 rounded-full"
+                        title="Collapse"
+                    >
+                        <ChevronUp className="h-3.5 w-3.5" />
+                    </Button>
+                )}
             </div>
 
-            <div className={`rounded-lg border border-[var(--border-main)] bg-[var(--bg-app)]/50 overflow-hidden flex-1 flex flex-col ${compact ? 'min-h-0' : ''}`}>
-                <div className={`border-b border-[var(--border-main)] bg-[var(--bg-app)] text-[var(--text-main)] font-medium flex-shrink-0 ${compact ? 'px-3 py-2 text-xs' : 'px-4 py-3 text-sm'}`}>
-                    Team on this project
-                </div>
-                {!manpower.length ? (
-                    <div className={`flex flex-col items-center justify-center gap-1.5 text-[var(--text-muted)] text-center flex-1 ${compact ? 'p-5' : 'p-8'}`}>
-                        <Users className={compact ? 'h-10 w-10 text-slate-600' : 'h-12 w-12 text-slate-600'} />
-                        <p className={compact ? 'text-xs' : ''}>No users assigned yet.</p>
-                    </div>
-                ) : (
-                    <ul className="divide-y divide-[var(--border-main)] flex-1 overflow-y-auto custom-scrollbar-thin">
-                        {manpower.map((entry, idx) => {
-                            const u = displayUser(entry);
-                            return (
-                                <li
-                                    key={u.id ?? idx}
-                                    className={cn(
-                                        'flex items-center justify-between gap-2 hover:bg-[var(--bg-card)]/50',
-                                        compact ? 'px-3 py-2' : 'px-4 py-3'
-                                    )}
-                                >
-                                    <div className="flex items-center gap-2 min-w-0 flex-1">
-                                        <div className={cn('flex-shrink-0 rounded-full bg-[var(--bg-card)] flex items-center justify-center overflow-hidden border border-[var(--border-main)]', compact ? 'h-8 w-8' : 'h-10 w-10')}>
-                                            {u.avatar ? (
-                                                <img src={getImageUrl(u.avatar)} alt="" className="h-full w-full object-cover" />
-                                            ) : (
-                                                <Users className={compact ? 'h-4 w-4 text-[var(--text-muted)]' : 'h-5 w-5 text-[var(--text-muted)]'} />
-                                            )}
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className={cn('font-medium text-[var(--text-main)] truncate', compact && 'text-xs')}>{u.name}</p>
-                                            {u.email && <p className="text-xs text-[var(--text-muted)] truncate">{u.email}</p>}
-                                        </div>
-                                    </div>
-                                    <Tooltip content="Remove from project" place="left" className="cursor-pointer">
-                                        <button
-                                            type="button"
-                                            onClick={() => setUserToRemove(entry)}
-                                            className={cn(
-                                                'flex items-center gap-1 rounded-lg font-medium transition-all duration-200 text-red-500/70 hover:text-red-500 hover:bg-red-500/10 flex-shrink-0',
-                                                compact ? 'p-1.5 text-xs' : 'px-3 py-2 text-sm'
-                                            )}
-                                        >
-                                            <UserMinus className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
-                                            {!compact && 'Remove'}
-                                        </button>
-                                    </Tooltip>
-                                </li>
-                            );
-                        })}
-                    </ul>
+            <div className={cn(
+                "flex items-center transition-all duration-300",
+                isExpanded ? "flex-wrap gap-3" : "-space-x-2" 
+            )}>
+                {visibleUsers.map((entry, idx) => (
+                    <UserAvatar key={displayUser(entry).id ?? idx} entry={entry} />
+                ))}
+
+                {/* Counter / Expand Button */}
+                {!isExpanded && remainingCount > 0 && (
+                    <button
+                        onClick={() => setIsExpanded(true)}
+                        className="relative h-9 w-9 rounded-full ring-2 ring-[var(--bg-card)] bg-[var(--bg-app)] hover:bg-[var(--bg-card)] flex items-center justify-center z-0 hover:z-10 transition-colors cursor-pointer"
+                        title="Show all"
+                    >
+                        <span className="text-xs font-semibold text-[var(--text-muted)]">+{remainingCount}</span>
+                    </button>
                 )}
+
+                 {/* Add Button - Circle style in flow */}
+                 <button
+                    onClick={() => setAddModalOpen(true)}
+                    className={cn(
+                        "relative h-9 w-9 rounded-full border border-dashed border-[var(--border-main)] flex items-center justify-center text-[var(--text-muted)] hover:text-primary-400 hover:border-primary-500/50 hover:bg-primary-500/5 transition-colors z-0",
+                         !isExpanded && "ml-2"
+                    )}
+                    title="Add Member"
+                >
+                    <Plus className="h-4 w-4" />
+                </button>
             </div>
 
             <AddUserToProjectModal

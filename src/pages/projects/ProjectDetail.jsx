@@ -140,86 +140,114 @@ const ProjectDetail = () => {
                 </Button>
             </div>
 
-            {/* Top: Project details + Manpower (50/50) */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Project details - compact with fixed height */}
-                <div className="card overflow-hidden flex flex-col h-[240px]">
-                    <div className="flex items-start gap-3 mb-3">
-                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500/20 to-primary-600/10 border border-primary-500/20">
+            {/* Unified Project Hero Card */}
+            <div className="card p-4">
+                <div className="flex flex-col md:flex-row gap-6 justify-between items-start">
+                    {/* Left: Info & Manpower */}
+                    <div className="flex items-start gap-3 flex-1 min-w-0 h-full">
+                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500/20 to-primary-600/10 border border-primary-500/20 shadow-inner">
                             <FolderKanban className="h-5 w-5 text-primary-400" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                            <h1 className="text-xl font-bold text-[var(--text-main)] truncate mb-1.5">{project.name}</h1>
-                            <div className="flex items-center gap-2 flex-wrap mb-2">
-                                <Badge variant={getStatusColor(project.status)}>
-                                    {project.status?.replace('_', ' ')}
-                                </Badge>
-                                <Badge variant={getPriorityColor(project.priority)}>
-                                    {project.priority}
-                                </Badge>
-                                {project.is_archived && (
-                                    <Badge variant="gray">
-                                        <Archive className="w-3 h-3 mr-1 inline" />
-                                        Archived
+                        <div className="flex-1 min-w-0 space-y-3">
+                            <div className="space-y-1.5">
+                                <div>
+                                    <h1 className="text-lg font-bold text-[var(--text-main)] truncate leading-tight">{project.name}</h1>
+                                    <div className="flex items-center flex-wrap gap-x-3 gap-y-1 text-xs text-[var(--text-muted)] mt-0.5">
+                                        {project.created_by && (
+                                            <span>Created by {project.created_by.name || project.created_by.email}</span>
+                                        )}
+                                        {project.vendor && (
+                                            <>
+                                                <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]/50"></span>
+                                                <span className="flex items-center gap-1">
+                                                    <Building2 className="w-3 h-3" /> {project.vendor.name}
+                                                </span>
+                                            </>
+                                        )}
+                                        {project.project_type && (
+                                             <>
+                                                <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]/50"></span>
+                                                <span className="flex items-center gap-1">
+                                                    <TrendingUp className="w-3 h-3" /> {project.project_type.name}
+                                                </span>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-center gap-2 flex-wrap pt-0.5">
+                                    <Badge variant={getStatusColor(project.status)} className="px-2 py-0.5 text-[10px] uppercase tracking-wide">
+                                        {project.status?.replace('_', ' ')}
                                     </Badge>
+                                    <Badge variant={getPriorityColor(project.priority)} className="px-2 py-0.5 text-[10px] uppercase tracking-wide">
+                                        {project.priority}
+                                    </Badge>
+                                    {project.is_archived && (
+                                        <Badge variant="gray" className="px-2 py-0.5 text-[10px]">
+                                            <Archive className="w-3 h-3 mr-1 inline" />
+                                            Archived
+                                        </Badge>
+                                    )}
+                                </div>
+
+                                {project.description && (
+                                    <p className="text-[var(--text-muted)] text-sm leading-relaxed max-w-2xl pt-1">
+                                        {project.description}
+                                    </p>
                                 )}
                             </div>
-                            {project.description && (
-                                <p className="text-[var(--text-muted)] text-xs leading-relaxed line-clamp-2 mb-3">
-                                    {project.description}
-                                </p>
-                            )}
-                        </div>
-                        <div className="flex-shrink-0 w-32">
-                            <div className="flex justify-between items-center mb-1">
-                                <span className="text-xs font-medium text-[var(--text-muted)]">Progress</span>
+
+                            {/* Integrated Manpower Section - Moved Here */}
+                            <div className="pt-1">
+                                <ProjectManpowerSection projectId={id} onRefresh={refetch} />
                             </div>
-                            <ProgressBar 
-                                value={project.progress ?? 0} 
-                                showValue 
-                                variant={getStatusColor(project.status)}
-                            />
                         </div>
                     </div>
 
-                    {/* Meta row: vendor, type, dates, created - compact */}
-                    <div className="mt-auto pt-3 border-t border-[var(--border-main)]/50 grid grid-cols-2 gap-2 text-xs">
-                        {project.vendor && (
-                            <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
-                                <Building2 className="h-3.5 w-3.5 flex-shrink-0 text-[var(--text-muted)]" />
-                                <span className="truncate" title={project.vendor.name}>{project.vendor.name}</span>
-                            </div>
-                        )}
-                        {project.project_type && (
-                            <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
-                                <TrendingUp className="h-3.5 w-3.5 flex-shrink-0 text-[var(--text-muted)]" />
-                                <span className="truncate">{project.project_type.name}</span>
-                            </div>
-                        )}
-                        {(project.start_date || project.end_date) && (
-                            <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
-                                <Calendar className="h-3.5 w-3.5 flex-shrink-0 text-[var(--text-muted)]" />
-                                <span className="truncate">
-                                    {project.start_date && <DateTime date={project.start_date} variant="dateOnly" />}
-                                    {project.start_date && project.end_date && ' – '}
-                                    {project.end_date && <DateTime date={project.end_date} variant="dateOnly" />}
+                    {/* Right: Progress & Stats - Compact */}
+                    <div className="w-full md:w-80 bg-[var(--bg-app)]/50 rounded-lg p-3 border border-[var(--border-main)] flex flex-col justify-center flex-shrink-0">
+                        <div className="flex justify-between items-end mb-1.5">
+                            <span className="text-xs font-medium text-[var(--text-muted)]">Completion</span>
+                            <span className="text-lg font-bold text-[var(--text-main)]">{project.progress ?? 0}%</span>
+                        </div>
+                        <ProgressBar 
+                            value={project.progress ?? 0} 
+                            variant={getStatusColor(project.status)}
+                            className="h-2"
+                        />
+                        <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-2 text-[11px] text-[var(--text-muted)]">
+                           {project.start_date && (
+                                <div className="flex flex-col">
+                                    <span className="leading-none opacity-80">Start Date</span>
+                                    <span className="font-medium text-[var(--text-main)] mt-0.5">
+                                        <DateTime date={project.start_date} variant="dateOnly" />
+                                    </span>
+                                </div>
+                           )}
+                           {project.end_date && (
+                                <div className="flex flex-col text-right">
+                                    <span className="leading-none opacity-80">Due Date</span>
+                                    <span className="font-medium text-[var(--text-main)] mt-0.5">
+                                        <DateTime date={project.end_date} variant="dateOnly" />
+                                    </span>
+                                </div>
+                           )}
+                           {project.start_date && project.end_date && (
+                                <div className="flex flex-col border-t border-[var(--border-main)]/50 pt-1.5 col-span-1">
+                                    <span className="leading-none opacity-80 flex items-center gap-1"><Calendar className="w-2.5 h-2.5"/> Duration</span>
+                                    <span className="font-medium text-[var(--text-main)] mt-0.5">
+                                         {Math.ceil((new Date(project.end_date) - new Date(project.start_date)) / (1000 * 60 * 60 * 24))} days
+                                    </span>
+                                </div>
+                           )}
+                           <div className="flex flex-col border-t border-[var(--border-main)]/50 pt-1.5 col-span-1 text-right">
+                                <span className="leading-none opacity-80 flex items-center gap-1 justify-end"><Clock className="w-2.5 h-2.5"/> Updated</span>
+                                <span className="font-medium text-[var(--text-main)] mt-0.5">
+                                    <DateTime date={project.created_at} variant="dateOnly" />
                                 </span>
                             </div>
-                        )}
-                        {project.created_by && (
-                            <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
-                                <User className="h-3.5 w-3.5 flex-shrink-0 text-[var(--text-muted)]" />
-                                <span className="truncate">
-                                    {project.created_by.name || project.created_by.email || `User #${project.created_by.id ?? project.created_by}`}
-                                </span>
-                            </div>
-                        )}
+                        </div>
                     </div>
-                </div>
-
-                {/* Manpower - fixed height */}
-                <div className="card overflow-hidden flex flex-col h-[240px]">
-                    <ProjectManpowerSection projectId={id} onRefresh={refetch} compact />
                 </div>
             </div>
 
