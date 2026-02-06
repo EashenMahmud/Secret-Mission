@@ -181,6 +181,37 @@ const ProjectGanttCustom = ({
         };
     }, [scrollSyncClass, timelineWidth, totalRows, items.length]);
 
+    // Synchronize vertical scrolling
+    useEffect(() => {
+        if (!items.length) return;
+
+        const verticalScrollContainers = document.querySelectorAll(`.${verticalScrollSyncClass}`);
+
+        if (verticalScrollContainers.length === 0) return;
+
+        const syncVerticalScrolls = (sourceScrollTop, source) => {
+            verticalScrollContainers.forEach((container) => {
+                if (container !== source && Math.abs(container.scrollTop - sourceScrollTop) > 1) {
+                    container.scrollTop = sourceScrollTop;
+                }
+            });
+        };
+
+        const handleVerticalScroll = (e) => {
+            syncVerticalScrolls(e.target.scrollTop, e.target);
+        };
+
+        verticalScrollContainers.forEach((container) => {
+            container.addEventListener('scroll', handleVerticalScroll);
+        });
+
+        return () => {
+            verticalScrollContainers.forEach((container) => {
+                container.removeEventListener('scroll', handleVerticalScroll);
+            });
+        };
+    }, [verticalScrollSyncClass, totalRows, items.length]);
+
     if (!items.length) {
         return (
             <div className={`space-y-4 ${className}`}>
@@ -241,9 +272,12 @@ const ProjectGanttCustom = ({
                 <div className="border-b border-[var(--border-main)] bg-[var(--bg-app)]/80 flex-shrink-0">
                     {/* Month headers */}
                     <div className="flex border-b border-[var(--border-main)]">
+                        <div className="w-48 border-r border-[var(--border-main)] px-4 py-2 bg-[var(--bg-app)] flex-shrink-0 font-medium text-xs text-[var(--text-muted)] flex items-center">
+                            Task
+                        </div>
                          <div
                             className={`flex overflow-x-auto hide-scrollbar ${scrollSyncClass}`}
-                            style={{ width: '100%' }}
+                            style={{ width: 'calc(100% - 12rem)' }}
                         >
                             <div className="flex" style={{ width: `${timelineWidth}px`, minWidth: `${timelineWidth}px` }}>
                                 {monthGroups.map((group, idx) => {
@@ -267,9 +301,10 @@ const ProjectGanttCustom = ({
 
                     {/* Day headers */}
                     <div className="flex">
+                        <div className="w-48 border-r border-[var(--border-main)] px-4 py-2 bg-[var(--bg-app)] flex-shrink-0"></div>
                         <div
                             className={`flex overflow-x-auto hide-scrollbar ${scrollSyncClass}`}
-                            style={{ width: '100%' }}
+                            style={{ width: 'calc(100% - 12rem)' }}
                         >
                             <div className="flex" style={{ width: `${timelineWidth}px`, minWidth: `${timelineWidth}px` }}>
                                 {calendarDays.map((day, idx) => {
@@ -296,109 +331,146 @@ const ProjectGanttCustom = ({
                     </div>
                 </div>
 
-                {/* Gantt Rows - Single scrollable container */}
-                <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden">
-                    <div
-                        className={`gantt-x-scrollbar overflow-x-auto flex-1 ${scrollSyncClass}`}
-                        style={{
-                            width: '100%',
-                            height: '100%'
-                        }}
-                    >
-                         <div className={`overflow-y-auto custom-scrollbar-thin-gantt overflow-x-hidden ${verticalScrollSyncClass}`} style={{ width: `${timelineWidth}px`, minWidth: `${timelineWidth}px`, height: '100%' }}>
+                {/* Gantt Rows - Proper structure: fixed left + scrollable right */}
+                <div className="flex-1 flex min-h-0" style={{ height: totalHeight - headerHeight }}>
+                    {/* Fixed left column - NEVER scrolls horizontally */}
+                    <div className="w-48 border-r border-[var(--border-main)] flex-shrink-0 flex flex-col bg-[var(--bg-app)]/30">
+                        <div className={`flex-1 overflow-y-auto custom-scrollbar-thin-gantt ${verticalScrollSyncClass}`}>
                             <div className="flex flex-col">
                                 {Array.from({ length: totalRows }).map((_, rowIdx) => {
                                     const bar = itemBars[rowIdx];
-                                    
-                                    // Render grid lines for the row
-                                    const GridLines = () => (
-                                         <div className="absolute inset-0 flex pointer-events-none">
-                                            {calendarDays.map((day, dayIdx) => {
-                                                const isWeekendDay = isWeekend(day);
-                                                return (
-                                                    <div
-                                                        key={dayIdx}
-                                                        className={`border-r border-[var(--border-main)] last:border-r-0 ${isWeekendDay ? 'bg-[var(--bg-app)]/10' : ''}`}
-                                                        style={{ width: `${dayWidth}px`, flexShrink: 0 }}
-                                                    />
-                                                );
-                                            })}
-                                        </div>
-                                    );
-
-                                    // Empty row (no task)
-                                    if (!bar) {
-                                        return (
-                                            <div
-                                                key={`empty-${rowIdx}`}
-                                                className="relative flex items-center border-b border-[var(--border-main)]"
-                                                style={{ height: rowHeight, minHeight: rowHeight }}
-                                            >
-                                                <GridLines />
-                                            </div>
-                                        );
-                                    }
-
-                                    // Row with task
                                     return (
                                         <div
-                                            key={bar.id}
-                                            className="relative flex items-center border-b border-[var(--border-main)] hover:bg-[var(--bg-card)]/30 transition-colors group"
+                                            key={bar ? bar.id : `empty-${rowIdx}`}
+                                            className="flex items-center border-b border-[var(--border-main)] px-4 py-2"
                                             style={{ height: rowHeight, minHeight: rowHeight }}
                                         >
-                                            <GridLines />
-
-                                            {/* Gantt bar */}
-                                            <div
-                                                className="absolute top-1/2 -translate-y-1/2 h-8 rounded-md overflow-visible shadow-sm border border-[var(--border-main)] z-20 group-bar"
-                                                style={{
-                                                    left: `${bar.left}px`,
-                                                    width: `${bar.width}px`,
-                                                }}
-                                            >
-                                                {/* Actions - Attached to the left of the bar */}
-                                                 <div className="absolute right-full mr-2 flex items-center gap-1 opacity-100 transition-opacity z-30 top-1/2 -translate-y-1/2 bg-[var(--bg-app)]/80 rounded p-0.5 backdrop-blur-sm border border-[var(--border-main)]">
-                                                    {onEdit && (
-                                                        <button 
-                                                            onClick={(e) => { e.stopPropagation(); onEdit(bar); }}
-                                                            className="p-1 rounded bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-primary-400 hover:bg-primary-500/10 transition-colors"
-                                                            title="Edit"
-                                                        >
-                                                            <Edit2 className="w-3 h-3" />
-                                                        </button>
-                                                    )}
-                                                    {onDelete && (
-                                                        <button 
-                                                            onClick={(e) => { e.stopPropagation(); onDelete(bar); }}
-                                                            className="p-1 rounded bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                                                            title="Delete"
-                                                        >
-                                                            <Trash2 className="w-3 h-3" />
-                                                        </button>
-                                                    )}
-                                                </div>
-
-                                                {/* Progress bar background */}
-                                                <div className={`h-full ${getStatusColor(bar.status)} relative rounded-md overflow-hidden`}>
-                                                    {/* Completed portion */}
-                                                    {bar.progress > 0 && (
-                                                        <div
-                                                            className="h-full bg-black/20 transition-all"
-                                                            style={{ width: `${bar.progress}%` }}
-                                                        />
-                                                    )}
-                                                    
-                                                    {/* Task Label Inside Bar */}
-                                                    <div className="absolute inset-0 flex items-center px-2">
-                                                        <span className="text-xs font-semibold text-white/90 truncate drop-shadow-sm select-none" title={bar.name}>
-                                                            {bar.name}
-                                                        </span>
+                                            {bar ? (
+                                                <div className="flex items-center gap-2 w-full">
+                                                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${getStatusColor(bar.status)}`}></div>
+                                                    <div className="min-w-0 flex-1">
+                                                        <p className="text-sm font-medium text-[var(--text-main)] truncate">{bar.name}</p>
+                                                        {bar.planningType && (
+                                                            <p className="text-xs text-[var(--text-muted)] truncate">{bar.planningType}</p>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            </div>
+                                            ) : (
+                                                <div className="w-full"></div>
+                                            )}
                                         </div>
                                     );
                                 })}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Scrollable timeline area */}
+                    <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden">
+                        {/* Horizontal scroll container - scrollbar visible at bottom */}
+                        <div
+                            className={`gantt-x-scrollbar overflow-x-auto flex-1 ${scrollSyncClass}`}
+                            style={{
+                                width: '100%',
+                                height: '100%'
+                            }}
+                        >
+                            {/* Vertical scroll container - inside horizontal scroll */}
+                            <div className={`overflow-y-auto custom-scrollbar-thin-gantt overflow-x-hidden ${verticalScrollSyncClass}`} style={{ width: `${timelineWidth}px`, minWidth: `${timelineWidth}px`, height: '100%' }}>
+                                <div className="flex flex-col">
+                                    {Array.from({ length: totalRows }).map((_, rowIdx) => {
+                                        const bar = itemBars[rowIdx];
+                                        
+                                        // Render grid lines for the row
+                                        const GridLines = () => (
+                                             <div className="absolute inset-0 flex pointer-events-none">
+                                                {calendarDays.map((day, dayIdx) => {
+                                                    const isWeekendDay = isWeekend(day);
+                                                    return (
+                                                        <div
+                                                            key={dayIdx}
+                                                            className={`border-r border-[var(--border-main)] last:border-r-0 ${isWeekendDay ? 'bg-[var(--bg-app)]/10' : ''}`}
+                                                            style={{ width: `${dayWidth}px`, flexShrink: 0 }}
+                                                        />
+                                                    );
+                                                })}
+                                            </div>
+                                        );
+
+                                        // Empty row (no task)
+                                        if (!bar) {
+                                            return (
+                                                <div
+                                                    key={`empty-${rowIdx}`}
+                                                    className="relative flex items-center border-b border-[var(--border-main)]"
+                                                    style={{ height: rowHeight, minHeight: rowHeight }}
+                                                >
+                                                    <GridLines />
+                                                </div>
+                                            );
+                                        }
+
+                                        // Row with task
+                                        return (
+                                            <div
+                                                key={bar.id}
+                                                className="relative flex items-center border-b border-[var(--border-main)] hover:bg-[var(--bg-card)]/30 transition-colors group"
+                                                style={{ height: rowHeight, minHeight: rowHeight }}
+                                            >
+                                                <GridLines />
+
+                                                {/* Gantt bar */}
+                                                <div
+                                                    className="absolute top-1/2 -translate-y-1/2 h-8 rounded-md overflow-visible shadow-sm border border-[var(--border-main)] z-20 group-bar"
+                                                    style={{
+                                                        left: `${bar.left}px`,
+                                                        width: `${bar.width}px`,
+                                                    }}
+                                                >
+                                                    {/* Actions - Attached to the left of the bar */}
+                                                     <div className="absolute right-full mr-2 flex items-center gap-1 opacity-100 transition-opacity z-30 top-1/2 -translate-y-1/2 bg-[var(--bg-app)]/80 rounded p-0.5 backdrop-blur-sm border border-[var(--border-main)]">
+                                                        {onEdit && (
+                                                            <button 
+                                                                onClick={(e) => { e.stopPropagation(); onEdit(bar); }}
+                                                                className="p-1 rounded bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-primary-400 hover:bg-primary-500/10 transition-colors"
+                                                                title="Edit"
+                                                            >
+                                                                <Edit2 className="w-3 h-3" />
+                                                            </button>
+                                                        )}
+                                                        {onDelete && (
+                                                            <button 
+                                                                onClick={(e) => { e.stopPropagation(); onDelete(bar); }}
+                                                                className="p-1 rounded bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                                                                title="Delete"
+                                                            >
+                                                                <Trash2 className="w-3 h-3" />
+                                                            </button>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Progress bar background */}
+                                                    <div className={`h-full ${getStatusColor(bar.status)} relative rounded-md overflow-hidden`}>
+                                                        {/* Completed portion */}
+                                                        {bar.progress > 0 && (
+                                                            <div
+                                                                className="h-full bg-black/20 transition-all"
+                                                                style={{ width: `${bar.progress}%` }}
+                                                            />
+                                                        )}
+                                                        
+                                                        {/* Task Label Inside Bar */}
+                                                        <div className="absolute inset-0 flex items-center px-2">
+                                                            <span className="text-xs font-semibold text-white/90 truncate drop-shadow-sm select-none" title={bar.name}>
+                                                                {bar.name}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </div>
                     </div>
