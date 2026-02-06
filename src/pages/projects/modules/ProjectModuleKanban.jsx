@@ -54,7 +54,9 @@ const ModuleCard = ({ module, onEdit, onDelete }) => {
         <div
             ref={setNodeRef}
             style={style}
-            className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-lg p-3 mb-2.5 shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing group"
+            {...attributes}
+            {...listeners}
+            className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-lg p-3 mb-2.5 shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing group touch-none"
         >
             <div className="flex items-start justify-between mb-2">
                 <div className="flex-1 min-w-0">
@@ -64,9 +66,7 @@ const ModuleCard = ({ module, onEdit, onDelete }) => {
                     )}
                 </div>
                 <div
-                    {...attributes}
-                    {...listeners}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing p-1"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1"
                 >
                     <GripVertical className="w-4 h-4 text-[var(--text-muted)]" />
                 </div>
@@ -89,9 +89,10 @@ const ModuleCard = ({ module, onEdit, onDelete }) => {
             <div className="flex items-center gap-2 pt-2 border-t border-[var(--border-main)]">
                 <button
                     onClick={(e) => {
-                        e.stopPropagation();
+                        e.stopPropagation(); // Prevent drag start
                         onEdit(module);
                     }}
+                    onPointerDown={(e) => e.stopPropagation()} // Extra safety for dnd-kit
                     className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs text-[var(--text-muted)] hover:text-primary-500 hover:bg-primary-500/10 rounded transition-colors"
                 >
                     <Edit2 className="w-3 h-3" />
@@ -99,9 +100,10 @@ const ModuleCard = ({ module, onEdit, onDelete }) => {
                 </button>
                 <button
                     onClick={(e) => {
-                        e.stopPropagation();
+                        e.stopPropagation(); // Prevent drag start
                         onDelete(module);
                     }}
+                    onPointerDown={(e) => e.stopPropagation()} // Extra safety for dnd-kit
                     className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded transition-colors"
                 >
                     <Trash2 className="w-3 h-3" />
@@ -130,7 +132,7 @@ const KanbanColumn = ({ column, modules, onEdit, onDelete }) => {
                 </div>
             </div>
             
-            {/* Column Content - Scrollable */}
+            {/* Column Content - Scrollable if needed */}
             <div
                 ref={setNodeRef}
                 className={`overflow-y-auto custom-scrollbar-thin bg-[var(--bg-app)]/50 rounded-lg p-3 border-2 transition-colors ${
@@ -138,7 +140,11 @@ const KanbanColumn = ({ column, modules, onEdit, onDelete }) => {
                         ? 'border-primary-500 bg-primary-500/10'
                         : 'border-[var(--border-main)]/50'
                 }`}
-                style={{ height: 'calc(100% - 3rem)', minHeight: 0 }}
+                style={{ 
+                    maxHeight: 'calc(800px - 3rem)', // Constraint based on max board height
+                    minHeight: '260px', // Approx 2 cards
+                    height: 'auto' 
+                }}
             >
                 <SortableContext items={moduleIds} strategy={verticalListSortingStrategy}>
                     {modules.length === 0 ? (
@@ -178,7 +184,11 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
     const modules = modulesResponse?.data?.data || modulesResponse?.data || [];
 
     const sensors = useSensors(
-        useSensor(PointerSensor),
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 5, // Prevent drag on simple clicks
+            },
+        }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
@@ -193,6 +203,35 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
         return grouped;
     }, [modules]);
 
+    const restrictToBoard = ({ transform, draggingNodeRect, windowRect }) => {
+        const boardElement = document.getElementById('kanban-board');
+        if (!boardElement || !draggingNodeRect) {
+            return transform;
+        }
+
+        const boardRect = boardElement.getBoundingClientRect();
+        
+        const value = {
+            ...transform,
+        };
+
+        // Clamp x
+        if (draggingNodeRect.left + transform.x < boardRect.left) {
+            value.x = boardRect.left - draggingNodeRect.left;
+        } else if (draggingNodeRect.right + transform.x > boardRect.right) {
+            value.x = boardRect.right - draggingNodeRect.right;
+        }
+
+        // Clamp y
+        if (draggingNodeRect.top + transform.y < boardRect.top) {
+            value.y = boardRect.top - draggingNodeRect.top;
+        } else if (draggingNodeRect.bottom + transform.y > boardRect.bottom) {
+            value.y = boardRect.bottom - draggingNodeRect.bottom;
+        }
+
+        return value;
+    };
+
     const handleDragStart = (event) => {
         setActiveId(event.active.id);
     };
@@ -201,13 +240,31 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
         const { active, over } = event;
         setActiveId(null);
 
-        if (!over || active.id === over.id) return;
+        if (!over) return;
 
-        const moduleId = active.id;
-        const newStatus = over.id;
+        const activeId = active.id;
+        const overId = over.id;
 
-        // Find the module
-        const module = modules.find(m => String(m.id) === String(moduleId));
+        if (activeId === overId) return;
+
+        let newStatus;
+        
+        // Check if dropped on a column directly
+        if (STATUS_COLUMNS.some(col => col.id === overId)) {
+            newStatus = overId;
+        } else {
+            // Dropped on another module - find its status
+            const overModule = modules.find(m => String(m.id) === String(overId));
+            if (overModule) {
+                newStatus = overModule.status;
+            } else {
+                // Drop on unknown element
+                return;
+            }
+        }
+
+        // Find the active module
+        const module = modules.find(m => String(m.id) === String(activeId));
         if (!module || module.status === newStatus) return;
 
         try {
@@ -222,7 +279,7 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
             };
 
             await updateModule({
-                end_point: `/update-project-module/${moduleId}`,
+                end_point: `/update-project-module/${module.id}`,
                 body: payload,
             }).unwrap();
 
@@ -295,21 +352,30 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
                 </Button>
             </div>
 
-            {/* Kanban Board - Fixed Height with Scroll */}
-            <div style={{ height: '800px', maxHeight: '800px', overflow: 'hidden' }}>
+            {/* Kanban Board - Dynamic Height with Limits */}
+            <div 
+                id="kanban-board"
+                style={{ 
+                    maxHeight: '800px', 
+                    minHeight: '280px', // Approx for 2 cards + padding
+                    height: 'auto',
+                    overflow: 'hidden' // Scrolling is handled inside columns
+                }}
+            >
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
+                    modifiers={[restrictToBoard]}
                 >
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" style={{ height: '100%' }}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" style={{ height: 'auto' }}>
                         {STATUS_COLUMNS.map((column) => (
                             <div
                                 key={column.id}
                                 data-status={column.id}
                                 className="flex-1 min-w-[280px]"
-                                style={{ height: '100%' }}
+                                style={{ height: 'auto' }}
                             >
                                 <KanbanColumn
                                     column={column}
