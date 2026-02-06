@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     DndContext,
     DragOverlay,
@@ -16,7 +17,7 @@ import {
     useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Plus, GripVertical, Edit2, Trash2, Calendar, Clock, LayoutList, LayoutGrid, ChevronDown } from 'lucide-react';
+import { Plus, GripVertical, Edit2, Trash2, Calendar, Clock, LayoutList, LayoutGrid, ChevronDown, Eye } from 'lucide-react';
 import { useGetApiWithIdQuery, usePostApiMutation, useDeleteApiMutation } from '../../../store/api/commonApi';
 import { toast } from 'react-toastify';
 import Button from '../../../components/ui/Button';
@@ -32,7 +33,7 @@ const STATUS_COLUMNS = [
     { id: 'on_hold', label: 'On Hold', color: 'error' },
 ];
 
-const ModuleCard = ({ module, onEdit, onDelete }) => {
+const ModuleCard = ({ module, onEdit, onDelete, onViewTask }) => {
     const {
         attributes,
         listeners,
@@ -85,6 +86,17 @@ const ModuleCard = ({ module, onEdit, onDelete }) => {
             </div>
 
             <div className="flex items-center gap-2 pt-2 border-t border-[var(--border-main)]">
+                 <button
+                    onClick={(e) => {
+                        e.stopPropagation(); // Prevent drag start
+                        onViewTask(module);
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()} // Extra safety for dnd-kit
+                    className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 rounded transition-colors"
+                >
+                    <Eye className="w-3 h-3" />
+                    Tasks
+                </button>
                 <button
                     onClick={(e) => {
                         e.stopPropagation(); // Prevent drag start
@@ -112,7 +124,7 @@ const ModuleCard = ({ module, onEdit, onDelete }) => {
     );
 };
 
-const KanbanColumn = ({ column, modules, onEdit, onDelete }) => {
+const KanbanColumn = ({ column, modules, onEdit, onDelete, onViewTask }) => {
     const moduleIds = modules.map(m => String(m.id));
     const { setNodeRef, isOver } = useDroppable({
         id: column.id,
@@ -156,6 +168,7 @@ const KanbanColumn = ({ column, modules, onEdit, onDelete }) => {
                                 module={module}
                                 onEdit={onEdit}
                                 onDelete={onDelete}
+                                onViewTask={onViewTask}
                             />
                         ))
                     )}
@@ -165,7 +178,7 @@ const KanbanColumn = ({ column, modules, onEdit, onDelete }) => {
     );
 };
 
-const ModuleListView = ({ modules, onEdit, onDelete, onStatusChange }) => {
+const ModuleListView = ({ modules, onEdit, onDelete, onStatusChange, onViewTask }) => {
     return (
         <div className="overflow-x-auto rounded-lg border border-[var(--border-main)] bg-[var(--bg-app)]/50">
             <table className="w-full text-left border-collapse">
@@ -236,6 +249,13 @@ const ModuleListView = ({ modules, onEdit, onDelete, onStatusChange }) => {
                                 </td>
                                 <td className="p-4 text-right">
                                     <div className="flex items-center justify-end gap-2">
+                                         <button
+                                            onClick={() => onViewTask(module)}
+                                            className="p-1.5 rounded-md text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 transition-colors"
+                                            title="View Tasks"
+                                        >
+                                            <Eye className="w-4 h-4" />
+                                        </button>
                                         <button
                                             onClick={() => onEdit(module)}
                                             className="p-1.5 rounded-md text-[var(--text-muted)] hover:text-primary-500 hover:bg-primary-500/10 transition-colors"
@@ -262,6 +282,7 @@ const ModuleListView = ({ modules, onEdit, onDelete, onStatusChange }) => {
 };
 
 const ProjectModuleKanban = ({ projectId, onRefresh }) => {
+    const navigate = useNavigate();
     const [viewMode, setViewMode] = useState('kanban'); // 'kanban' | 'list'
     const [activeId, setActiveId] = useState(null);
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -399,6 +420,10 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
         setIsFormModalOpen(true);
     };
 
+    const handleViewTask = (module) => {
+        navigate(`/projects/${projectId}/planning/${module.id}`);
+    };
+
     const handleDelete = (module) => {
         setSelectedModule(module);
         setIsDeleteModalOpen(true);
@@ -511,6 +536,7 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
                                         modules={modulesByStatus[column.id] || []}
                                         onEdit={handleEdit}
                                         onDelete={handleDelete}
+                                        onViewTask={handleViewTask}
                                     />
                                 </div>
                             ))}
@@ -534,6 +560,7 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
                     onEdit={handleEdit} 
                     onDelete={handleDelete}
                     onStatusChange={performStatusUpdate}
+                    onViewTask={handleViewTask}
                 />
             )}
 

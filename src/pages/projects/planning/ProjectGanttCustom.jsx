@@ -1,6 +1,5 @@
 import { useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { GanttChart, Edit2, Trash2, Plus, Eye } from 'lucide-react';
+import { GanttChart, Edit2, Trash2, Plus } from 'lucide-react';
 import { useGetApiWithIdQuery } from '../../../store/api/commonApi';
 import { format, eachDayOfInterval, isToday, isWeekend } from 'date-fns';
 import Button from '../../../components/ui/Button';
@@ -16,10 +15,6 @@ const ProjectGanttCustom = ({
     onDelete,
     onAdd,
 }) => {
-    const navigate = useNavigate();
-    const handleView = (item) => {
-        navigate(`/projects/${projectId}/planning/${item.id}`);
-    };
     const { data: planningRes } = useGetApiWithIdQuery(
         { url: '/project-planning-list', id: projectId },
         { skip: !projectId || itemsProp !== undefined }
@@ -433,14 +428,7 @@ const ProjectGanttCustom = ({
                                                     }}
                                                 >
                                                     {/* Actions - Attached to the left of the bar */}
-                                                     <div className="absolute right-full mr-2 flex items-center gap-1 opacity-100 transition-opacity z-30 top-1/2 -translate-y-1/2 bg-[var(--bg-app)]/80 rounded p-0.5 backdrop-blur-sm border border-[var(--border-main)]">
-                                                        <button 
-                                                            onClick={(e) => { e.stopPropagation(); handleView(bar); }}
-                                                            className="p-1 rounded bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
-                                                            title="View"
-                                                        >
-                                                            <Eye className="w-3 h-3" />
-                                                        </button>
+                                                     <div className="absolute right-full mr-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-30 top-1/2 -translate-y-1/2 bg-[var(--bg-app)]/80 rounded p-0.5 backdrop-blur-sm border border-[var(--border-main)]">
                                                         {onEdit && (
                                                             <button 
                                                                 onClick={(e) => { e.stopPropagation(); onEdit(bar); }}
@@ -463,8 +451,7 @@ const ProjectGanttCustom = ({
 
                                                     {/* Progress bar background */}
                                                     <div 
-                                                        className={`h-full ${getStatusColor(bar.status)} relative rounded-md overflow-hidden cursor-pointer hover:brightness-105 transition-all`}
-                                                        onClick={() => handleView(bar)}
+                                                        className={`h-full ${getStatusColor(bar.status)} relative rounded-md overflow-hidden transition-all`}
                                                     >
                                                         {/* Completed portion */}
                                                         {bar.progress > 0 && (
