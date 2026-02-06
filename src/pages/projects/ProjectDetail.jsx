@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useGetApiWithIdQuery } from '../../store/api/commonApi';
+import { useGetApiWithIdQuery, useGetApiQuery, useDeleteApiMutation } from '../../store/api/commonApi';
 import {
     ArrowLeft,
     Edit,
@@ -16,22 +16,56 @@ import {
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import ProjectFormModal from './ProjectFormModal';
-import ProjectPlanningSection from './planning/ProjectPlanningSection';
+import ProjectPlanningFormModal from './planning/ProjectPlanningFormModal';
+import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import ProjectManpowerSection from './planning/ProjectManpowerSection';
 import ProjectGanttCustom from './planning/ProjectGanttCustom';
 import ProjectModuleKanban from './modules/ProjectModuleKanban';
 import DateTime from '../../components/ui/DateTime';
 import ProgressBar from '../../components/ui/ProgressBar';
+import { toast } from 'react-toastify';
 
 const ProjectDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    
+    // Planning state
+    const [addPlanningModalOpen, setAddPlanningModalOpen] = useState(false);
+    const [editPlanningItem, setEditPlanningItem] = useState(null);
+    const [deletePlanningItem, setDeletePlanningItem] = useState(null);
+    const [deletePlanning, { isLoading: isDeletingPlanning }] = useDeleteApiMutation();
 
     const { data: response, isLoading, refetch } = useGetApiWithIdQuery({
         url: '/projects',
         id: id,
     });
+
+    const { data: planningRes, refetch: refetchPlanning } = useGetApiWithIdQuery(
+        { url: '/project-planning-list', id: id },
+        { skip: !id }
+    );
+    
+    // Planning types for the modal
+    const { data: planningTypesRes } = useGetApiQuery(
+        { url: '/planning-type-list' },
+        { skip: !id }
+    );
+
+    const planningList = planningRes?.data?.data ?? planningRes?.data ?? [];
+    const planningTypes = planningTypesRes?.data?.data ?? planningTypesRes?.data ?? [];
+
+    const handlePlanningDelete = async () => {
+        if (!deletePlanningItem) return;
+        try {
+            await deletePlanning({ end_point: `/delete-project-planning/${deletePlanningItem.id}` }).unwrap();
+            toast.success('Planning item removed');
+            setDeletePlanningItem(null);
+            refetchPlanning();
+        } catch (e) {
+            toast.error(e?.data?.message || 'Failed to delete');
+        }
+    };
 
     const project = response?.data;
 
@@ -189,32 +223,24 @@ const ProjectDetail = () => {
                 </div>
             </div>
 
-            {/* Planning + Gantt (20/80): sidebar list + timeline */}
+            {/* Planning + Gantt (Full Width) */}
             <div className="card overflow-hidden">
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-0">
-                    {/* Planning sidebar (20%) */}
-                    <div className="min-w-0 lg:col-span-1 lg:border-r border-[var(--border-main)] lg:pr-6">
-                        <ProjectPlanningSection
-                            projectId={id}
-                            projectStart={project.start_date}
-                            projectEnd={project.end_date}
-                            onRefresh={refetch}
-                            showGantt={false}
-                            compact
-                            scrollHeightClass="h-[420px]"
-                        />
-                    </div>
-
-                    {/* Gantt (80%) */}
-                    <div className="min-w-0 pt-6 lg:pt-0 lg:pl-6 lg:col-span-4">
-                        <ProjectGanttCustom
-                            projectId={id}
-                            projectStart={project.start_date}
-                            projectEnd={project.end_date}
-                            minHeight={420}
-                        />
-                    </div>
-                </div>
+                <ProjectGanttCustom
+                    projectId={id}
+                    items={planningList}
+                    projectStart={project.start_date}
+                    projectEnd={project.end_date}
+                    minHeight={500}
+                    onAdd={() => {
+                        setEditPlanningItem(null);
+                        setAddPlanningModalOpen(true);
+                    }}
+                    onEdit={(item) => {
+                        setEditPlanningItem(item);
+                        setAddPlanningModalOpen(true);
+                    }}
+                    onDelete={(item) => setDeletePlanningItem(item)}
+                />
             </div>
 
             {/* Project Modules Kanban Board */}
@@ -226,6 +252,30 @@ const ProjectDetail = () => {
                 projectId={id}
                 mode="edit"
                 onSuccess={refetch}
+            />
+
+            <ProjectPlanningFormModal
+                isOpen={addPlanningModalOpen}
+                onClose={() => {
+                    setAddPlanningModalOpen(false);
+                    setEditPlanningItem(null);
+                }}
+                projectId={id}
+                planningTypes={planningTypes}
+                editItem={editPlanningItem}
+                onSuccess={() => {
+                    refetchPlanning();
+                    refetch(); // Update project progress if needed
+                }}
+            />
+
+            <ConfirmationModal
+                isOpen={!!deletePlanningItem}
+                onClose={() => setDeletePlanningItem(null)}
+                onConfirm={handlePlanningDelete}
+                title="Remove planning item"
+                message={`Remove "${deletePlanningItem?.description || deletePlanningItem?.title || deletePlanningItem?.name || 'this item'}"?`}
+                isLoading={isDeletingPlanning}
             />
         </div>
     );
