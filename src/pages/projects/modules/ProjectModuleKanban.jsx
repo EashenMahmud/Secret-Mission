@@ -10,22 +10,20 @@ import {
     useDroppable,
 } from '@dnd-kit/core';
 import {
-    arrayMove,
     SortableContext,
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import {
     useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Plus, GripVertical, Edit2, Trash2, Calendar, Clock } from 'lucide-react';
+import { Plus, GripVertical, Edit2, Trash2, Calendar, Clock, LayoutList, LayoutGrid, ChevronDown } from 'lucide-react';
 import { useGetApiWithIdQuery, usePostApiMutation, useDeleteApiMutation } from '../../../store/api/commonApi';
 import { toast } from 'react-toastify';
 import Button from '../../../components/ui/Button';
 import ProjectModuleFormModal from './ProjectModuleFormModal';
 import ConfirmationModal from '../../../components/ui/ConfirmationModal';
 import Badge from '../../../components/ui/Badge';
+import { cn } from '../../../lib/utils';
 
 const STATUS_COLUMNS = [
     { id: 'pending', label: 'Pending', color: 'warning' },
@@ -167,7 +165,104 @@ const KanbanColumn = ({ column, modules, onEdit, onDelete }) => {
     );
 };
 
+const ModuleListView = ({ modules, onEdit, onDelete, onStatusChange }) => {
+    return (
+        <div className="overflow-x-auto rounded-lg border border-[var(--border-main)] bg-[var(--bg-app)]/50">
+            <table className="w-full text-left border-collapse">
+                <thead>
+                    <tr className="border-b border-[var(--border-main)] bg-[var(--bg-card)]/50 text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">
+                        <th className="p-4">Name</th>
+                        <th className="p-4">Description</th>
+                        <th className="p-4">Est. Days</th>
+                        <th className="p-4">Status</th>
+                        <th className="p-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--border-main)]">
+                    {modules.length === 0 ? (
+                         <tr>
+                            <td colSpan={5} className="p-8 text-center text-[var(--text-muted)] italic">
+                                No modules found. Add one to get started.
+                            </td>
+                        </tr>
+                    ) : (
+                        modules.map(module => (
+                            <tr key={module.id} className="group hover:bg-[var(--bg-card)]/50 transition-colors">
+                                <td className="p-4 font-medium text-[var(--text-main)]">
+                                    {module.name}
+                                </td>
+                                <td className="p-4 text-sm text-[var(--text-muted)] max-w-md truncate">
+                                    {module.description || '-'}
+                                </td>
+                                <td className="p-4 text-sm text-[var(--text-muted)]">
+                                    {module.estimated_days ? (
+                                        <div className="flex items-center gap-1.5">
+                                            <Clock className="w-3.5 h-3.5 opacity-70" />
+                                            {module.estimated_days}d
+                                        </div>
+                                    ) : '-'}
+                                </td>
+                                <td className="p-4">
+                                    <div className="relative inline-block w-40">
+                                        <select
+                                            value={module.status}
+                                            onChange={(e) => onStatusChange(module, e.target.value)}
+                                            className={cn(
+                                                "w-full appearance-none pl-3 pr-8 py-1.5 rounded-md text-xs font-medium border cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all",
+                                                STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'success' && "bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20",
+                                                STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'warning' && "bg-yellow-500/10 text-yellow-500 border-yellow-500/20 hover:bg-yellow-500/20",
+                                                STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'info' && "bg-blue-500/10 text-blue-500 border-blue-500/20 hover:bg-blue-500/20",
+                                                STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'error' && "bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20",
+                                                !module.status && "bg-gray-500/10 text-gray-500 border-gray-500/20"
+                                            )}
+                                        >
+                                            {STATUS_COLUMNS.map(col => (
+                                                <option key={col.id} value={col.id} className="text-[var(--text-main)] bg-[var(--bg-card)]">
+                                                    {col.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+                                            <ChevronDown className={cn(
+                                                 "h-3 w-3",
+                                                  STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'success' ? "text-green-500" :
+                                                  STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'warning' ? "text-yellow-500" :
+                                                  STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'info' ? "text-blue-500" :
+                                                  STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'error' ? "text-red-500" :
+                                                  "text-gray-500"
+                                            )} />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className="p-4 text-right">
+                                    <div className="flex items-center justify-end gap-2">
+                                        <button
+                                            onClick={() => onEdit(module)}
+                                            className="p-1.5 rounded-md text-[var(--text-muted)] hover:text-primary-500 hover:bg-primary-500/10 transition-colors"
+                                            title="Edit"
+                                        >
+                                            <Edit2 className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => onDelete(module)}
+                                            className="p-1.5 rounded-md text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                                            title="Delete"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))
+                    )}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
 const ProjectModuleKanban = ({ projectId, onRefresh }) => {
+    const [viewMode, setViewMode] = useState('kanban'); // 'kanban' | 'list'
     const [activeId, setActiveId] = useState(null);
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -202,6 +297,31 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
         });
         return grouped;
     }, [modules]);
+
+    const performStatusUpdate = async (module, newStatus) => {
+         try {
+            // Update module status via POST
+            const payload = {
+                name: module.name,
+                description: module.description || '',
+                estimated_days: module.estimated_days || 0,
+                status: newStatus,
+                is_completed: newStatus === 'completed',
+                completed_at: newStatus === 'completed' ? new Date().toISOString().split('T')[0] : null,
+            };
+
+            await updateModule({
+                end_point: `/update-project-module/${module.id}`,
+                body: payload,
+            }).unwrap();
+
+            toast.success('Module status updated');
+            refetch();
+            onRefresh?.();
+        } catch (error) {
+            toast.error(error?.data?.message || 'Failed to update module status');
+        }
+    }
 
     const restrictToBoard = ({ transform, draggingNodeRect, windowRect }) => {
         const boardElement = document.getElementById('kanban-board');
@@ -258,7 +378,6 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
             if (overModule) {
                 newStatus = overModule.status;
             } else {
-                // Drop on unknown element
                 return;
             }
         }
@@ -267,28 +386,7 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
         const module = modules.find(m => String(m.id) === String(activeId));
         if (!module || module.status === newStatus) return;
 
-        try {
-            // Update module status via POST
-            const payload = {
-                name: module.name,
-                description: module.description || '',
-                estimated_days: module.estimated_days || 0,
-                status: newStatus,
-                is_completed: newStatus === 'completed',
-                completed_at: newStatus === 'completed' ? new Date().toISOString().split('T')[0] : null,
-            };
-
-            await updateModule({
-                end_point: `/update-project-module/${module.id}`,
-                body: payload,
-            }).unwrap();
-
-            toast.success('Module status updated');
-            refetch();
-            onRefresh?.();
-        } catch (error) {
-            toast.error(error?.data?.message || 'Failed to update module status');
-        }
+        await performStatusUpdate(module, newStatus);
     };
 
     const handleAdd = () => {
@@ -345,60 +443,99 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h2 className="text-xl font-bold text-[var(--text-main)] mb-1">Project Modules</h2>
-                    <p className="text-sm text-[var(--text-muted)]">Drag and drop to update status</p>
+                    <p className="text-sm text-[var(--text-muted)]">
+                        {viewMode === 'kanban' ? 'Drag and drop to update status' : 'Manage modules in list view'}
+                    </p>
                 </div>
-                <Button onClick={handleAdd} leftIcon={<Plus className="w-4 h-4" />}>
-                    Add Module
-                </Button>
-            </div>
-
-            {/* Kanban Board - Dynamic Height with Limits */}
-            <div 
-                id="kanban-board"
-                style={{ 
-                    maxHeight: '800px', 
-                    minHeight: '280px', // Approx for 2 cards + padding
-                    height: 'auto',
-                    overflow: 'hidden' // Scrolling is handled inside columns
-                }}
-            >
-                <DndContext
-                    sensors={sensors}
-                    collisionDetection={closestCenter}
-                    onDragStart={handleDragStart}
-                    onDragEnd={handleDragEnd}
-                    modifiers={[restrictToBoard]}
-                >
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" style={{ height: 'auto' }}>
-                        {STATUS_COLUMNS.map((column) => (
-                            <div
-                                key={column.id}
-                                data-status={column.id}
-                                className="flex-1 min-w-[280px]"
-                                style={{ height: 'auto' }}
-                            >
-                                <KanbanColumn
-                                    column={column}
-                                    modules={modulesByStatus[column.id] || []}
-                                    onEdit={handleEdit}
-                                    onDelete={handleDelete}
-                                />
-                            </div>
-                        ))}
-                    </div>
-
-                <DragOverlay>
-                    {activeModule ? (
-                        <div className="bg-[var(--bg-card)] border border-primary-500 rounded-lg p-4 shadow-lg opacity-95">
-                            <h4 className="font-semibold text-[var(--text-main)] mb-1">{activeModule.name}</h4>
-                            {activeModule.description && (
-                                <p className="text-sm text-[var(--text-muted)] line-clamp-2">{activeModule.description}</p>
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center p-1 rounded-lg bg-[var(--bg-app)]/50 border border-[var(--border-main)]">
+                         <button
+                            onClick={() => setViewMode('kanban')}
+                            className={cn(
+                                "p-1.5 rounded-md transition-all",
+                                viewMode === 'kanban' 
+                                    ? "bg-[var(--bg-card)] text-primary-500 shadow-sm" 
+                                    : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
                             )}
-                        </div>
-                    ) : null}
-                </DragOverlay>
-                </DndContext>
+                            title="Kanban View"
+                        >
+                            <LayoutGrid className="w-4 h-4" />
+                        </button>
+                        <button
+                            onClick={() => setViewMode('list')}
+                            className={cn(
+                                "p-1.5 rounded-md transition-all",
+                                viewMode === 'list' 
+                                    ? "bg-[var(--bg-card)] text-primary-500 shadow-sm" 
+                                    : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                            )}
+                             title="List View"
+                        >
+                            <LayoutList className="w-4 h-4" />
+                        </button>
+                    </div>
+                    <Button onClick={handleAdd} leftIcon={<Plus className="w-4 h-4" />}>
+                        Add Module
+                    </Button>
+                </div>
             </div>
+
+            {/* Content Switcher */}
+            {viewMode === 'kanban' ? (
+                 <div 
+                    id="kanban-board"
+                    style={{ 
+                        maxHeight: '800px', 
+                        minHeight: '280px', // Approx for 2 cards + padding
+                        height: 'auto',
+                        overflow: 'hidden' // Scrolling is handled inside columns
+                    }}
+                >
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragStart={handleDragStart}
+                        onDragEnd={handleDragEnd}
+                        modifiers={[restrictToBoard]}
+                    >
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" style={{ height: 'auto' }}>
+                            {STATUS_COLUMNS.map((column) => (
+                                <div
+                                    key={column.id}
+                                    data-status={column.id}
+                                    className="flex-1 min-w-[280px]"
+                                    style={{ height: 'auto' }}
+                                >
+                                    <KanbanColumn
+                                        column={column}
+                                        modules={modulesByStatus[column.id] || []}
+                                        onEdit={handleEdit}
+                                        onDelete={handleDelete}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+
+                    <DragOverlay>
+                        {activeModule ? (
+                            <div className="bg-[var(--bg-card)] border border-primary-500 rounded-lg p-4 shadow-lg opacity-95">
+                                <h4 className="font-semibold text-[var(--text-main)] mb-1">{activeModule.name}</h4>
+                                {activeModule.description && (
+                                    <p className="text-sm text-[var(--text-muted)] line-clamp-2">{activeModule.description}</p>
+                                )}
+                            </div>
+                        ) : null}
+                    </DragOverlay>
+                    </DndContext>
+                </div>
+            ) : (
+                <ModuleListView 
+                    modules={modules} 
+                    onEdit={handleEdit} 
+                    onDelete={handleDelete}
+                    onStatusChange={performStatusUpdate}
+                />
+            )}
 
             <ProjectModuleFormModal
                 isOpen={isFormModalOpen}
