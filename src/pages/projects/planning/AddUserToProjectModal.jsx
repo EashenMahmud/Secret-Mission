@@ -24,7 +24,10 @@ const AddUserToProjectModal = ({ isOpen, onClose, projectId, assignedUserIds = [
         try {
             await postApi({
                 end_point: '/add-multiple-users-to-project',
-                body: { project_id: Number(projectId), user_ids: values.user_ids },
+                body: { 
+                    project_id: Number(projectId), 
+                    user_ids: values.user_ids 
+                },
             }).unwrap();
             toast.success('Users added to project');
             onSuccess?.();
