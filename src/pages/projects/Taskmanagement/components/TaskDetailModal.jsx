@@ -4,6 +4,8 @@ import { createPortal } from 'react-dom';
 import { useGetApiWithIdQuery, usePostApiMutation } from '../../../../store/api/commonApi';
 import { TaskStatusBadge, TaskPriorityBadge } from './TaskStatusBadge';
 import TaskAssignees from './TaskAssignees';
+import TaskSubtasks from './TaskSubtasks';
+import TaskDiscussions from './TaskDiscussions';
 import Button from '../../../../components/ui/Button';
 import DateTime from '../../../../components/ui/DateTime';
 import { toast } from 'react-toastify';
@@ -281,6 +283,17 @@ const TaskDetailModal = ({
                                 )}
                             </div>
 
+                            {/* Subtasks */}
+                            <div className="bg-[var(--bg-app)] rounded-lg p-4">
+                                <TaskSubtasks
+                                    taskId={taskId}
+                                    onUpdate={() => {
+                                        refetch();
+                                        onUpdate?.();
+                                    }}
+                                />
+                            </div>
+
                             {/* Assignees */}
                             <div className="bg-[var(--bg-app)] rounded-lg p-4">
                                 <TaskAssignees
@@ -292,6 +305,11 @@ const TaskDetailModal = ({
                                         onUpdate?.();
                                     }}
                                 />
+                            </div>
+
+                            {/* Discussions */}
+                            <div className="bg-[var(--bg-app)] rounded-lg p-4">
+                                <TaskDiscussions taskId={taskId} />
                             </div>
 
                             {/* Activity Log */}
