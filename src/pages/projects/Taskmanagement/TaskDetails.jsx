@@ -246,6 +246,7 @@ const TaskDetails = () => {
                     tasks={filteredTasks}
                     onTaskClick={handleTaskClick}
                     onAddTask={() => setShowCreateModal(true)}
+                    onStatusChange={handleTaskSuccess}
                     isLoading={isLoading}
                 />
             ) : (
