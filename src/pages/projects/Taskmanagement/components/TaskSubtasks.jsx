@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Plus, CheckCircle2, Circle, Trash2, X, MoreHorizontal, Check } from 'lucide-react';
-import { usePostApiMutation, useGetApiQuery } from '../../../../store/api/commonApi';
+import { Plus, CheckSquare, Square, Trash2, X, Check, Loader2, Edit2 } from 'lucide-react';
+import { usePostApiMutation, useGetApiQuery, useDeleteApiMutation } from '../../../../store/api/commonApi';
 import { toast } from 'react-toastify';
 import { cn } from '../../../../lib/utils';
 import Button from '../../../../components/ui/Button';
@@ -10,6 +10,7 @@ const TaskSubtasks = ({ taskId, onUpdate }) => {
     const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
     const [editingId, setEditingId] = useState(null);
     const [editTitle, setEditTitle] = useState('');
+    const [loadingIds, setLoadingIds] = useState(new Set());
 
     // Fetch subtasks
     const { data: subtasksData, refetch, isLoading: isLoadingSubtasks } = useGetApiQuery(
@@ -18,12 +19,7 @@ const TaskSubtasks = ({ taskId, onUpdate }) => {
     );
 
     const [postApi] = usePostApiMutation();
-    const [deleteApi] = usePostApiMutation(); // The user said DELETE /delete-sub-task/{id} but usually we use postApi for everything in this project or deleteApi if it's actual delete method. The user provided "/delete-sub-task/{id}" which implies a URL. The commonApi has deleteApi. Let's check commonApi again.
-    // Actually commonApi has deleteApi: builder.mutation({ query: ({ end_point }) => ({ url: end_point, method: 'DELETE' }) })
-    // But the user lists it as /delete-sub-task/{id}. I will try to use the deleteApi if it supports the method, otherwise post. The user said "and these are for discussion api in the image", implying the first list was just text.
-    // Let's assume standard REST for delete if possible, or POST if the project uses POST for everything.
-    // Looking at previous chats, the project seems to use POST for almost everything including updates.
-    // But commonApi has `deleteApi`. I'll try `deleteApi` for delete.
+    const [deleteApi] = useDeleteApiMutation();
 
     const subtasks = subtasksData?.data || [];
 
@@ -51,74 +47,36 @@ const TaskSubtasks = ({ taskId, onUpdate }) => {
     };
 
     const handleToggleComplete = async (subtaskId, currentStatus) => {
+        // Prevent multiple clicks
+        if (loadingIds.has(subtaskId)) return;
+
+        setLoadingIds(prev => new Set(prev).add(subtaskId));
+
         try {
+            const endpoint = currentStatus
+                ? `/mark-sub-task-incomplete/${subtaskId}`
+                : `/mark-sub-task-completed/${subtaskId}`;
+
             await postApi({
-                end_point: `/mark-sub-task-completed/${subtaskId}`,
-                body: {} // Usually toggle endpoints don't need body if the logic is on server, or maybe status.
-                // The user listed "/mark-sub-task-completed/{sub_task_id}".
+                end_point: endpoint,
+                body: {}
             }).unwrap();
 
             refetch();
             onUpdate?.();
         } catch (error) {
             toast.error('Failed to update subtask');
+        } finally {
+            setLoadingIds(prev => {
+                const next = new Set(prev);
+                next.delete(subtaskId);
+                return next;
+            });
         }
     };
-
-    const handleDelete = async (subtaskId) => {
-        try {
-            // using deleteApi from commonApi which uses method: 'DELETE'
-            // The endpoint provided is /delete-sub-task/{id}
-            await postApi({
-                end_point: `/delete-sub-task/${subtaskId}`, // Just in case it's a POST-based delete like others, I'll use postApi first? 
-                // Wait, usually delete is DELETE. But if previous endpoints were "POST /update...", maybe this is "POST /delete..."?
-                // The user provided list: "/delete-sub-task/{id}". 
-                // In my implementation plan I wrote DELETE. 
-                // Let's check `UserList.jsx` to see how they delete.
-                // UserList uses `useDeleteApiMutation`.
-                // I will use `useDeleteApiMutation` but if it fails I might need to switch.
-                // However, the commonApi definition for deleteApi is method: 'DELETE'.
-                // If the backend expects POST for delete (which is weird but possible in some legacy PHP apps), this might fail.
-                // But looking at the endpoint name `/delete-sub-task/...`, it looks like an action.
-                // I'll stick to `useDeleteApiMutation` first as per plan. 
-                // actually wait, look at `commonApi.js`:
-                // deleteApi: builder.mutation({ query: ({ end_point }) => ({ url: end_point, method: 'DELETE' }) })
-                // If the backend route is defined as Route::post('delete-sub-task/{id}'), then I must use POST.
-                // Most Laravel action-based routes like `mark-completed` suggests a controller action.
-                // I'll bet on POST for safety given the other endpoints are POST.
-                // actually, I will check UserList again.
-                // UserList: `deleteUser({ end_point: /users/${userToDelete.id} })` -> This looks like RESTful resource delete.
-                // `/delete-sub-task/{id}` looks like a custom RPC-style endpoint, which often uses POST.
-                // I will use POST for `/delete-sub-task/{id}`.
-                method: 'DELETE', // Wait, commonApi postApi forces method POST.
-            }).unwrap();
-
-            refetch();
-            onUpdate?.();
-            toast.success('Subtask deleted');
-        } catch (error) {
-            // If POST method not allowed, maybe try DELETE?
-            // But I can't try-catch distinct methods easily with hooks rules.
-            // I'll assume standard DELETE for now using the explicit delete hook if I have it.
-            // Actually, looking at `commonApi.js` snippet from earlier: 
-            // `deleteApi` is method DELETE.
-            // `postApi` is method POST.
-            // I will use `deleteApi` which sends DELETE method.
-        }
-    };
-
-    // Actually, looking at the URL pattern /delete-sub-task/{id}, it strongly suggests an action URL rather than a resource URL (/sub-tasks/{id}).
-    // Action URLs in this project seem to be POST.
-    // I will use usePostApiMutation for delete as well, pointing to that URL.
 
     const deleteSubtask = async (id) => {
         try {
-            // Using DELETE method via deleteApi
-            // If the user provided URL is literally /delete-sub-task/{id}, it might be a DELETE route or POST.
-            // Let's rely on the fact that `commonApi` has `deleteApi`.
-            // But wait, I recall `UserList` using `deleteApi`.
-            // `UserList` used `useDeleteApiMutation`.
-            // I'll import `useDeleteApiMutation`.
             await deleteApi({ end_point: `/delete-sub-task/${id}` }).unwrap();
             refetch();
             onUpdate?.();
@@ -144,7 +102,7 @@ const TaskSubtasks = ({ taskId, onUpdate }) => {
             await postApi({
                 end_point: `/update-sub-task/${editingId}`,
                 body: { title: editTitle }
-            }).unwrap(); // Assuming the body needs title.
+            }).unwrap();
 
             setEditingId(null);
             refetch();
@@ -202,15 +160,19 @@ const TaskSubtasks = ({ taskId, onUpdate }) => {
                     >
                         <button
                             onClick={() => handleToggleComplete(subtask.id, subtask.is_completed)}
+                            disabled={loadingIds.has(subtask.id)}
                             className={cn(
                                 "mt-0.5 flex-shrink-0 transition-colors",
-                                subtask.is_completed ? "text-green-500" : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                                subtask.is_completed ? "text-green-500" : "text-[var(--text-muted)] hover:text-[var(--text-main)]",
+                                loadingIds.has(subtask.id) && "opacity-50 cursor-wait"
                             )}
                         >
-                            {subtask.is_completed ? (
-                                <CheckCircle2 className="w-5 h-5" />
+                            {loadingIds.has(subtask.id) ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : subtask.is_completed ? (
+                                <CheckSquare className="w-5 h-5" />
                             ) : (
-                                <Circle className="w-5 h-5" />
+                                <Square className="w-5 h-5" />
                             )}
                         </button>
 
@@ -252,15 +214,17 @@ const TaskSubtasks = ({ taskId, onUpdate }) => {
                                         title="Edit"
                                         disabled={subtask.is_completed}
                                     >
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /></svg>
+                                        <Edit2 className="w-3.5 h-3.5" />
                                     </button>
-                                    <button
-                                        onClick={() => deleteSubtask(subtask.id)}
-                                        className="p-1 text-[var(--text-muted)] hover:text-red-500 rounded"
-                                        title="Delete"
-                                    >
-                                        <Trash2 className="w-3.5 h-3.5" />
-                                    </button>
+                                    {!subtask.is_completed && (
+                                        <button
+                                            onClick={() => deleteSubtask(subtask.id)}
+                                            className="p-1 text-[var(--text-muted)] hover:text-red-500 rounded"
+                                            title="Delete"
+                                        >
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         )}
@@ -269,7 +233,7 @@ const TaskSubtasks = ({ taskId, onUpdate }) => {
 
                 {isAdding && (
                     <form onSubmit={handleAddSubtask} className="flex items-center gap-3 p-2">
-                        <Circle className="w-5 h-5 text-[var(--text-muted)] dashed opacity-50" />
+                        <Square className="w-5 h-5 text-[var(--text-muted)] dashed opacity-50" />
                         <div className="flex-1 flex items-center gap-2">
                             <input
                                 type="text"
