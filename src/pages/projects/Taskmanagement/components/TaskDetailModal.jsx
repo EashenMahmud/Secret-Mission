@@ -5,6 +5,7 @@ import { useGetApiWithIdQuery, usePostApiMutation } from '../../../../store/api/
 import { TaskStatusBadge, TaskPriorityBadge } from './TaskStatusBadge';
 import TaskAssignees from './TaskAssignees';
 import Button from '../../../../components/ui/Button';
+import DateTime from '../../../../components/ui/DateTime';
 import { toast } from 'react-toastify';
 import { cn } from '../../../../lib/utils';
 
@@ -97,15 +98,7 @@ const TaskDetailModal = ({
         }
     };
 
-    const formatDate = (dateStr) => {
-        if (!dateStr) return 'Not set';
-        return new Date(dateStr).toLocaleDateString('en-US', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-        });
-    };
+
 
     const isOverdue = task?.deadline && new Date(task.deadline) < new Date() && task?.status !== 'completed';
 
@@ -229,7 +222,11 @@ const TaskDetailModal = ({
                                         <Calendar className="w-4 h-4" />
                                         <span className="text-xs font-medium">Start Date</span>
                                     </div>
-                                    <p className="text-sm text-[var(--text-main)]">{formatDate(task.start_date)}</p>
+                                    <DateTime
+                                        date={task.start_date}
+                                        variant="dateOnly"
+                                        className="text-sm text-[var(--text-main)]"
+                                    />
                                 </div>
                                 <div className={cn(
                                     "rounded-lg p-4",
@@ -242,12 +239,14 @@ const TaskDetailModal = ({
                                         <Clock className="w-4 h-4" />
                                         <span className="text-xs font-medium">Deadline</span>
                                     </div>
-                                    <p className={cn(
-                                        "text-sm",
-                                        isOverdue ? 'text-red-500 font-medium' : 'text-[var(--text-main)]'
-                                    )}>
-                                        {formatDate(task.deadline)}
-                                    </p>
+                                    <DateTime
+                                        date={task.deadline}
+                                        variant="dateOnly"
+                                        className={cn(
+                                            "text-sm",
+                                            isOverdue ? 'text-red-500 font-medium' : 'text-[var(--text-main)]'
+                                        )}
+                                    />
                                 </div>
                             </div>
 
@@ -286,7 +285,7 @@ const TaskDetailModal = ({
                             <div className="bg-[var(--bg-app)] rounded-lg p-4">
                                 <TaskAssignees
                                     taskId={taskId}
-                                    assignees={task.assignees || task.assigned_members || []}
+                                    assignments={task.assignments || []}
                                     projectId={projectId}
                                     onUpdate={() => {
                                         refetch();
