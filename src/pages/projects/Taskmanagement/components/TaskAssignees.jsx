@@ -175,7 +175,7 @@ const TaskAssignees = ({ taskId, assignments = [], onUpdate, projectId }) => {
                     </button>
                     <button
                         onClick={() => setShowDropdown(!showDropdown)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-[var(--primary-color)] text-white rounded-lg hover:bg-[var(--primary-color)]/90 transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-[var(--primary-color)]  rounded-lg hover:bg-[var(--primary-color)]/90 transition-colors"
                     >
                         <UserPlus className="w-3.5 h-3.5" />
                         Add Member
