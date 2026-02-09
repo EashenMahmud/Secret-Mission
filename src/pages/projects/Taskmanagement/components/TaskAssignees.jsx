@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { cn, getImageUrl } from '../../../../lib/utils';
 import Button from '../../../../components/ui/Button';
 import DateTime from '../../../../components/ui/DateTime';
+import Tooltip from '../../../../components/ui/Tooltip';
 
 const TaskAssignees = ({ taskId, assignments = [], onUpdate, projectId }) => {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -123,161 +124,108 @@ const TaskAssignees = ({ taskId, assignments = [], onUpdate, projectId }) => {
 
 
     // Member Avatar Component
-    const MemberAvatar = ({ user, size = 'md' }) => {
+    const MemberAvatar = ({ user, assignment, onRemove }) => {
         const profileUrl = getImageUrl(user?.profile_picture);
-        const sizeClasses = {
-            sm: 'w-8 h-8 text-xs',
-            md: 'w-10 h-10 text-sm',
-            lg: 'w-12 h-12 text-lg',
-        };
 
         return (
-            <div className="relative flex-shrink-0">
-                {profileUrl ? (
-                    <img
-                        src={profileUrl}
-                        alt={user?.name}
-                        className={cn(sizeClasses[size], "rounded-full object-cover border-2 border-[var(--border-main)]")}
-                        onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'flex';
-                        }}
-                    />
-                ) : null}
-                <div
-                    className={cn(
-                        sizeClasses[size],
-                        "rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 items-center justify-center text-white font-semibold border-2 border-[var(--border-main)]",
-                        profileUrl ? "hidden" : "flex"
-                    )}
+            <div className="group relative flex-shrink-0">
+                <Tooltip
+                    content={
+                        <div className="flex flex-col gap-0.5 p-1 min-w-[120px]">
+                            <span className="font-bold text-sm tracking-tight">{user?.name || 'Unknown'}</span>
+                            <span className="text-[10px] text-[var(--text-muted)] font-medium">{user?.email || 'No email provided'}</span>
+                            <span className="text-[10px] opacity-60 mt-0.5">{user?.user_type || 'Member'}</span>
+                            <div className="mt-2 pt-2 border-t border-[var(--border-main)]/30">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onRemove(assignment);
+                                    }}
+                                    className="w-full text-red-500 hover:text-red-400 text-left text-[10px] font-bold uppercase tracking-wider transition-colors"
+                                >
+                                    Remove from Task
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    place="top"
                 >
-                    {(user?.name || 'U').charAt(0).toUpperCase()}
-                </div>
+                    <div className="relative cursor-pointer transition-transform hover:scale-110">
+                        {profileUrl ? (
+                            <img
+                                src={profileUrl}
+                                alt={user?.name}
+                                className="w-10 h-10 rounded-full object-cover border-2 border-[var(--bg-card)] shadow-sm"
+                                onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    e.target.nextSibling.style.display = 'flex';
+                                }}
+                            />
+                        ) : null}
+                        <div
+                            className={cn(
+                                "w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 items-center justify-center text-white text-sm font-semibold border-2 border-[var(--bg-card)] shadow-sm",
+                                profileUrl ? "hidden" : "flex"
+                            )}
+                        >
+                            {(user?.name || 'U').charAt(0).toUpperCase()}
+                        </div>
+                        {assignment?.is_primary && (
+                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center shadow-sm border border-[var(--bg-card)]">
+                                <Crown className="w-2 h-2 text-white" />
+                            </div>
+                        )}
+                    </div>
+                </Tooltip>
             </div>
         );
     };
 
     return (
-        <div className="space-y-4">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <h4 className="text-sm font-semibold text-[var(--text-main)]">
-                    Assignees ({assignments.length})
-                </h4>
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={handleAssignSelf}
-                        disabled={isLoading}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[var(--primary-color)] hover:bg-[var(--primary-color)]/10 rounded-lg transition-colors"
-                    >
-                        <Hand className="w-3.5 h-3.5" />
-                        Assign to me
-                    </button>
+        <div className="relative">
+            {/* Assignees horizontal row */}
+            <div className="flex items-center flex-wrap gap-2">
+                {assignments.map((assignment) => (
+                    <MemberAvatar
+                        key={assignment.id}
+                        user={assignment.user || {}}
+                        assignment={assignment}
+                        onRemove={handleRemoveMember}
+                    />
+                ))}
+
+                {/* Circular Plus Button */}
+                <Tooltip content="Add Member" place="top">
                     <button
                         onClick={() => setShowDropdown(!showDropdown)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-[var(--primary-color)]  rounded-lg hover:bg-[var(--primary-color)]/90 transition-colors"
+                        className={cn(
+                            "w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm border-2 border-dashed",
+                            showDropdown
+                                ? "bg-[var(--primary-color)] text-white border-transparent rotate-45"
+                                : "bg-[var(--bg-app)] text-[var(--text-muted)] border-[var(--border-main)] hover:border-[var(--primary-color)] hover:text-[var(--primary-color)]"
+                        )}
                     >
-                        <UserPlus className="w-3.5 h-3.5" />
-                        Add Member
+                        <UserPlus className="w-5 h-5" />
                     </button>
-                </div>
-            </div>
+                </Tooltip>
 
-            {/* Assignees list */}
-            <div className="space-y-3">
-                {assignments.length === 0 ? (
-                    <div className="text-center py-6 border-2 border-dashed border-[var(--border-main)] rounded-lg">
-                        <UserPlus className="w-8 h-8 text-[var(--text-muted)] mx-auto mb-2" />
-                        <p className="text-sm text-[var(--text-muted)]">No assignees yet</p>
-                        <p className="text-xs text-[var(--text-muted)] mt-1">Add team members to this task</p>
-                    </div>
-                ) : (
-                    assignments.map((assignment) => {
-                        const user = assignment.user || {};
-
-                        return (
-                            <div
-                                key={assignment.id}
-                                className="flex items-start gap-3 p-3 bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl group hover:border-[var(--primary-color)]/30 transition-all"
-                            >
-                                {/* Avatar */}
-                                <div className="relative">
-                                    <MemberAvatar user={user} size="lg" />
-                                    {assignment.is_primary && (
-                                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center shadow-lg">
-                                            <Crown className="w-3 h-3 text-white" />
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Info */}
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <h5 className="text-sm font-semibold text-[var(--text-main)] truncate">
-                                            {user.name || 'Unknown User'}
-                                        </h5>
-                                        {assignment.is_primary && (
-                                            <span className="px-2 py-0.5 text-xs font-medium bg-amber-500/10 text-amber-600 rounded-full">
-                                                Primary
-                                            </span>
-                                        )}
-                                        <span className="px-2 py-0.5 text-xs font-medium bg-[var(--bg-app)] text-[var(--text-muted)] rounded-full">
-                                            {user.user_type || 'Member'}
-                                        </span>
-                                    </div>
-
-                                    {/* Contact info */}
-                                    <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--text-muted)]">
-                                        {user.email && (
-                                            <div className="flex items-center gap-1">
-                                                <Mail className="w-3 h-3" />
-                                                <span className="truncate max-w-[150px]">{user.email}</span>
-                                            </div>
-                                        )}
-                                        {user.phone && (
-                                            <div className="flex items-center gap-1">
-                                                <Phone className="w-3 h-3" />
-                                                <span>{user.phone}</span>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Assigned at */}
-                                    <div className="flex items-center gap-1 mt-2 text-xs text-[var(--text-muted)]">
-                                        <Clock className="w-3 h-3" />
-                                        <span>Assigned </span>
-                                        <DateTime
-                                            date={assignment.assigned_at || assignment.created_at}
-                                            variant="full"
-                                            className="text-xs text-[var(--text-muted)] font-normal"
-                                        />
-                                    </div>
-
-                                    {/* Instructions */}
-                                    {assignment.instructions && (
-                                        <p className="mt-2 text-xs text-[var(--text-muted)] bg-[var(--bg-app)] p-2 rounded-lg">
-                                            "{assignment.instructions}"
-                                        </p>
-                                    )}
-                                </div>
-
-                                {/* Remove button */}
-                                <button
-                                    onClick={() => handleRemoveMember(assignment)}
-                                    className="p-1.5 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
-                                    title="Remove from task"
-                                >
-                                    <X className="w-4 h-4" />
-                                </button>
-                            </div>
-                        );
-                    })
+                {/* Assign to me - Optional/Compact */}
+                {!assignments.some(a => (a.user_id || a.user?.id) === (/* Should ideally get current user ID from state/context */ null)) && (
+                    <Tooltip content="Assign to me" place="top">
+                        <button
+                            onClick={handleAssignSelf}
+                            disabled={isLoading}
+                            className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--bg-app)] text-[var(--text-muted)] border-2 border-[var(--border-main)] border-dashed transition-all hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] shadow-sm"
+                        >
+                            <Hand className="w-5 h-5" />
+                        </button>
+                    </Tooltip>
                 )}
             </div>
 
-            {/* Add member dropdown */}
+            {/* Add member dropdown - Positioned below the row */}
             {showDropdown && (
-                <div className="p-4 bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl space-y-4 animate-fade-in shadow-lg">
+                <div className="absolute top-full left-0 mt-3 w-80 p-4 bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl space-y-4 animate-fade-in shadow-2xl z-50">
                     <h5 className="text-sm font-semibold text-[var(--text-main)]">Add New Assignee</h5>
 
                     {/* Custom Member Picker */}

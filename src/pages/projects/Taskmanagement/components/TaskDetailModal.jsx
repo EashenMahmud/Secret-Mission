@@ -280,10 +280,10 @@ const TaskDetailModal = ({
                                         </Button>
                                     )}
                                 </div>
-                                {/* Assignees Area - Moved to Main Column for better visibility */}
-                                <div ref={assigneesRef} className="space-y-2 scroll-mt-20">
-                                    <h3 className="text-sm font-semibold text-[var(--text-main)]">Assignees</h3>
-                                    <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-4 shadow-sm">
+                                {/* Assignees Area - Redesigned as Members Row */}
+                                <div ref={assigneesRef} className="space-y-3 scroll-mt-20">
+                                    <h3 className="text-sm font-semibold text-[var(--text-main)]">Members</h3>
+                                    <div className="flex items-center gap-2">
                                         <TaskAssignees
                                             taskId={taskId}
                                             assignments={task.assignments || []}

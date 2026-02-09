@@ -16,7 +16,7 @@ const Tooltip = ({
         <>
             <div
                 data-tooltip-id={tooltipId}
-                data-tooltip-content={content}
+                data-tooltip-content={typeof content === 'string' ? content : undefined}
                 className={cn('inline-flex items-center cursor-help', className)}
             >
                 {children || <HelpCircle className="h-4 w-4 text-gray-400" />}
@@ -24,8 +24,11 @@ const Tooltip = ({
             <ReactTooltip
                 id={tooltipId}
                 place={place}
-                className="z-50 !bg-[var(--bg-card)] !text-[var(--text-main)] !border !border-[var(--border-main)] !px-3 !py-2 !rounded-lg !text-xs !shadow-xl !opacity-100"
-            />
+                clickable={true}
+                className="z-[9999] !bg-[var(--bg-card)] !text-[var(--text-main)] !border !border-[var(--border-main)] !px-3 !py-2 !rounded-lg !text-xs !shadow-2xl !opacity-100"
+            >
+                {typeof content !== 'string' ? content : null}
+            </ReactTooltip>
         </>
     );
 };
