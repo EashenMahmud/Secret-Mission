@@ -8,6 +8,7 @@ import TaskSubtasks from './TaskSubtasks';
 import TaskDiscussions from './TaskDiscussions';
 import Button from '../../../../components/ui/Button';
 import DateTime from '../../../../components/ui/DateTime';
+import Tooltip from '../../../../components/ui/Tooltip';
 import { toast } from 'react-toastify';
 import { cn } from '../../../../lib/utils';
 
@@ -237,13 +238,18 @@ const TaskDetailModal = ({
                                         )}
                                     </div>
 
-                                    <button
-                                        onClick={() => scrollToSection(datesRef)}
-                                        className="flex items-center gap-2 px-3 py-1.5 bg-[var(--bg-card)] border border-[var(--border-main)] rounded-lg hover:border-[var(--primary-color)] transition-colors text-sm font-medium text-[var(--text-main)] shadow-sm"
+                                    <Tooltip
+                                        content={`Start: ${new Date(task.start_date).toLocaleDateString()} - Due: ${new Date(task.deadline).toLocaleDateString()}`}
+                                        place="top"
                                     >
-                                        <Clock className="w-4 h-4 text-[var(--text-muted)]" />
-                                        Dates
-                                    </button>
+                                        <button
+                                            onClick={() => scrollToSection(datesRef)}
+                                            className="flex items-center gap-2 px-3 py-1.5 bg-[var(--bg-card)] border border-[var(--border-main)] rounded-lg hover:border-[var(--primary-color)] transition-colors text-sm font-medium text-[var(--text-main)] shadow-sm"
+                                        >
+                                            <Clock className="w-4 h-4 text-[var(--text-muted)]" />
+                                            Dates
+                                        </button>
+                                    </Tooltip>
 
                                     <button
                                         onClick={() => scrollToSection(checklistRef)}
@@ -274,7 +280,21 @@ const TaskDetailModal = ({
                                         </Button>
                                     )}
                                 </div>
-
+                                {/* Assignees Area - Moved to Main Column for better visibility */}
+                                <div ref={assigneesRef} className="space-y-2 scroll-mt-20">
+                                    <h3 className="text-sm font-semibold text-[var(--text-main)]">Assignees</h3>
+                                    <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-4 shadow-sm">
+                                        <TaskAssignees
+                                            taskId={taskId}
+                                            assignments={task.assignments || []}
+                                            projectId={projectId}
+                                            onUpdate={() => {
+                                                refetch();
+                                                onUpdate?.();
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                                 {/* Description */}
                                 <div className="space-y-2">
                                     <h3 className="text-sm font-semibold text-[var(--text-main)] flex items-center gap-2">
@@ -337,21 +357,7 @@ const TaskDetailModal = ({
 
                                 </div>
 
-                                {/* Assignees Area - Moved to Main Column for better visibility */}
-                                <div ref={assigneesRef} className="space-y-2 scroll-mt-20">
-                                    <h3 className="text-sm font-semibold text-[var(--text-main)]">Assignees</h3>
-                                    <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-4 shadow-sm">
-                                        <TaskAssignees
-                                            taskId={taskId}
-                                            assignments={task.assignments || []}
-                                            projectId={projectId}
-                                            onUpdate={() => {
-                                                refetch();
-                                                onUpdate?.();
-                                            }}
-                                        />
-                                    </div>
-                                </div>
+
                             </div>
 
                             {/* Right Column - Activity & Discussions (Span 4) */}
