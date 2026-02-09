@@ -121,7 +121,7 @@ const TaskSubtasks = ({ taskId, onUpdate }) => {
         <div className="space-y-4">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold text-[var(--text-main)]">Subtasks</h3>
+                    <h3 className="text-sm font-semibold text-[var(--text-main)]">Checklist</h3>
                     {totalCount > 0 && (
                         <span className="text-xs text-[var(--text-muted)] bg-[var(--bg-app)] px-2 py-0.5 rounded-full">
                             {completedCount}/{totalCount}
@@ -136,7 +136,7 @@ const TaskSubtasks = ({ taskId, onUpdate }) => {
                         className="text-[var(--primary-color)] hover:bg-[var(--primary-color)]/10"
                     >
                         <Plus className="w-4 h-4 mr-1" />
-                        Add Subtask
+                        Add Item
                     </Button>
                 )}
             </div>

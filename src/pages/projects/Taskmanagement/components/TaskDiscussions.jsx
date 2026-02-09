@@ -102,10 +102,7 @@ const TaskDiscussions = ({ taskId }) => {
 
     return (
         <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-[var(--text-main)] flex items-center gap-2">
-                <MessageSquare className="w-4 h-4" />
-                Discussion
-            </h3>
+
 
             {/* Comment List */}
             <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
