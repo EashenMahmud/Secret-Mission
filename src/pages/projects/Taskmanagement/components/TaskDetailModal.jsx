@@ -106,7 +106,7 @@ const TaskDetailModal = ({
             />
 
             {/* Slide-over panel - Increased width for 2-column layout */}
-            <div className="relative w-full max-w-6xl bg-[var(--bg-card)] shadow-2xl animate-slide-in-right overflow-hidden flex flex-col">
+            <div className="relative w-full max-w-5xl bg-[var(--bg-card)] shadow-2xl animate-slide-in-right overflow-hidden flex flex-col">
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-[var(--border-main)]">
                     <div className="flex items-center gap-3">
@@ -147,7 +147,7 @@ const TaskDetailModal = ({
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 max-w-7xl mx-auto">
 
                             {/* Left Column - Task Info (Span 8) */}
-                            <div className="lg:col-span-8 space-y-6">
+                            <div className="lg:col-span-6 space-y-6">
                                 {/* Title Section */}
                                 <div className="flex items-start justify-between gap-4">
                                     <div>
@@ -361,7 +361,7 @@ const TaskDetailModal = ({
                             </div>
 
                             {/* Right Column - Activity & Discussions (Span 4) */}
-                            <div className="lg:col-span-4 space-y-6">
+                            <div className="lg:col-span-6 space-y-6">
                                 {/* Discussions / Comments */}
                                 <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl shadow-sm h-full flex flex-col">
                                     <div className="p-4 border-b border-[var(--border-main)] flex items-center justify-between bg-[var(--bg-app)]/50 rounded-t-xl">
