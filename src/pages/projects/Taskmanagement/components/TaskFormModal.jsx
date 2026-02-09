@@ -166,14 +166,14 @@ const TaskFormModal = ({
                         </div>
 
                         {/* Progress */}
-                        <Input
+                        {/* <Input
                             name="progress"
                             label="Progress (%)"
                             type="number"
                             min={0}
                             max={100}
                             placeholder="0"
-                        />
+                        /> */}
 
                         {/* Actions */}
                         <div className="flex justify-end gap-3 pt-4 border-t border-[var(--border-main)]">

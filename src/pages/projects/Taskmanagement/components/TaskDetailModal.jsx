@@ -8,6 +8,7 @@ import TaskSubtasks from './TaskSubtasks';
 import TaskDiscussions from './TaskDiscussions';
 import Button from '../../../../components/ui/Button';
 import DateTime from '../../../../components/ui/DateTime';
+import ProgressBar from '../../../../components/ui/ProgressBar';
 import { toast } from 'react-toastify';
 import { cn } from '../../../../lib/utils';
 
@@ -29,7 +30,6 @@ const TaskDetailModal = ({
     onUpdate
 }) => {
     const [showStatusDropdown, setShowStatusDropdown] = useState(false);
-    const [progress, setProgress] = useState(0);
 
     const { data: taskData, isLoading, refetch } = useGetApiWithIdQuery(
         { url: '/task-details', id: taskId },
@@ -40,11 +40,7 @@ const TaskDetailModal = ({
 
     const task = taskData?.data || taskData;
 
-    React.useEffect(() => {
-        if (task?.progress !== undefined) {
-            setProgress(task.progress);
-        }
-    }, [task?.progress]);
+
 
     const handleStatusChange = async (newStatus) => {
         try {
@@ -53,7 +49,7 @@ const TaskDetailModal = ({
                 body: {
                     task_id: String(taskId),
                     status: newStatus,
-                    progress: progress,
+                    progress: task?.progress || 0,
                 },
             }).unwrap();
 
@@ -66,24 +62,7 @@ const TaskDetailModal = ({
         }
     };
 
-    const handleProgressUpdate = async () => {
-        try {
-            await postApi({
-                end_point: `/update-progress-status/${taskId}`,
-                body: {
-                    task_id: String(taskId),
-                    status: task?.status || 'draft',
-                    progress: progress,
-                },
-            }).unwrap();
 
-            toast.success('Progress updated');
-            refetch();
-            onUpdate?.();
-        } catch (error) {
-            toast.error(error?.data?.message || 'Failed to update progress');
-        }
-    };
 
     const handleMarkComplete = async () => {
         try {
@@ -259,28 +238,14 @@ const TaskDetailModal = ({
                                         <BarChart3 className="w-4 h-4" />
                                         <span className="text-sm font-medium">Progress</span>
                                     </div>
-                                    <span className="text-lg font-bold text-[var(--text-main)]">{progress}%</span>
+                                    <span className="text-lg font-bold text-[var(--text-main)]">{task.progress || 0}%</span>
                                 </div>
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="100"
-                                    value={progress}
-                                    onChange={(e) => setProgress(Number(e.target.value))}
-                                    className="w-full h-2 bg-[var(--bg-skeleton)] rounded-lg appearance-none cursor-pointer slider"
+                                <ProgressBar
+                                    value={task.progress || 0}
+                                    variant="primary"
+                                    showValue={false}
+                                    className="h-2"
                                 />
-                                {progress !== task.progress && (
-                                    <div className="flex justify-end mt-2">
-                                        <Button
-                                            size="sm"
-                                            onClick={handleProgressUpdate}
-                                            disabled={isUpdating}
-                                            isLoading={isUpdating}
-                                        >
-                                            Save Progress
-                                        </Button>
-                                    </div>
-                                )}
                             </div>
 
                             {/* Subtasks */}
