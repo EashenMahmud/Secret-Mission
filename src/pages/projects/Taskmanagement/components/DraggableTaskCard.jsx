@@ -58,12 +58,13 @@ const DraggableTaskCard = ({ task, onClick }) => {
             </div>
 
             {/* Priority indicator line */}
-            <div className={cn(
+
+            {/* <div className={cn(
                 'absolute top-0 left-0 right-0 h-1 rounded-t-lg',
                 task.priority === 'High' && 'bg-red-500',
                 task.priority === 'Medium' && 'bg-amber-500',
                 task.priority === 'Low' && 'bg-green-500'
-            )} />
+            )} /> */}
 
             {/* Clickable content area */}
             <div onClick={() => onClick?.(task)}>
