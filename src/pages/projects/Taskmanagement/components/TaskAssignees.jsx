@@ -116,7 +116,7 @@ const TaskAssignees = ({ taskId, assignments = [], onUpdate, projectId }) => {
             toast.success('You have been assigned to this task');
             onUpdate?.();
         } catch (error) {
-            toast.error(error?.data?.message || 'Failed to assign yourself');
+            toast.error(error?.data?.errors || error?.data?.message || 'Failed to assign yourself');
         }
     };
 
