@@ -189,12 +189,12 @@ const TaskDetailModal = ({
                                                     cx="28"
                                                     cy="28"
                                                     r="24"
-                                                    stroke="var(--primary-color)"
+                                                    stroke="#10b981"
                                                     strokeWidth="5"
                                                     fill="transparent"
                                                     strokeDasharray={150.72}
                                                     strokeDashoffset={150.72 - ((task.progress || 0) / 100) * 150.72}
-                                                    className="transition-all duration-1000 ease-out"
+                                                    className="transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]"
                                                     strokeLinecap="round"
                                                 />
                                             </svg>
