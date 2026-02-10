@@ -1,4 +1,5 @@
 import { useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GanttChart, Edit2, Trash2, Plus } from 'lucide-react';
 import { useGetApiWithIdQuery } from '../../../store/api/commonApi';
 import { format, eachDayOfInterval, isToday, isWeekend } from 'date-fns';
@@ -15,6 +16,7 @@ const ProjectGanttCustom = ({
     onDelete,
     onAdd,
 }) => {
+    const navigate = useNavigate();
     const { data: planningRes } = useGetApiWithIdQuery(
         { url: '/project-planning-list', id: projectId },
         { skip: !projectId || itemsProp !== undefined }
@@ -218,7 +220,7 @@ const ProjectGanttCustom = ({
                 <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-500/15 border border-primary-500/25">
-                           <GanttChart className="h-5 w-5 text-primary-400" />
+                            <GanttChart className="h-5 w-5 text-primary-400" />
                         </div>
                         <div>
                             <h3 className="text-base font-semibold text-[var(--text-main)]">Timeline (Gantt)</h3>
@@ -247,7 +249,7 @@ const ProjectGanttCustom = ({
 
     return (
         <div className={`space-y-4 ${className}`}>
-             <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-500/15 border border-primary-500/25">
                         <GanttChart className="h-5 w-5 text-primary-400" />
@@ -257,7 +259,7 @@ const ProjectGanttCustom = ({
                         <p className="text-xs text-[var(--text-muted)]">Project schedule at a glance</p>
                     </div>
                 </div>
-                 {onAdd && (
+                {onAdd && (
                     <Button onClick={onAdd} size="sm" leftIcon={<Plus className="w-4 h-4" />}>
                         Add Item
                     </Button>
@@ -275,7 +277,7 @@ const ProjectGanttCustom = ({
                         <div className="w-48 border-r border-[var(--border-main)] px-4 py-2 bg-[var(--bg-app)] flex-shrink-0 font-medium text-xs text-[var(--text-muted)] flex items-center">
                             Task
                         </div>
-                         <div
+                        <div
                             className={`flex overflow-x-auto hide-scrollbar ${scrollSyncClass}`}
                             style={{ width: 'calc(100% - 12rem)' }}
                         >
@@ -380,10 +382,10 @@ const ProjectGanttCustom = ({
                                 <div className="flex flex-col">
                                     {Array.from({ length: totalRows }).map((_, rowIdx) => {
                                         const bar = itemBars[rowIdx];
-                                        
+
                                         // Render grid lines for the row
                                         const GridLines = () => (
-                                             <div className="absolute inset-0 flex pointer-events-none">
+                                            <div className="absolute inset-0 flex pointer-events-none">
                                                 {calendarDays.map((day, dayIdx) => {
                                                     const isWeekendDay = isWeekend(day);
                                                     return (
@@ -428,9 +430,9 @@ const ProjectGanttCustom = ({
                                                     }}
                                                 >
                                                     {/* Actions - Attached to the left of the bar */}
-                                                     <div className="absolute right-full mr-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-30 top-1/2 -translate-y-1/2 bg-[var(--bg-app)]/80 rounded p-0.5 backdrop-blur-sm border border-[var(--border-main)]">
+                                                    <div className="absolute right-full mr-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-30 top-1/2 -translate-y-1/2 bg-[var(--bg-app)]/80 rounded p-0.5 backdrop-blur-sm border border-[var(--border-main)]">
                                                         {onEdit && (
-                                                            <button 
+                                                            <button
                                                                 onClick={(e) => { e.stopPropagation(); onEdit(bar); }}
                                                                 className="p-1 rounded bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-primary-400 hover:bg-primary-500/10 transition-colors"
                                                                 title="Edit"
@@ -439,7 +441,7 @@ const ProjectGanttCustom = ({
                                                             </button>
                                                         )}
                                                         {onDelete && (
-                                                            <button 
+                                                            <button
                                                                 onClick={(e) => { e.stopPropagation(); onDelete(bar); }}
                                                                 className="p-1 rounded bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
                                                                 title="Delete"
@@ -450,8 +452,9 @@ const ProjectGanttCustom = ({
                                                     </div>
 
                                                     {/* Progress bar background */}
-                                                    <div 
-                                                        className={`h-full ${getStatusColor(bar.status)} relative rounded-md overflow-hidden transition-all`}
+                                                    <div
+                                                        className={`h-full ${getStatusColor(bar.status)} relative rounded-md overflow-hidden transition-all cursor-pointer`}
+                                                        onClick={() => navigate(`/projects/${projectId}/planning/${bar.id}`)}
                                                     >
                                                         {/* Completed portion */}
                                                         {bar.progress > 0 && (
@@ -460,7 +463,7 @@ const ProjectGanttCustom = ({
                                                                 style={{ width: `${bar.progress}%` }}
                                                             />
                                                         )}
-                                                        
+
                                                         {/* Task Label Inside Bar */}
                                                         <div className="absolute inset-0 flex items-center px-2">
                                                             <span className="text-xs font-semibold text-white/90 truncate drop-shadow-sm select-none" title={bar.name}>
