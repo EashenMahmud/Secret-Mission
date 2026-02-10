@@ -123,12 +123,18 @@ const TaskAssignees = ({ taskId, assignments = [], onUpdate, projectId }) => {
 
 
 
+    const [isExpanded, setIsExpanded] = useState(false);
+
     // Member Avatar Component
-    const MemberAvatar = ({ user, assignment, onRemove }) => {
+    const MemberAvatar = ({ user, assignment, onRemove, index, isStacked }) => {
         const profileUrl = getImageUrl(user?.profile_picture);
+        const isPrimary = assignment?.is_primary;
 
         return (
-            <div className="group relative flex-shrink-0">
+            <div
+                className="group relative flex-shrink-0"
+                style={{ zIndex: isStacked ? 10 - index : 1 }}
+            >
                 <Tooltip
                     content={
                         <div className="flex flex-col gap-0.5 p-1 min-w-[120px]">
@@ -150,12 +156,16 @@ const TaskAssignees = ({ taskId, assignments = [], onUpdate, projectId }) => {
                     }
                     place="top"
                 >
-                    <div className="relative cursor-pointer transition-transform hover:scale-110">
+                    <div className={cn(
+                        "relative cursor-pointer transition-all hover:scale-110",
+                        isStacked && "hover:z-50",
+                        isPrimary && "p-0.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.5)]"
+                    )}>
                         {profileUrl ? (
                             <img
                                 src={profileUrl}
                                 alt={user?.name}
-                                className="w-10 h-10 rounded-full object-cover border-2 border-[var(--bg-card)] shadow-sm"
+                                className="w-9 h-9 rounded-full object-cover border-2 border-[var(--bg-card)] shadow-sm"
                                 onError={(e) => {
                                     e.target.style.display = 'none';
                                     e.target.nextSibling.style.display = 'flex';
@@ -164,62 +174,91 @@ const TaskAssignees = ({ taskId, assignments = [], onUpdate, projectId }) => {
                         ) : null}
                         <div
                             className={cn(
-                                "w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 items-center justify-center text-white text-sm font-semibold border-2 border-[var(--bg-card)] shadow-sm",
+                                "w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 items-center justify-center text-white text-[10px] font-semibold border-2 border-[var(--bg-card)] shadow-sm",
                                 profileUrl ? "hidden" : "flex"
                             )}
                         >
                             {(user?.name || 'U').charAt(0).toUpperCase()}
                         </div>
-                        {assignment?.is_primary && (
-                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center shadow-sm border border-[var(--bg-card)]">
-                                <Crown className="w-2 h-2 text-white" />
-                            </div>
-                        )}
                     </div>
                 </Tooltip>
             </div>
         );
     };
 
+    const displayLimit = isExpanded ? assignments.length : 4;
+    const displayedAssignments = assignments.slice(0, displayLimit);
+    const remainingCount = assignments.length - displayedAssignments.length;
+
     return (
         <div className="relative">
-            {/* Assignees horizontal row */}
-            <div className="flex items-center flex-wrap gap-2">
-                {assignments.map((assignment) => (
+            {/* Assignees horizontal row - Stacked or Grid Layout */}
+            <div className={cn(
+                "flex items-center transition-all",
+                isExpanded ? "flex-wrap gap-2" : "-space-x-3"
+            )}>
+                {displayedAssignments.map((assignment, idx) => (
                     <MemberAvatar
                         key={assignment.id}
                         user={assignment.user || {}}
                         assignment={assignment}
                         onRemove={handleRemoveMember}
+                        index={idx}
+                        isStacked={!isExpanded}
                     />
                 ))}
 
-                {/* Circular Plus Button */}
-                <Tooltip content="Add Member" place="top">
+                {/* Remaining Counter / Expand Button */}
+                {remainingCount > 0 && (
                     <button
-                        onClick={() => setShowDropdown(!showDropdown)}
-                        className={cn(
-                            "w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm border-2 border-dashed",
-                            showDropdown
-                                ? "bg-[var(--primary-color)] text-white border-transparent rotate-45"
-                                : "bg-[var(--bg-app)] text-[var(--text-muted)] border-[var(--border-main)] hover:border-[var(--primary-color)] hover:text-[var(--primary-color)]"
-                        )}
+                        onClick={() => setIsExpanded(true)}
+                        className="relative z-0 w-9 h-9 rounded-full bg-[var(--bg-app)] border-2 border-[var(--bg-card)] flex items-center justify-center shadow-sm hover:border-[var(--primary-color)] transition-colors"
+                        style={{ marginLeft: isExpanded ? '0' : '-0.75rem' }}
                     >
-                        <UserPlus className="w-5 h-5" />
+                        <span className="text-[10px] font-bold text-cyan-400">+{remainingCount}</span>
                     </button>
-                </Tooltip>
+                )}
+
+                {/* Collapse Button (Only show if expanded and we had hidden items) */}
+                {isExpanded && assignments.length > 4 && (
+                    <button
+                        onClick={() => setIsExpanded(false)}
+                        className="text-[10px] font-bold text-[var(--text-muted)] hover:text-[var(--primary-color)] ml-1 transition-colors underline decoration-dotted underline-offset-4"
+                    >
+                        Show less
+                    </button>
+                )}
+
+                {/* Circular Plus Button */}
+                <div style={{ marginLeft: !isExpanded && assignments.length > 0 ? '0.75rem' : '0.5rem' }}>
+                    <Tooltip content="Add Member" place="top">
+                        <button
+                            onClick={() => setShowDropdown(!showDropdown)}
+                            className={cn(
+                                "w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-sm border-2 border-dashed",
+                                showDropdown
+                                    ? "bg-[var(--primary-color)] text-white border-transparent rotate-45"
+                                    : "bg-[var(--bg-app)] text-[var(--text-muted)] border-[var(--border-main)] hover:border-[var(--primary-color)] hover:text-[var(--primary-color)]"
+                            )}
+                        >
+                            <UserPlus className="w-4 h-4" />
+                        </button>
+                    </Tooltip>
+                </div>
 
                 {/* Assign to me - Optional/Compact */}
                 {!assignments.some(a => (a.user_id || a.user?.id) === (/* Should ideally get current user ID from state/context */ null)) && (
-                    <Tooltip content="Assign to me" place="top">
-                        <button
-                            onClick={handleAssignSelf}
-                            disabled={isLoading}
-                            className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--bg-app)] text-[var(--text-muted)] border-2 border-[var(--border-main)] border-dashed transition-all hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] shadow-sm"
-                        >
-                            <Hand className="w-5 h-5" />
-                        </button>
-                    </Tooltip>
+                    <div style={{ marginLeft: '0.25rem' }}>
+                        <Tooltip content="Assign to me" place="top">
+                            <button
+                                onClick={handleAssignSelf}
+                                disabled={isLoading}
+                                className="w-9 h-9 rounded-full flex items-center justify-center bg-[var(--bg-app)] text-[var(--text-muted)] border-2 border-[var(--border-main)] border-dashed transition-all hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] shadow-sm"
+                            >
+                                <Hand className="w-4 h-4" />
+                            </button>
+                        </Tooltip>
+                    </div>
                 )}
             </div>
 
