@@ -120,7 +120,7 @@ const TaskBoard = ({
 
     if (isLoading) {
         return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4">
                 {statuses.map((status) => (
                     <div
                         key={status}
@@ -152,7 +152,7 @@ const TaskBoard = ({
             }}
         >
             <div className="overflow-x-auto pb-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 min-w-[1200px]">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 min-w-[1400px]">
                     {statuses.map((status) => {
                         const config = statusConfig[status];
                         const statusTasks = getTasksByStatus(status);
@@ -178,7 +178,7 @@ const TaskBoard = ({
                 style={{ cursor: 'grabbing' }}
             >
                 {activeTask ? (
-                    <div className="shadow-2xl rounded-lg" style={{ width: '280px' }}>
+                    <div className="shadow-2xl rounded-lg" style={{ width: '320px' }}>
                         <TaskCard task={activeTask} />
                     </div>
                 ) : null}

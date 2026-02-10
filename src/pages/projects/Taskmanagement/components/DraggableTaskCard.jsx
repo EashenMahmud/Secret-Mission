@@ -69,7 +69,7 @@ const DraggableTaskCard = ({ task, onClick }) => {
             {/* Clickable content area */}
             <div onClick={() => onClick?.(task)}>
                 {/* Header */}
-                <div className="flex items-start justify-between gap-2 mb-3 pt-1 pr-6">
+                <div className="flex items-start justify-between gap-2 mb-3 pt-1 pr-5">
                     <h4 className="text-sm font-medium text-[var(--text-main)] line-clamp-2 group-hover:text-[var(--primary-color)] transition-colors">
                         {task.title}
                     </h4>

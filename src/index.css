@@ -15,6 +15,12 @@
   --bg-skeleton: #e2e8f0;
   --bg-skeleton-muted: #f1f5f9;
   --bg-off-range: #cbd5e1;
+
+  /* Scrollbar colors */
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+  --scrollbar-thumb-primary: #0ea5e9;
 }
 
 .dark {
@@ -28,6 +34,12 @@
   --bg-skeleton: #334155;
   --bg-skeleton-muted: #1e293b;
   --bg-off-range: #373e66;
+
+  /* Scrollbar colors */
+  --scrollbar-track: #0f172a;
+  --scrollbar-thumb: #334155;
+  --scrollbar-thumb-hover: #475569;
+  --scrollbar-thumb-primary: #38bdf8;
 }
 
 .dark input::-webkit-calendar-picker-indicator {
@@ -153,68 +165,138 @@
     @apply fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-dark-900 rounded-2xl shadow-2xl border border-dark-700 z-50 max-h-[90vh] overflow-y-auto;
   }
 
-  /* Scrollbar styles */
+  /* ============================================
+     SCROLLBAR STYLES - Theme Aware
+     ============================================ */
+
+  /* Standard scrollbar (8px) - General use */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
-    @apply w-2;
+    width: 8px;
+    height: 8px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-dark-900;
+    background: var(--scrollbar-track);
+    border-radius: 4px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-dark-700 rounded-full hover:bg-dark-600;
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+    transition: background 0.2s ease;
   }
 
-  /* Thin scrollbar for compact lists */
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+
+  /* Thin scrollbar (6px) - Compact lists, sidebars */
+  .custom-scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
   .custom-scrollbar-thin::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
   }
 
   .custom-scrollbar-thin::-webkit-scrollbar-track {
-    background: var(--bg-app);
+    background: var(--scrollbar-track);
     border-radius: 3px;
   }
 
   .custom-scrollbar-thin::-webkit-scrollbar-thumb {
-    background: var(--border-main);
+    background: var(--scrollbar-thumb);
     border-radius: 3px;
+    transition: background 0.2s ease;
   }
 
   .custom-scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
+    background: var(--scrollbar-thumb-hover);
   }
 
-  /* Extra thin scrollbar for Gantt chart */
+  /* Extra thin scrollbar (4px) - Gantt charts, tight spaces */
+  .custom-scrollbar-thin-gantt {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
   .custom-scrollbar-thin-gantt::-webkit-scrollbar {
-    width: 2px;
-    height: 2px;
+    width: 4px;
+    height: 4px;
   }
 
   .custom-scrollbar-thin-gantt::-webkit-scrollbar-track {
-    @apply bg-dark-900;
+    background: var(--scrollbar-track);
+    border-radius: 2px;
   }
 
   .custom-scrollbar-thin-gantt::-webkit-scrollbar-thumb {
-    @apply bg-dark-700 rounded-full hover:bg-dark-600;
+    background: var(--scrollbar-thumb);
+    border-radius: 2px;
+    transition: background 0.2s ease;
   }
 
-  /* Ultra thin horizontal scrollbar for Gantt X-axis */
+  .custom-scrollbar-thin-gantt::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+
+  /* Horizontal scrollbar for Gantt X-axis */
+  .gantt-x-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
   .gantt-x-scrollbar::-webkit-scrollbar {
-    height: 3px;
+    height: 4px;
   }
 
   .gantt-x-scrollbar::-webkit-scrollbar-track {
-    @apply bg-dark-900;
+    background: var(--scrollbar-track);
+    border-radius: 2px;
   }
 
   .gantt-x-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-dark-600 rounded-full hover:bg-dark-500;
+    background: var(--scrollbar-thumb);
+    border-radius: 2px;
+    transition: background 0.2s ease;
   }
 
-  .gantt-x-scrollbar {
+  .gantt-x-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+
+  /* Primary accent scrollbar - For special emphasis */
+  .custom-scrollbar-primary {
     scrollbar-width: thin;
-    scrollbar-color: rgb(51 65 85) rgb(15 23 42);
+    scrollbar-color: var(--scrollbar-thumb-primary) var(--scrollbar-track);
+  }
+
+  .custom-scrollbar-primary::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar-primary::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar-primary::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-primary);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+  }
+
+  .custom-scrollbar-primary::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-primary);
+    opacity: 0.8;
   }
 
   /* Hide scrollbar but keep functionality */
