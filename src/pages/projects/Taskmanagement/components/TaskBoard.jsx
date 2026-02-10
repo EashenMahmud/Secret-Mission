@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     DndContext,
     DragOverlay,
@@ -18,7 +18,7 @@ import TaskCard from './TaskCard';
 import DraggableTaskCard from './DraggableTaskCard';
 import { getStatusConfig } from './TaskStatusBadge';
 import { cn } from '../../../../lib/utils';
-import { Plus } from 'lucide-react';
+import { Plus, ChevronUp, ChevronDown } from 'lucide-react';
 import { usePostApiMutation } from '../../../../store/api/commonApi';
 import { toast } from 'react-toastify';
 
@@ -187,9 +187,47 @@ const TaskBoard = ({
     );
 };
 
-// Droppable Column Component
+// Droppable Column Component with Scroll Indicators
 const DroppableColumn = ({ status, config, tasks, columnColor, onTaskClick, onAddTask }) => {
     const { setNodeRef, isOver } = useDroppable({ id: status });
+    const scrollContainerRef = useRef(null);
+    const [showTopIndicator, setShowTopIndicator] = useState(false);
+    const [showBottomIndicator, setShowBottomIndicator] = useState(false);
+
+    // Check scroll position and update indicators
+    const checkScroll = () => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        const { scrollTop, scrollHeight, clientHeight } = container;
+        const isScrollable = scrollHeight > clientHeight;
+
+        // Show top indicator if scrolled down
+        setShowTopIndicator(isScrollable && scrollTop > 10);
+
+        // Show bottom indicator if can scroll down
+        setShowBottomIndicator(isScrollable && scrollTop < scrollHeight - clientHeight - 10);
+    };
+
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        // Initial check
+        checkScroll();
+
+        // Add scroll listener
+        container.addEventListener('scroll', checkScroll);
+
+        // Add resize observer to handle content changes
+        const resizeObserver = new ResizeObserver(checkScroll);
+        resizeObserver.observe(container);
+
+        return () => {
+            container.removeEventListener('scroll', checkScroll);
+            resizeObserver.disconnect();
+        };
+    }, [tasks]);
 
     return (
         <div
@@ -223,31 +261,65 @@ const DroppableColumn = ({ status, config, tasks, columnColor, onTaskClick, onAd
                 </div>
             </div>
 
-            {/* Tasks */}
-            <div className="p-3 space-y-3 flex-1 overflow-y-auto max-h-[calc(100vh-320px)] min-h-[100px]">
-                <SortableContext
-                    items={tasks.map(t => t.id)}
-                    strategy={verticalListSortingStrategy}
-                >
-                    {tasks.length === 0 ? (
-                        <div className={cn(
-                            "text-center py-8 text-xs text-[var(--text-muted)] border-2 border-dashed rounded-lg transition-all duration-200",
-                            isOver
-                                ? "border-[var(--primary-color)] bg-[var(--primary-color)]/10 text-[var(--primary-color)]"
-                                : "border-[var(--border-main)]"
-                        )}>
-                            {isOver ? 'Drop here' : 'No tasks'}
-                        </div>
-                    ) : (
-                        tasks.map((task) => (
-                            <DraggableTaskCard
-                                key={task.id}
-                                task={task}
-                                onClick={onTaskClick}
-                            />
-                        ))
+            {/* Tasks with Scroll Indicators */}
+            <div className="relative flex-1 overflow-hidden">
+                {/* Top Scroll Indicator */}
+                <div
+                    className={cn(
+                        'absolute top-0 left-0 right-0 z-10 pointer-events-none transition-opacity duration-300',
+                        showTopIndicator ? 'opacity-100' : 'opacity-0'
                     )}
-                </SortableContext>
+                >
+                    <div className="bg-gradient-to-b from-[var(--bg-app)] via-[var(--bg-app)]/95 to-[var(--bg-app)]/40 h-16 flex items-start justify-center pt-2 shadow-lg">
+                        <div className="bg-[var(--bg-card)] rounded-full p-1.5 shadow-md border border-[var(--border-main)]">
+                            <ChevronUp className="w-5 h-5 text-primary-500 animate-pulse" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Scrollable Tasks Container */}
+                <div
+                    ref={scrollContainerRef}
+                    className="p-3 space-y-3 overflow-y-auto hide-scrollbar max-h-[calc(100vh-320px)] min-h-[100px]"
+                >
+                    <SortableContext
+                        items={tasks.map(t => t.id)}
+                        strategy={verticalListSortingStrategy}
+                    >
+                        {tasks.length === 0 ? (
+                            <div className={cn(
+                                "text-center py-8 text-xs text-[var(--text-muted)] border-2 border-dashed rounded-lg transition-all duration-200",
+                                isOver
+                                    ? "border-[var(--primary-color)] bg-[var(--primary-color)]/10 text-[var(--primary-color)]"
+                                    : "border-[var(--border-main)]"
+                            )}>
+                                {isOver ? 'Drop here' : 'No tasks'}
+                            </div>
+                        ) : (
+                            tasks.map((task) => (
+                                <DraggableTaskCard
+                                    key={task.id}
+                                    task={task}
+                                    onClick={onTaskClick}
+                                />
+                            ))
+                        )}
+                    </SortableContext>
+                </div>
+
+                {/* Bottom Scroll Indicator */}
+                <div
+                    className={cn(
+                        'absolute bottom-0 left-0 right-0 z-10 pointer-events-none transition-opacity duration-300',
+                        showBottomIndicator ? 'opacity-100' : 'opacity-0'
+                    )}
+                >
+                    <div className="bg-gradient-to-t from-[var(--bg-app)] via-[var(--bg-app)]/95 to-[var(--bg-app)]/40 h-16 flex items-end justify-center pb-2 shadow-lg">
+                        <div className="bg-[var(--bg-card)] rounded-full p-1.5 shadow-md border border-[var(--border-main)]">
+                            <ChevronDown className="w-5 h-5 text-primary-500 animate-pulse" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
