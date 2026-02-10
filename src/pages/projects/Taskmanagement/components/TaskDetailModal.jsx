@@ -101,7 +101,7 @@ const TaskDetailModal = ({
         <div className="fixed inset-0 z-50 flex justify-end">
             {/* Backdrop */}
             <div
-                className="fixed inset-0 bg-black/50 transition-opacity backdrop-blur-sm"
+                className="fixed inset-0 bg-gray-500/50 transition-opacity backdrop-blur-sm"
                 onClick={onClose}
             />
 
