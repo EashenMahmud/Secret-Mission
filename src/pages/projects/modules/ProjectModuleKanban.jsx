@@ -85,8 +85,24 @@ const ModuleCard = ({ module, onEdit, onDelete, onViewTask }) => {
                 )}
             </div>
 
+            <div className="mb-4">
+                <div className="flex justify-between text-[10px] text-[var(--text-muted)] mb-1 font-medium">
+                    <span>Progress</span>
+                    <span>{module.progress ?? 0}%</span>
+                </div>
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg-skeleton)]">
+                    <div
+                        className={cn(
+                            'h-full transition-all duration-300 ease-out rounded-full',
+                            (module.progress ?? 0) === 100 ? 'bg-green-500' : 'bg-indigo-500'
+                        )}
+                        style={{ width: `${module.progress ?? 0}%` }}
+                    />
+                </div>
+            </div>
+
             <div className="flex items-center gap-2 pt-2 border-t border-[var(--border-main)]">
-                 <button
+                <button
                     onClick={(e) => {
                         e.stopPropagation(); // Prevent drag start
                         onViewTask(module);
@@ -141,19 +157,18 @@ const KanbanColumn = ({ column, modules, onEdit, onDelete, onViewTask }) => {
                     </Badge>
                 </div>
             </div>
-            
+
             {/* Column Content - Scrollable if needed */}
             <div
                 ref={setNodeRef}
-                className={`overflow-y-auto custom-scrollbar-thin bg-[var(--bg-app)]/50 rounded-lg p-3 border-2 transition-colors ${
-                    isOver
-                        ? 'border-primary-500 bg-primary-500/10'
-                        : 'border-[var(--border-main)]/50'
-                }`}
-                style={{ 
+                className={`overflow-y-auto custom-scrollbar-thin bg-[var(--bg-app)]/50 rounded-lg p-3 border-2 transition-colors ${isOver
+                    ? 'border-primary-500 bg-primary-500/10'
+                    : 'border-[var(--border-main)]/50'
+                    }`}
+                style={{
                     maxHeight: 'calc(800px - 3rem)', // Constraint based on max board height
                     minHeight: '260px', // Approx 2 cards
-                    height: 'auto' 
+                    height: 'auto'
                 }}
             >
                 <SortableContext items={moduleIds} strategy={verticalListSortingStrategy}>
@@ -187,13 +202,14 @@ const ModuleListView = ({ modules, onEdit, onDelete, onStatusChange, onViewTask 
                         <th className="p-4">Name</th>
                         <th className="p-4">Description</th>
                         <th className="p-4">Est. Days</th>
+                        <th className="p-4 w-48">Progress</th>
                         <th className="p-4">Status</th>
                         <th className="p-4 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-[var(--border-main)]">
                     {modules.length === 0 ? (
-                         <tr>
+                        <tr>
                             <td colSpan={5} className="p-8 text-center text-[var(--text-muted)] italic">
                                 No modules found. Add one to get started.
                             </td>
@@ -214,6 +230,22 @@ const ModuleListView = ({ modules, onEdit, onDelete, onStatusChange, onViewTask 
                                             {module.estimated_days}d
                                         </div>
                                     ) : '-'}
+                                </td>
+                                <td className="p-4">
+                                    <div className="flex flex-col gap-1 w-40">
+                                        <div className="flex justify-between text-[10px] text-[var(--text-muted)]">
+                                            <span>{module.progress ?? 0}%</span>
+                                        </div>
+                                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg-skeleton)]">
+                                            <div
+                                                className={cn(
+                                                    'h-full transition-all duration-300 ease-out rounded-full',
+                                                    (module.progress ?? 0) === 100 ? 'bg-green-500' : 'bg-indigo-500'
+                                                )}
+                                                style={{ width: `${module.progress ?? 0}%` }}
+                                            />
+                                        </div>
+                                    </div>
                                 </td>
                                 <td className="p-4">
                                     <div className="relative inline-block w-40">
@@ -237,19 +269,19 @@ const ModuleListView = ({ modules, onEdit, onDelete, onStatusChange, onViewTask 
                                         </select>
                                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
                                             <ChevronDown className={cn(
-                                                 "h-3 w-3",
-                                                  STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'success' ? "text-green-500" :
-                                                  STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'warning' ? "text-yellow-500" :
-                                                  STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'info' ? "text-blue-500" :
-                                                  STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'error' ? "text-red-500" :
-                                                  "text-gray-500"
+                                                "h-3 w-3",
+                                                STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'success' ? "text-green-500" :
+                                                    STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'warning' ? "text-yellow-500" :
+                                                        STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'info' ? "text-blue-500" :
+                                                            STATUS_COLUMNS.find(c => c.id === module.status)?.color === 'error' ? "text-red-500" :
+                                                                "text-gray-500"
                                             )} />
                                         </div>
                                     </div>
                                 </td>
                                 <td className="p-4 text-right">
                                     <div className="flex items-center justify-end gap-2">
-                                         <button
+                                        <button
                                             onClick={() => onViewTask(module)}
                                             className="p-1.5 rounded-md text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 transition-colors"
                                             title="View Tasks"
@@ -320,7 +352,7 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
     }, [modules]);
 
     const performStatusUpdate = async (module, newStatus) => {
-         try {
+        try {
             // Update module status via POST
             const payload = {
                 name: module.name,
@@ -351,7 +383,7 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
         }
 
         const boardRect = boardElement.getBoundingClientRect();
-        
+
         const value = {
             ...transform,
         };
@@ -389,7 +421,7 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
         if (activeId === overId) return;
 
         let newStatus;
-        
+
         // Check if dropped on a column directly
         if (STATUS_COLUMNS.some(col => col.id === overId)) {
             newStatus = overId;
@@ -474,12 +506,12 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="flex items-center p-1 rounded-lg bg-[var(--bg-app)]/50 border border-[var(--border-main)]">
-                         <button
+                        <button
                             onClick={() => setViewMode('kanban')}
                             className={cn(
                                 "p-1.5 rounded-md transition-all",
-                                viewMode === 'kanban' 
-                                    ? "bg-[var(--bg-card)] text-primary-500 shadow-sm" 
+                                viewMode === 'kanban'
+                                    ? "bg-[var(--bg-card)] text-primary-500 shadow-sm"
                                     : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
                             )}
                             title="Kanban View"
@@ -490,11 +522,11 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
                             onClick={() => setViewMode('list')}
                             className={cn(
                                 "p-1.5 rounded-md transition-all",
-                                viewMode === 'list' 
-                                    ? "bg-[var(--bg-card)] text-primary-500 shadow-sm" 
+                                viewMode === 'list'
+                                    ? "bg-[var(--bg-card)] text-primary-500 shadow-sm"
                                     : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
                             )}
-                             title="List View"
+                            title="List View"
                         >
                             <LayoutList className="w-4 h-4" />
                         </button>
@@ -507,10 +539,10 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
 
             {/* Content Switcher */}
             {viewMode === 'kanban' ? (
-                 <div 
+                <div
                     id="kanban-board"
-                    style={{ 
-                        maxHeight: '800px', 
+                    style={{
+                        maxHeight: '800px',
                         minHeight: '280px', // Approx for 2 cards + padding
                         height: 'auto',
                         overflow: 'hidden' // Scrolling is handled inside columns
@@ -542,22 +574,22 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
                             ))}
                         </div>
 
-                    <DragOverlay>
-                        {activeModule ? (
-                            <div className="bg-[var(--bg-card)] border border-primary-500 rounded-lg p-4 shadow-lg opacity-95">
-                                <h4 className="font-semibold text-[var(--text-main)] mb-1">{activeModule.name}</h4>
-                                {activeModule.description && (
-                                    <p className="text-sm text-[var(--text-muted)] line-clamp-2">{activeModule.description}</p>
-                                )}
-                            </div>
-                        ) : null}
-                    </DragOverlay>
+                        <DragOverlay>
+                            {activeModule ? (
+                                <div className="bg-[var(--bg-card)] border border-primary-500 rounded-lg p-4 shadow-lg opacity-95">
+                                    <h4 className="font-semibold text-[var(--text-main)] mb-1">{activeModule.name}</h4>
+                                    {activeModule.description && (
+                                        <p className="text-sm text-[var(--text-muted)] line-clamp-2">{activeModule.description}</p>
+                                    )}
+                                </div>
+                            ) : null}
+                        </DragOverlay>
                     </DndContext>
                 </div>
             ) : (
-                <ModuleListView 
-                    modules={modules} 
-                    onEdit={handleEdit} 
+                <ModuleListView
+                    modules={modules}
+                    onEdit={handleEdit}
                     onDelete={handleDelete}
                     onStatusChange={performStatusUpdate}
                     onViewTask={handleViewTask}
