@@ -29,7 +29,7 @@ const ProjectDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    
+
     // Planning state
     const [addPlanningModalOpen, setAddPlanningModalOpen] = useState(false);
     const [editPlanningItem, setEditPlanningItem] = useState(null);
@@ -45,7 +45,7 @@ const ProjectDetail = () => {
         { url: '/project-planning-list', id: id },
         { skip: !id }
     );
-    
+
     // Planning types for the modal
     const { data: planningTypesRes } = useGetApiQuery(
         { url: '/planning-type-list' },
@@ -165,7 +165,7 @@ const ProjectDetail = () => {
                                             </>
                                         )}
                                         {project.project_type && (
-                                             <>
+                                            <>
                                                 <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]/50"></span>
                                                 <span className="flex items-center gap-1">
                                                     <TrendingUp className="w-3 h-3" /> {project.project_type.name}
@@ -174,7 +174,7 @@ const ProjectDetail = () => {
                                         )}
                                     </div>
                                 </div>
-                                
+
                                 <div className="flex items-center gap-2 flex-wrap pt-0.5">
                                     <Badge variant={getStatusColor(project.status)} className="px-2 py-0.5 text-[10px] uppercase tracking-wide">
                                         {project.status?.replace('_', ' ')}
@@ -210,38 +210,38 @@ const ProjectDetail = () => {
                             <span className="text-xs font-medium text-[var(--text-muted)]">Completion</span>
                             <span className="text-lg font-bold text-[var(--text-main)]">{project.progress ?? 0}%</span>
                         </div>
-                        <ProgressBar 
-                            value={project.progress ?? 0} 
+                        <ProgressBar
+                            value={project.progress ?? 0}
                             variant={getStatusColor(project.status)}
                             className="h-2"
                         />
                         <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-2 text-[11px] text-[var(--text-muted)]">
-                           {project.start_date && (
+                            {project.start_date && (
                                 <div className="flex flex-col">
                                     <span className="leading-none opacity-80">Start Date</span>
                                     <span className="font-medium text-[var(--text-main)] mt-0.5">
                                         <DateTime date={project.start_date} variant="dateOnly" />
                                     </span>
                                 </div>
-                           )}
-                           {project.end_date && (
+                            )}
+                            {project.end_date && (
                                 <div className="flex flex-col text-right">
                                     <span className="leading-none opacity-80">Due Date</span>
                                     <span className="font-medium text-[var(--text-main)] mt-0.5">
                                         <DateTime date={project.end_date} variant="dateOnly" />
                                     </span>
                                 </div>
-                           )}
-                           {project.start_date && project.end_date && (
+                            )}
+                            {project.start_date && project.end_date && (
                                 <div className="flex flex-col border-t border-[var(--border-main)]/50 pt-1.5 col-span-1">
-                                    <span className="leading-none opacity-80 flex items-center gap-1"><Calendar className="w-2.5 h-2.5"/> Duration</span>
+                                    <span className="leading-none opacity-80 flex items-center gap-1"><Calendar className="w-2.5 h-2.5" /> Duration</span>
                                     <span className="font-medium text-[var(--text-main)] mt-0.5">
-                                         {Math.ceil((new Date(project.end_date) - new Date(project.start_date)) / (1000 * 60 * 60 * 24))} days
+                                        {Math.ceil((new Date(project.end_date) - new Date(project.start_date)) / (1000 * 60 * 60 * 24))} days
                                     </span>
                                 </div>
-                           )}
-                           <div className="flex flex-col border-t border-[var(--border-main)]/50 pt-1.5 col-span-1 text-right">
-                                <span className="leading-none opacity-80 flex items-center gap-1 justify-end"><Clock className="w-2.5 h-2.5"/> Updated</span>
+                            )}
+                            <div className="flex flex-col border-t border-[var(--border-main)]/50 pt-1.5 col-span-1 text-right">
+                                <span className="leading-none opacity-80 flex items-center gap-1 justify-end"><Clock className="w-2.5 h-2.5" /> Updated</span>
                                 <span className="font-medium text-[var(--text-main)] mt-0.5">
                                     <DateTime date={project.created_at} variant="dateOnly" />
                                 </span>

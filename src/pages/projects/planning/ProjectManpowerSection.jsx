@@ -6,6 +6,7 @@ import ConfirmationModal from '../../../components/ui/ConfirmationModal';
 import AddUserToProjectModal from './AddUserToProjectModal';
 import { toast } from 'react-toastify';
 import { cn, getImageUrl } from '../../../lib/utils';
+import Tooltip from '../../../components/ui/Tooltip';
 
 const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
     const [addModalOpen, setAddModalOpen] = useState(false);
@@ -50,18 +51,42 @@ const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
 
     const MAX_DISPLAY = 5;
     const remainingCount = Math.max(0, manpower.length - MAX_DISPLAY);
-    
+
     // items to show based on state
     const visibleUsers = isExpanded ? manpower : manpower.slice(0, MAX_DISPLAY);
 
     const UserAvatar = ({ entry }) => {
         const u = displayUser(entry);
         return (
-            <div className="relative group z-10 hover:z-50 cursor-pointer">
+            <Tooltip
+                id={`user-manpower-${u.id}`}
+                place="top"
+                className="z-10 hover:z-50"
+                content={
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                                <p className="text-xs font-semibold text-[var(--text-main)] truncate">{u.name}</p>
+                                <p className="text-[10px] text-[var(--text-muted)] truncate">{u.email}</p>
+                            </div>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setUserToRemove(entry);
+                                }}
+                                className="text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 p-1 rounded transition-colors flex-shrink-0"
+                                title="Remove User"
+                            >
+                                <X className="h-3 w-3" />
+                            </button>
+                        </div>
+                    </div>
+                }
+            >
                 {/* Avatar Circle */}
                 <div className={cn(
-                    "relative h-9 w-9 rounded-full ring-2 ring-[var(--bg-card)] flex items-center justify-center overflow-hidden transition-all duration-200",
-                    "group-hover:ring-primary-500 group-hover:scale-105"
+                    "relative h-9 w-9 rounded-full ring-2 ring-[var(--bg-card)] flex items-center justify-center overflow-hidden transition-all duration-200 cursor-pointer",
+                    "hover:ring-primary-500 hover:scale-105"
                 )}>
                     {u.avatar ? (
                         <img src={getImageUrl(u.avatar)} alt={u.name} className="h-full w-full object-cover" />
@@ -71,34 +96,14 @@ const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
                         </div>
                     )}
                 </div>
-
-                {/* Hover Details Popover */}
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 opacity-0 group-hover:opacity-100 bg-[var(--bg-card)] border border-[var(--border-main)] shadow-xl rounded-lg p-3 touch-none pointer-events-none group-hover:pointer-events-auto transition-all duration-200 translate-y-2 group-hover:translate-y-0 flex flex-col gap-1 z-50">
-                    <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                            <p className="text-xs font-semibold text-[var(--text-main)] truncate">{u.name}</p>
-                            <p className="text-[10px] text-[var(--text-muted)] truncate">{u.email}</p>
-                        </div>
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setUserToRemove(entry);
-                            }}
-                            className="text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 p-1 rounded transition-colors flex-shrink-0"
-                            title="Remove User"
-                        >
-                            <X className="h-3 w-3" />
-                        </button>
-                    </div>
-                </div>
-            </div>
+            </Tooltip>
         );
     };
 
     if (manpower.length === 0) {
         return (
             <div>
-                 <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-3">
                     <h2 className="flex items-center gap-2 font-semibold text-[var(--text-main)] text-sm uppercase tracking-wider">
                         <Users className="h-4 w-4 text-primary-400" />
                         Manpower (0)
@@ -129,10 +134,10 @@ const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
                     <Users className="h-4 w-4 text-primary-400" />
                     Manpower ({manpower.length})
                 </h2>
-                 {isExpanded && (
+                {isExpanded && (
                     <Button
                         size="sm"
-                        variant="ghost" 
+                        variant="ghost"
                         onClick={() => setIsExpanded(false)}
                         className="h-6 w-6 p-0 rounded-full"
                         title="Collapse"
@@ -144,7 +149,7 @@ const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
 
             <div className={cn(
                 "flex items-center transition-all duration-300",
-                isExpanded ? "flex-wrap gap-3" : "-space-x-2" 
+                isExpanded ? "flex-wrap gap-3" : "-space-x-2"
             )}>
                 {visibleUsers.map((entry, idx) => (
                     <UserAvatar key={displayUser(entry).id ?? idx} entry={entry} />
@@ -161,12 +166,12 @@ const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
                     </button>
                 )}
 
-                 {/* Add Button - Circle style in flow */}
-                 <button
+                {/* Add Button - Circle style in flow */}
+                <button
                     onClick={() => setAddModalOpen(true)}
                     className={cn(
                         "relative h-9 w-9 rounded-full border border-dashed border-[var(--border-main)] flex items-center justify-center text-[var(--text-muted)] hover:text-primary-400 hover:border-primary-500/50 hover:bg-primary-500/5 transition-colors z-0",
-                         !isExpanded && "ml-2"
+                        !isExpanded && "ml-2"
                     )}
                     title="Add Member"
                 >
