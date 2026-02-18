@@ -1,7 +1,5 @@
 import { useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { GanttChart, Edit2, Trash2, Plus } from 'lucide-react';
-import { useGetApiWithIdQuery } from '../../../store/api/commonApi';
 import { format, eachDayOfInterval, isToday, isWeekend } from 'date-fns';
 import Button from '../../../components/ui/Button';
 
@@ -16,13 +14,7 @@ const ProjectGanttCustom = ({
     onDelete,
     onAdd,
 }) => {
-    const navigate = useNavigate();
-    const { data: planningRes } = useGetApiWithIdQuery(
-        { url: '/project-planning-list', id: projectId },
-        { skip: !projectId || itemsProp !== undefined }
-    );
-
-    const items = itemsProp ?? planningRes?.data?.data ?? planningRes?.data ?? [];
+    const items = itemsProp ?? [];
     const scrollSyncClass = 'gantt-timeline-scroll';
     const verticalScrollSyncClass = 'gantt-vertical-scroll';
 
@@ -453,8 +445,7 @@ const ProjectGanttCustom = ({
 
                                                     {/* Progress bar background */}
                                                     <div
-                                                        className={`h-full ${getStatusColor(bar.status)} relative rounded-md overflow-hidden transition-all cursor-pointer`}
-                                                        onClick={() => navigate(`/projects/${projectId}/planning/${bar.id}`)}
+                                                        className={`h-full ${getStatusColor(bar.status)} relative rounded-md overflow-hidden transition-all cursor-default`}
                                                     >
                                                         {/* Completed portion */}
                                                         {bar.progress > 0 && (

@@ -66,14 +66,14 @@ const ModuleCard = ({ module, onEdit, onDelete, onViewTask }) => {
             )}
         >
             {/* Status indicator line */}
-            <div className={cn(
+            {/* <div className={cn(
                 'absolute top-0 left-0 right-0 h-1',
                 module.status === 'draft' && 'bg-slate-500',
                 module.status === 'pending' && 'bg-amber-500',
                 module.status === 'in_progress' && 'bg-blue-500',
                 module.status === 'completed' && 'bg-green-500',
                 module.status === 'blocked' && 'bg-red-500'
-            )} />
+            )} /> */}
 
             <div className="flex items-start justify-between mb-3 pt-1">
                 <div className="flex-1 min-w-0">
