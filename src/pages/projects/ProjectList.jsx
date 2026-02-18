@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useGetApiQuery, useDeleteApiMutation } from '../../store/api/commonApi';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { FolderKanban, Plus, Building2, Calendar, TrendingUp, Eye, Edit, Trash2 } from 'lucide-react';
 import ProjectFormModal from './ProjectFormModal';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
@@ -22,16 +23,18 @@ const ProjectList = () => {
     const [projectToDelete, setProjectToDelete] = useState(null);
     const [page, setPage] = useState(1);
 
+    const { role } = useSelector((state) => state.auth);
+
     // Fetch projects from API
     const { data: response, isLoading, refetch } = useGetApiQuery({
-        url: '/projects',
+        url: role === 'admin' ? '/projects' : 'my-project-list',
         params: { page }
     });
 
     const [deleteProject, { isLoading: isDeleting }] = useDeleteApiMutation();
 
-    const projects = response?.data?.data || [];
-    const paginationData = response?.data || {};
+    const projects = role === 'admin' ? (response?.data?.data || []) : (response?.data || []);
+    const paginationData = role === 'admin' ? (response?.data || {}) : {};
 
 
 
@@ -106,17 +109,19 @@ const ProjectList = () => {
                     <h1 className="text-3xl font-bold text-[var(--text-main)] mb-2">Projects</h1>
                     <p className="text-[var(--text-muted)]">Manage your projects and track progress</p>
                 </div>
-                <button
-                    className="btn-primary flex items-center gap-2"
-                    onClick={() => {
-                        setFormMode('create');
-                        setSelectedProjectId(null);
-                        setIsFormModalOpen(true);
-                    }}
-                >
-                    <Plus className="w-5 h-5" />
-                    New Project
-                </button>
+                {role === 'admin' && (
+                    <button
+                        className="btn-primary flex items-center gap-2"
+                        onClick={() => {
+                            setFormMode('create');
+                            setSelectedProjectId(null);
+                            setIsFormModalOpen(true);
+                        }}
+                    >
+                        <Plus className="w-5 h-5" />
+                        New Project
+                    </button>
+                )}
             </div>
 
             {isLoading ? (
@@ -132,17 +137,19 @@ const ProjectList = () => {
                     <FolderKanban className="w-16 h-16 text-[var(--text-muted)] mx-auto mb-4" />
                     <h3 className="text-xl font-semibold text-[var(--text-main)] mb-2">No projects yet</h3>
                     <p className="text-[var(--text-muted)] mb-4">Get started by creating your first project</p>
-                    <button
-                        className="btn-primary inline-flex items-center gap-2"
-                        onClick={() => {
-                            setFormMode('create');
-                            setSelectedProjectId(null);
-                            setIsFormModalOpen(true);
-                        }}
-                    >
-                        <Plus className="w-5 h-5" />
-                        Create Project
-                    </button>
+                    {role === 'admin' && (
+                        <button
+                            className="btn-primary inline-flex items-center gap-2"
+                            onClick={() => {
+                                setFormMode('create');
+                                setSelectedProjectId(null);
+                                setIsFormModalOpen(true);
+                            }}
+                        >
+                            <Plus className="w-5 h-5" />
+                            Create Project
+                        </button>
+                    )}
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -161,20 +168,24 @@ const ProjectList = () => {
                                 >
                                     <Eye className="w-4 h-4" />
                                 </button>
-                                <button
-                                    onClick={(e) => handleEdit(e, project.id)}
-                                    className="p-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors shadow-lg"
-                                    title="Edit Project"
-                                >
-                                    <Edit className="w-4 h-4" />
-                                </button>
-                                <button
-                                    onClick={(e) => handleDeleteClick(e, project)}
-                                    className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-lg"
-                                    title="Delete Project"
-                                >
-                                    <Trash2 className="w-4 h-4" />
-                                </button>
+                                {role === 'admin' && (
+                                    <>
+                                        <button
+                                            onClick={(e) => handleEdit(e, project.id)}
+                                            className="p-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors shadow-lg"
+                                            title="Edit Project"
+                                        >
+                                            <Edit className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={(e) => handleDeleteClick(e, project)}
+                                            className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-lg"
+                                            title="Delete Project"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </>
+                                )}
                             </div>
 
                             <div className="flex items-start gap-3 mb-4">
@@ -239,9 +250,9 @@ const ProjectList = () => {
                                     <div className="flex justify-between text-sm">
                                         <span className="text-[var(--text-muted)]">Progress</span>
                                     </div>
-                                    <ProgressBar 
-                                        value={project.progress || 0} 
-                                        showValue 
+                                    <ProgressBar
+                                        value={project.progress || 0}
+                                        showValue
                                         variant={getStatusColor(project.status)}
                                     />
                                 </div>

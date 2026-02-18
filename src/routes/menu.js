@@ -19,7 +19,7 @@ export const menuItems = [
         label: 'Dashboard',
         path: '/dashboard',
         icon: LayoutDashboard,
-        roles: ['admin', 'employee'],
+        roles: ['admin', 'employee', 'developer'],
     },
     {
         id: 'users',
@@ -90,7 +90,7 @@ export const menuItems = [
         label: 'Projects',
         path: '/projects',
         icon: FolderKanban,
-        roles: ['admin', 'employee'],
+        roles: ['admin', 'employee', 'developer'],
     },
     {
         id: 'tasks',
