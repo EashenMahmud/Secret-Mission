@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGetApiWithIdQuery, useGetApiQuery, useDeleteApiMutation } from '../../store/api/commonApi';
 import {
@@ -21,6 +22,7 @@ import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import ProjectManpowerSection from './planning/ProjectManpowerSection';
 import ProjectGanttCustom from './planning/ProjectGanttCustom';
 import ProjectModuleKanban from './modules/ProjectModuleKanban';
+import ProjectModuleStepView from './modules/ProjectModuleStepView';
 import DateTime from '../../components/ui/DateTime';
 import ProgressBar from '../../components/ui/ProgressBar';
 import { toast } from 'react-toastify';
@@ -28,6 +30,7 @@ import { toast } from 'react-toastify';
 const ProjectDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { role } = useSelector((state) => state.auth);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     // Planning state
@@ -271,8 +274,12 @@ const ProjectDetail = () => {
                 />
             </div>
 
-            {/* Project Modules Kanban Board */}
-            <ProjectModuleKanban projectId={id} onRefresh={refetch} />
+            {/* Project Modules View - Conditional based on role */}
+            {role === 'admin' ? (
+                <ProjectModuleKanban projectId={id} onRefresh={refetch} />
+            ) : (
+                <ProjectModuleStepView projectId={id} />
+            )}
 
             <ProjectFormModal
                 isOpen={isEditModalOpen}
