@@ -1,4 +1,5 @@
 import { useMemo, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { GanttChart, Edit2, Trash2, Plus } from 'lucide-react';
 import { format, eachDayOfInterval, isToday, isWeekend } from 'date-fns';
 import Button from '../../../components/ui/Button';
@@ -14,6 +15,7 @@ const ProjectGanttCustom = ({
     onDelete,
     onAdd,
 }) => {
+    const { role } = useSelector((state) => state.auth);
     const items = itemsProp ?? [];
     const scrollSyncClass = 'gantt-timeline-scroll';
     const verticalScrollSyncClass = 'gantt-vertical-scroll';
@@ -250,7 +252,7 @@ const ProjectGanttCustom = ({
                         <p className="text-xs text-[var(--text-muted)]">Project schedule at a glance</p>
                     </div>
                 </div>
-                {onAdd && (
+                {role === 'admin' && onAdd && (
                     <Button onClick={onAdd} size="sm" leftIcon={<Plus className="w-4 h-4" />}>
                         Add Item
                     </Button>
@@ -420,27 +422,28 @@ const ProjectGanttCustom = ({
                                                         width: `${bar.width}px`,
                                                     }}
                                                 >
-                                                    {/* Actions - Attached to the left of the bar */}
-                                                    <div className="absolute right-full mr-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-30 top-1/2 -translate-y-1/2 bg-[var(--bg-app)]/80 rounded p-0.5 backdrop-blur-sm border border-[var(--border-main)]">
-                                                        {onEdit && (
-                                                            <button
-                                                                onClick={(e) => { e.stopPropagation(); onEdit(bar); }}
-                                                                className="p-1 rounded bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-primary-400 hover:bg-primary-500/10 transition-colors"
-                                                                title="Edit"
-                                                            >
-                                                                <Edit2 className="w-3 h-3" />
-                                                            </button>
-                                                        )}
-                                                        {onDelete && (
-                                                            <button
-                                                                onClick={(e) => { e.stopPropagation(); onDelete(bar); }}
-                                                                className="p-1 rounded bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                                                                title="Delete"
-                                                            >
-                                                                <Trash2 className="w-3 h-3" />
-                                                            </button>
-                                                        )}
-                                                    </div>
+                                                    {role === 'admin' && (
+                                                        <div className="absolute right-full mr-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-30 top-1/2 -translate-y-1/2 bg-[var(--bg-app)]/80 rounded p-0.5 backdrop-blur-sm border border-[var(--border-main)]">
+                                                            {onEdit && (
+                                                                <button
+                                                                    onClick={(e) => { e.stopPropagation(); onEdit(bar); }}
+                                                                    className="p-1 rounded bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-primary-400 hover:bg-primary-500/10 transition-colors"
+                                                                    title="Edit"
+                                                                >
+                                                                    <Edit2 className="w-3 h-3" />
+                                                                </button>
+                                                            )}
+                                                            {onDelete && (
+                                                                <button
+                                                                    onClick={(e) => { e.stopPropagation(); onDelete(bar); }}
+                                                                    className="p-1 rounded bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                                                                    title="Delete"
+                                                                >
+                                                                    <Trash2 className="w-3 h-3" />
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    )}
 
                                                     {/* Progress bar background */}
                                                     <div
