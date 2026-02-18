@@ -140,8 +140,7 @@ const ProjectGanttCustom = ({
 
     const rowHeight = 48;
     const headerHeight = 100;
-    const minRows = items.length > 0 ? Math.max(Math.ceil((minHeight - headerHeight) / rowHeight), itemBars.length) : Math.ceil((minHeight - headerHeight) / rowHeight);
-    const totalRows = Math.max(minRows, itemBars.length);
+    const totalRows = itemBars.length + 1;
     const totalHeight = totalRows * rowHeight + headerHeight;
     const timelineWidth = calendarDays.length * dayWidth;
 
