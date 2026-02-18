@@ -27,10 +27,11 @@ import Badge from '../../../components/ui/Badge';
 import { cn } from '../../../lib/utils';
 
 const STATUS_COLUMNS = [
+    { id: 'draft', label: 'Draft', color: 'gray' },
     { id: 'pending', label: 'Pending', color: 'warning' },
     { id: 'in_progress', label: 'In Progress', color: 'info' },
     { id: 'completed', label: 'Completed', color: 'success' },
-    { id: 'on_hold', label: 'On Hold', color: 'error' },
+    { id: 'blocked', label: 'Blocked', color: 'error' },
 ];
 
 const ModuleCard = ({ module, onEdit, onDelete, onViewTask }) => {
@@ -49,90 +50,110 @@ const ModuleCard = ({ module, onEdit, onDelete, onViewTask }) => {
         opacity: isDragging ? 0.5 : 1,
     };
 
+    const statusColor = STATUS_COLUMNS.find(col => col.id === module.status)?.color || 'gray';
+    const progress = module.progress ?? 0;
+
     return (
         <div
             ref={setNodeRef}
             style={style}
             {...attributes}
             {...listeners}
-            className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-lg p-3 mb-2.5 shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing group touch-none"
+            className={cn(
+                "bg-[var(--bg-card)] border border-[var(--border-main)] rounded-lg p-3 mb-2 cursor-grab active:cursor-grabbing group relative overflow-hidden transition-all duration-200",
+                "hover:border-primary-500 hover:shadow-lg",
+                isDragging && "shadow-2xl ring-2 ring-primary-500 z-50"
+            )}
         >
-            <div className="flex items-start justify-between mb-2">
+            {/* Status indicator line */}
+            <div className={cn(
+                'absolute top-0 left-0 right-0 h-1',
+                module.status === 'draft' && 'bg-slate-500',
+                module.status === 'pending' && 'bg-amber-500',
+                module.status === 'in_progress' && 'bg-blue-500',
+                module.status === 'completed' && 'bg-green-500',
+                module.status === 'blocked' && 'bg-red-500'
+            )} />
+
+            <div className="flex items-start justify-between mb-3 pt-1">
                 <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-[var(--text-main)] mb-1 truncate">{module.name}</h4>
+                    <h4 className="font-semibold text-[var(--text-main)] text-sm mb-1 group-hover:text-primary-500 transition-colors line-clamp-2">
+                        {module.name}
+                    </h4>
                     {module.description && (
-                        <p className="text-sm text-[var(--text-muted)] line-clamp-2 mb-2">{module.description}</p>
+                        <p className="text-xs text-[var(--text-muted)] line-clamp-2">
+                            {module.description}
+                        </p>
                     )}
                 </div>
-                <div
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1"
-                >
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity ml-2">
                     <GripVertical className="w-4 h-4 text-[var(--text-muted)]" />
                 </div>
             </div>
 
             <div className="flex items-center justify-between mb-3">
-                {module.estimated_days && (
-                    <div className="flex items-center gap-1 text-xs text-[var(--text-muted)]">
+                {module.estimated_days ? (
+                    <div className="flex items-center gap-1 text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-medium">
                         <Clock className="w-3 h-3" />
                         <span>{module.estimated_days} {module.estimated_days === 1 ? 'day' : 'days'}</span>
                     </div>
-                )}
-                {module.status && (
-                    <Badge variant={STATUS_COLUMNS.find(col => col.id === module.status)?.color || 'gray'}>
-                        {STATUS_COLUMNS.find(col => col.id === module.status)?.label || module.status}
-                    </Badge>
-                )}
+                ) : <div />}
+                <Badge variant={statusColor} className="text-[10px] py-0 px-2 uppercase tracking-tight">
+                    {STATUS_COLUMNS.find(col => col.id === module.status)?.label || module.status}
+                </Badge>
             </div>
 
             <div className="mb-4">
                 <div className="flex justify-between text-[10px] text-[var(--text-muted)] mb-1 font-medium">
                     <span>Progress</span>
-                    <span>{module.progress ?? 0}%</span>
+                    <span>{progress}%</span>
                 </div>
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg-skeleton)]">
                     <div
                         className={cn(
                             'h-full transition-all duration-300 ease-out rounded-full',
-                            (module.progress ?? 0) === 100 ? 'bg-green-500' : 'bg-indigo-500'
+                            progress === 100 ? 'bg-green-500' : 'bg-indigo-500'
                         )}
-                        style={{ width: `${module.progress ?? 0}%` }}
+                        style={{ width: `${progress}%` }}
                     />
                 </div>
             </div>
 
-            <div className="flex items-center gap-2 pt-2 border-t border-[var(--border-main)]">
+            <div className="flex items-center gap-1.5 pt-3 border-t border-[var(--border-main)]/50">
                 <button
                     onClick={(e) => {
-                        e.stopPropagation(); // Prevent drag start
+                        e.stopPropagation();
                         onViewTask(module);
                     }}
-                    onPointerDown={(e) => e.stopPropagation()} // Extra safety for dnd-kit
-                    className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 rounded transition-colors"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-[10px] font-medium text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/10 rounded-md transition-all"
+                    title="View Tasks"
                 >
-                    <Eye className="w-3 h-3" />
+                    <Eye className="w-3.5 h-3.5" />
                     Tasks
                 </button>
                 <button
                     onClick={(e) => {
-                        e.stopPropagation(); // Prevent drag start
+                        e.stopPropagation();
                         onEdit(module);
                     }}
-                    onPointerDown={(e) => e.stopPropagation()} // Extra safety for dnd-kit
-                    className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs text-[var(--text-muted)] hover:text-primary-500 hover:bg-primary-500/10 rounded transition-colors"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-[10px] font-medium text-[var(--text-muted)] hover:text-primary-500 hover:bg-primary-500/10 rounded-md transition-all"
+                    title="Edit"
                 >
-                    <Edit2 className="w-3 h-3" />
+                    <Edit2 className="w-3.5 h-3.5" />
                     Edit
                 </button>
                 <button
                     onClick={(e) => {
-                        e.stopPropagation(); // Prevent drag start
+                        e.stopPropagation();
                         onDelete(module);
                     }}
-                    onPointerDown={(e) => e.stopPropagation()} // Extra safety for dnd-kit
-                    className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded transition-colors"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-[10px] font-medium text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded-md transition-all"
+                    title="Delete"
                 >
-                    <Trash2 className="w-3 h-3" />
+                    <Trash2 className="w-3.5 h-3.5" />
                     Delete
                 </button>
             </div>
@@ -147,34 +168,44 @@ const KanbanColumn = ({ column, modules, onEdit, onDelete, onViewTask }) => {
     });
 
     return (
-        <div className="flex-1 min-w-[280px] flex flex-col h-full">
-            {/* Column Header - Fixed */}
-            <div className="mb-3 px-2 flex-shrink-0">
+        <div className="flex flex-col h-full bg-[var(--bg-app)]/40 rounded-xl border border-[var(--border-main)]/50">
+            {/* Column Header */}
+            <div className={cn(
+                "p-3 border-t-4 rounded-t-xl transition-all",
+                column.id === 'draft' && 'border-t-slate-500',
+                column.id === 'pending' && 'border-t-amber-500',
+                column.id === 'in_progress' && 'border-t-blue-500',
+                column.id === 'completed' && 'border-t-green-500',
+                column.id === 'blocked' && 'border-t-red-500',
+                isOver ? "bg-primary-500/5" : "bg-transparent"
+            )}>
                 <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-[var(--text-main)] text-sm">{column.label}</h3>
-                    <Badge variant="gray" className="text-xs">
-                        {modules.length}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-[var(--text-main)] text-sm tracking-tight uppercase">{column.label}</h3>
+                        <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[var(--bg-card)] text-[10px] font-bold text-[var(--text-muted)] border border-[var(--border-main)] shadow-sm">
+                            {modules.length}
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            {/* Column Content - Scrollable if needed */}
+            {/* Column Content */}
             <div
                 ref={setNodeRef}
-                className={`overflow-y-auto custom-scrollbar-thin bg-[var(--bg-app)]/50 rounded-lg p-3 border-2 transition-colors ${isOver
-                    ? 'border-primary-500 bg-primary-500/10'
-                    : 'border-[var(--border-main)]/50'
-                    }`}
+                className={cn(
+                    "flex-1 overflow-y-auto custom-scrollbar-thin p-3 pb-8 transition-colors",
+                    isOver && "bg-primary-500/10"
+                )}
                 style={{
-                    maxHeight: 'calc(800px - 3rem)', // Constraint based on max board height
-                    minHeight: '260px', // Approx 2 cards
-                    height: 'auto'
+                    height: 'calc(100vh - 450px)',
+                    minHeight: '400px',
                 }}
             >
                 <SortableContext items={moduleIds} strategy={verticalListSortingStrategy}>
                     {modules.length === 0 ? (
-                        <div className="text-center py-8 text-[var(--text-muted)] text-sm">
-                            <div className="text-[var(--text-muted)]/50 mb-2">Drop modules here</div>
+                        <div className="h-full flex flex-col items-center justify-center py-12 text-[var(--text-muted)] opacity-50 border-2 border-dashed border-[var(--border-main)] rounded-lg">
+                            <Plus className="w-6 h-6 mb-2 opacity-20" />
+                            <p className="text-xs font-medium">Empty</p>
                         </div>
                     ) : (
                         modules.map((module) => (
@@ -541,12 +572,7 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
             {viewMode === 'kanban' ? (
                 <div
                     id="kanban-board"
-                    style={{
-                        maxHeight: '800px',
-                        minHeight: '280px', // Approx for 2 cards + padding
-                        height: 'auto',
-                        overflow: 'hidden' // Scrolling is handled inside columns
-                    }}
+                    className="overflow-x-auto pb-6 custom-scrollbar"
                 >
                     <DndContext
                         sensors={sensors}
@@ -555,14 +581,9 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
                         onDragEnd={handleDragEnd}
                         modifiers={[restrictToBoard]}
                     >
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" style={{ height: 'auto' }}>
+                        <div className="flex gap-4 min-w-max pb-4" style={{ height: 'auto' }}>
                             {STATUS_COLUMNS.map((column) => (
-                                <div
-                                    key={column.id}
-                                    data-status={column.id}
-                                    className="flex-1 min-w-[280px]"
-                                    style={{ height: 'auto' }}
-                                >
+                                <div key={column.id} className="w-[280px] flex-shrink-0">
                                     <KanbanColumn
                                         column={column}
                                         modules={modulesByStatus[column.id] || []}
@@ -576,10 +597,10 @@ const ProjectModuleKanban = ({ projectId, onRefresh }) => {
 
                         <DragOverlay>
                             {activeModule ? (
-                                <div className="bg-[var(--bg-card)] border border-primary-500 rounded-lg p-4 shadow-lg opacity-95">
+                                <div className="bg-[var(--bg-card)] border-t-4 border-primary-500 rounded-lg p-3 shadow-2xl opacity-90 scale-105 transition-transform w-[280px]">
                                     <h4 className="font-semibold text-[var(--text-main)] mb-1">{activeModule.name}</h4>
                                     {activeModule.description && (
-                                        <p className="text-sm text-[var(--text-muted)] line-clamp-2">{activeModule.description}</p>
+                                        <p className="text-xs text-[var(--text-muted)] line-clamp-2">{activeModule.description}</p>
                                     )}
                                 </div>
                             ) : null}

@@ -20,10 +20,11 @@ const validationSchema = Yup.object({
 });
 
 const STATUS_OPTIONS = [
+    { value: 'draft', label: 'Draft' },
     { value: 'pending', label: 'Pending' },
     { value: 'in_progress', label: 'In Progress' },
     { value: 'completed', label: 'Completed' },
-    { value: 'on_hold', label: 'On Hold' },
+    { value: 'blocked', label: 'Blocked' },
 ];
 
 const ProjectModuleFormModal = ({ isOpen, onClose, projectId, module = null, onSuccess }) => {
@@ -32,21 +33,21 @@ const ProjectModuleFormModal = ({ isOpen, onClose, projectId, module = null, onS
 
     const initialValues = isEdit
         ? {
-              name: module.name || '',
-              description: module.description || '',
-              estimated_days: module.estimated_days || 0,
-              status: module.status || 'pending',
-              is_completed: module.is_completed || false,
-              completed_at: module.completed_at ? new Date(module.completed_at).toISOString().split('T')[0] : '',
-          }
+            name: module.name || '',
+            description: module.description || '',
+            estimated_days: module.estimated_days || 0,
+            status: module.status || 'pending',
+            is_completed: module.is_completed || false,
+            completed_at: module.completed_at ? new Date(module.completed_at).toISOString().split('T')[0] : '',
+        }
         : {
-              name: '',
-              description: '',
-              estimated_days: 0,
-              status: 'pending',
-              is_completed: false,
-              completed_at: '',
-          };
+            name: '',
+            description: '',
+            estimated_days: 0,
+            status: 'pending',
+            is_completed: false,
+            completed_at: '',
+        };
 
     const buildPayload = (values) => {
         const payload = {
