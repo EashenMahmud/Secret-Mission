@@ -21,7 +21,7 @@ import ProjectPlanningFormModal from './planning/ProjectPlanningFormModal';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import ProjectManpowerSection from './planning/ProjectManpowerSection';
 import ProjectGanttCustom from './planning/ProjectGanttCustom';
-import ProjectModuleKanban from './modules/ProjectModuleKanban';
+import ProjectModuleAdminView from './modules/ProjectModuleAdminView';
 import ProjectModuleStepView from './modules/ProjectModuleStepView';
 import DateTime from '../../components/ui/DateTime';
 import ProgressBar from '../../components/ui/ProgressBar';
@@ -257,7 +257,7 @@ const ProjectDetail = () => {
             </div>
             {/* Project Modules View - Conditional based on role */}
             {role === 'admin' ? (
-                <ProjectModuleKanban projectId={id} onRefresh={refetch} />
+                <ProjectModuleAdminView projectId={id} onRefresh={refetch} />
             ) : (
                 <div className="card p-4">
                     <ProjectModuleStepView projectId={id} />
