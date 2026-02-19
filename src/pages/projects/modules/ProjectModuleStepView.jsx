@@ -116,14 +116,14 @@ const ProjectModuleStepView = ({ projectId }) => {
             </div>
 
             <div className="card p-0 bg-transparent border-none">
-                <div className="relative py-12 md:py-24 overflow-hidden">
-                    {/* Connecting Background Path - Horizontal (Desktop) */}
-                    <div className="hidden md:block absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--border-main)] to-transparent -translate-y-1/2" />
+                <div className="relative py-12 md:py-20 overflow-hidden">
+                    {/* Connecting Background Path - Horizontal (Desktop - Hidden when wrapping as we use segments) */}
+                    {/* <div className="hidden md:block absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--border-main)] to-transparent -translate-y-1/2" /> */}
 
                     {/* Connecting Background Path - Vertical (Mobile) */}
                     <div className="block md:hidden absolute left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[var(--border-main)] to-transparent -translate-x-1/2" />
 
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-24 md:gap-20 pb-12 hide-scrollbar px-4 md:px-10 relative z-10">
+                    <div className="flex flex-col md:flex-row md:flex-wrap items-center justify-center gap-24 md:gap-x-24 md:gap-y-48 pb-20 md:pb-32 hide-scrollbar px-4 md:px-10 relative z-10">
                         {modules.map((module, index) => {
                             const config = STATUS_CONFIG[module.status] || STATUS_CONFIG.draft;
                             const ModuleIcon = getModuleIcon(module.name);
@@ -131,6 +131,10 @@ const ProjectModuleStepView = ({ projectId }) => {
 
                             return (
                                 <div key={module.id} className="relative flex flex-col items-center">
+                                    {/* Desktop Connecting Line - Horizontal Segment (Refined "Subtle but Light" Look) */}
+                                    <div className="hidden md:block absolute top-[64px] left-[-70px] right-[-70px] h-1 bg-primary-500/10 -z-10 rounded-full" />
+                                    <div className="hidden md:block absolute top-[64px] left-[-70px] right-[-70px] h-[1.5px] bg-primary-500/20 -z-10" />
+
                                     {/* Main Bubble */}
                                     <button
                                         onClick={() => navigate(`/projects/${projectId}/planning/${module.id}`)}
@@ -176,7 +180,7 @@ const ProjectModuleStepView = ({ projectId }) => {
                                     </div>
 
                                     {/* Connecting Stem inside the row (Desktop Only) */}
-                                    <div className="hidden md:block absolute top-1/2 -translate-y-full mb-16 h-8 w-px bg-gradient-to-t from-[var(--border-main)] to-transparent opacity-20" />
+                                    <div className="hidden md:block absolute top-[64px] h-12 w-0.5 bg-gradient-to-b from-primary-500/40 to-transparent" />
                                 </div>
                             );
                         })}
@@ -185,7 +189,7 @@ const ProjectModuleStepView = ({ projectId }) => {
             </div>
 
             {/* Simplified Legend */}
-            <div className="mt-8 md:mt-12 flex flex-wrap justify-center gap-6 md:gap-10">
+            <div className="flex flex-wrap justify-center gap-6 md:gap-10">
                 {Object.entries(STATUS_CONFIG).map(([key, config]) => (
                     <div key={key} className="flex items-center gap-2">
                         <div className={cn("w-2.5 h-2.5 md:w-3 md:h-3 rounded-full border-2", config.border, config.bg)} />
