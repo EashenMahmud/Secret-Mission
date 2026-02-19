@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useGetApiWithIdQuery, usePostApiMutation } from '../../../store/api/commonApi';
 import { Users, Plus, X, ChevronUp } from 'lucide-react';
 import Button from '../../../components/ui/Button';
@@ -12,6 +13,7 @@ const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [userToRemove, setUserToRemove] = useState(null);
     const [isExpanded, setIsExpanded] = useState(false);
+    const { role } = useSelector((state) => state.auth);
 
     const { data: manpowerRes, refetch } = useGetApiWithIdQuery(
         { url: '/project-manpower-list', id: projectId },
@@ -69,16 +71,18 @@ const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
                                 <p className="text-xs font-semibold text-[var(--text-main)] truncate">{u.name}</p>
                                 <p className="text-[10px] text-[var(--text-muted)] truncate">{u.email}</p>
                             </div>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setUserToRemove(entry);
-                                }}
-                                className="text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 p-1 rounded transition-colors flex-shrink-0"
-                                title="Remove User"
-                            >
-                                <X className="h-3 w-3" />
-                            </button>
+                            {role === 'admin' && (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setUserToRemove(entry);
+                                    }}
+                                    className="text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 p-1 rounded transition-colors flex-shrink-0"
+                                    title="Remove User"
+                                >
+                                    <X className="h-3 w-3" />
+                                </button>
+                            )}
                         </div>
                     </div>
                 }
@@ -109,13 +113,15 @@ const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
                         Manpower (0)
                     </h2>
                 </div>
-                <button
-                    onClick={() => setAddModalOpen(true)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-dashed border-[var(--border-main)] text-xs text-[var(--text-muted)] hover:text-primary-400 hover:border-primary-500/50 hover:bg-primary-500/5 transition-colors"
-                >
-                    <Plus className="h-3.5 w-3.5" />
-                    <span>Add Member</span>
-                </button>
+                {role === 'admin' && (
+                    <button
+                        onClick={() => setAddModalOpen(true)}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-dashed border-[var(--border-main)] text-xs text-[var(--text-muted)] hover:text-primary-400 hover:border-primary-500/50 hover:bg-primary-500/5 transition-colors"
+                    >
+                        <Plus className="h-3.5 w-3.5" />
+                        <span>Add Member</span>
+                    </button>
+                )}
                 <AddUserToProjectModal
                     isOpen={addModalOpen}
                     onClose={() => setAddModalOpen(false)}
@@ -167,16 +173,18 @@ const ProjectManpowerSection = ({ projectId, onRefresh, compact = false }) => {
                 )}
 
                 {/* Add Button - Circle style in flow */}
-                <button
-                    onClick={() => setAddModalOpen(true)}
-                    className={cn(
-                        "relative h-9 w-9 rounded-full border border-dashed border-[var(--border-main)] flex items-center justify-center text-[var(--text-muted)] hover:text-primary-400 hover:border-primary-500/50 hover:bg-primary-500/5 transition-colors z-0",
-                        !isExpanded && "ml-2"
-                    )}
-                    title="Add Member"
-                >
-                    <Plus className="h-4 w-4" />
-                </button>
+                {role === 'admin' && (
+                    <button
+                        onClick={() => setAddModalOpen(true)}
+                        className={cn(
+                            "relative h-9 w-9 rounded-full border border-dashed border-[var(--border-main)] flex items-center justify-center text-[var(--text-muted)] hover:text-primary-400 hover:border-primary-500/50 hover:bg-primary-500/5 transition-colors z-0",
+                            !isExpanded && "ml-2"
+                        )}
+                        title="Add Member"
+                    >
+                        <Plus className="h-4 w-4" />
+                    </button>
+                )}
             </div>
 
             <AddUserToProjectModal
