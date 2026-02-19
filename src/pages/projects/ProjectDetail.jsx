@@ -135,12 +135,14 @@ const ProjectDetail = () => {
                     <ArrowLeft className="w-5 h-5" />
                     Back to Projects
                 </button>
-                <Button
-                    onClick={() => setIsEditModalOpen(true)}
-                    leftIcon={<Edit className="w-4 h-4" />}
-                >
-                    Edit Project
-                </Button>
+                {role === 'admin' && (
+                    <Button
+                        onClick={() => setIsEditModalOpen(true)}
+                        leftIcon={<Edit className="w-4 h-4" />}
+                    >
+                        Edit Project
+                    </Button>
+                )}
             </div>
 
             {/* Unified Project Hero Card */}
