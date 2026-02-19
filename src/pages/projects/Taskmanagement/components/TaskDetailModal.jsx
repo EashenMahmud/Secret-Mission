@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Edit2, Calendar, Clock, Flag, CheckCircle2, AlertCircle, User2, List, Check } from 'lucide-react';
+import { X, Edit2, Calendar, Clock, Flag, CheckCircle2, AlertCircle, User2, List, Check, ChevronDown } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { useGetApiWithIdQuery, usePostApiMutation } from '../../../../store/api/commonApi';
 import { TaskStatusBadge, TaskPriorityBadge } from './TaskStatusBadge';
@@ -217,9 +217,10 @@ const TaskDetailModal = ({
                                         >
                                             <Flag className="w-4 h-4 text-[var(--text-muted)]" />
                                             Status
+                                            <ChevronDown className={cn("w-4 h-4 text-[var(--text-muted)] transition-transform", showStatusDropdown && "rotate-180")} />
                                         </button>
                                         {showStatusDropdown && (
-                                            <div className="absolute top-full left-0 mt-1 w-48 bg-[var(--bg-card)] border border-[var(--border-main)] rounded-lg shadow-xl z-10 overflow-hidden">
+                                            <div className="absolute top-full left-0 mt-1 w-48 bg-[var(--bg-card)] border border-[var(--border-main)] rounded-lg shadow-xl z-[60] overflow-hidden">
                                                 {STATUS_OPTIONS.map((option) => (
                                                     <button
                                                         key={option.value}
