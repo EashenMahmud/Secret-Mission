@@ -106,9 +106,12 @@ const ProjectModuleStepView = ({ projectId }) => {
 
     return (
         <div className="relative">
-            <div className="flex items-center justify-between mb-10 px-2">
-                <div>
-                    <h2 className="text-2xl font-black text-[var(--text-main)] italic tracking-tight">Project Modules</h2>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500/10 border border-primary-500/20 shadow-sm">
+                        <Layout className="h-5 w-5 text-primary-500" />
+                    </div>
+                    <h2 className="text-2xl font-black text-[var(--text-main)] italic tracking-tight uppercase">Project Modules</h2>
                 </div>
             </div>
 

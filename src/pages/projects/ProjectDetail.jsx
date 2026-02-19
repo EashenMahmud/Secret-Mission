@@ -255,7 +255,14 @@ const ProjectDetail = () => {
                     </div>
                 </div>
             </div>
-
+            {/* Project Modules View - Conditional based on role */}
+            {role === 'admin' ? (
+                <ProjectModuleKanban projectId={id} onRefresh={refetch} />
+            ) : (
+                <div className="card p-4">
+                    <ProjectModuleStepView projectId={id} />
+                </div>
+            )}
             {/* Planning + Gantt (Full Width) */}
             <div className="card overflow-hidden">
                 <ProjectGanttCustom
@@ -276,12 +283,7 @@ const ProjectDetail = () => {
                 />
             </div>
 
-            {/* Project Modules View - Conditional based on role */}
-            {role === 'admin' ? (
-                <ProjectModuleKanban projectId={id} onRefresh={refetch} />
-            ) : (
-                <ProjectModuleStepView projectId={id} />
-            )}
+
 
             <ProjectFormModal
                 isOpen={isEditModalOpen}
