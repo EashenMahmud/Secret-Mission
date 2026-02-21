@@ -45,16 +45,18 @@ const getModuleIcon = (name) => {
 };
 
 const STATUS_STYLES = {
-    active:      { label: 'Active',      cls: 'bg-emerald-400/20 text-emerald-300 border-emerald-400/30' },
-    inactive:    { label: 'Inactive',    cls: 'bg-slate-400/20  text-slate-300  border-slate-400/30'  },
-    completed:   { label: 'Completed',  cls: 'bg-blue-400/20   text-blue-300   border-blue-400/30'   },
-    in_progress: { label: 'In Progress',cls: 'bg-amber-400/20  text-amber-300  border-amber-400/30'  },
-    pending:     { label: 'Pending',    cls: 'bg-orange-400/20 text-orange-300 border-orange-400/30' },
+    active:      { label: 'Active',      cls: 'bg-emerald-500  text-white border-emerald-600' },
+    inactive:    { label: 'Inactive',    cls: 'bg-slate-500    text-white border-slate-600'   },
+    completed:   { label: 'Completed',   cls: 'bg-blue-500     text-white border-blue-600'    },
+    in_progress: { label: 'In Progress', cls: 'bg-amber-500    text-white border-amber-600'   },
+    pending:     { label: 'Pending',     cls: 'bg-orange-500   text-white border-orange-600'  },
+    blocked:     { label: 'Blocked',     cls: 'bg-red-500      text-white border-red-600'     },
+    draft:       { label: 'Draft',       cls: 'bg-zinc-500     text-white border-zinc-600'    },
 };
 
 const getStatusStyle = (status) => {
     const key = (status || '').toLowerCase().replace(/[\s-]/g, '_');
-    return STATUS_STYLES[key] || { label: status || 'N/A', cls: 'bg-white/10 text-white/60 border-white/20' };
+    return STATUS_STYLES[key] || { label: status || 'N/A', cls: 'bg-black/40 text-white border-white/30' };
 };
 
 const ArrowStepCard = ({ module, index, onEdit, onDelete, onViewTask }) => {
@@ -67,8 +69,9 @@ const ArrowStepCard = ({ module, index, onEdit, onDelete, onViewTask }) => {
         <div className="group relative flex items-center justify-center min-w-[260px] md:min-w-[300px] lg:min-w-[320px] px-2 py-3">
             {/* The Arrow Shape Container */}
             <div
+                onClick={() => onViewTask(module)}
                 className={cn(
-                    "relative w-full h-20 md:h-24 flex items-center shadow-xl transition-all duration-500 group-hover:scale-105 group-hover:shadow-2xl cursor-default overflow-hidden",
+                    "relative w-full h-20 md:h-24 flex items-center shadow-xl transition-all duration-500 group-hover:scale-105 group-hover:shadow-2xl cursor-pointer overflow-hidden",
                     colorConfig.bg
                 )}
                 style={{
@@ -195,9 +198,9 @@ const ProjectModuleAdminView = ({ projectId, onRefresh }) => {
     }
 
     return (
-        <div className="space-y-12 pb-20 overflow-visible">
+        <div className="card space-y-12 pb-20 overflow-visible">
             {/* Header Area */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 ">
                 <div className="space-y-1">
                     <div className="flex items-center gap-2.5">
                         <div className="p-2 rounded-xl bg-primary-500/10 border border-primary-500/20 shadow-inner">
