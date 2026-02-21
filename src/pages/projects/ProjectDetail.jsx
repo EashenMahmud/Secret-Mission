@@ -212,42 +212,50 @@ const ProjectDetail = () => {
                     {/* Right: Progress & Stats - Compact */}
                     <div className="w-full md:w-80 bg-[var(--bg-app)]/50 rounded-lg p-3 border border-[var(--border-main)] flex flex-col justify-center flex-shrink-0">
                         <div className="flex justify-between items-end mb-1.5">
-                            <span className="text-xs font-medium text-[var(--text-muted)]">Completion</span>
-                            <span className="text-lg font-bold text-[var(--text-main)]">{project.progress ?? 0}%</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)]">Completion</span>
+                            <span className="text-lg font-black text-primary-400 tabular-nums">{project.progress ?? 0}<span className="text-xs text-[var(--text-muted)]">%</span></span>
                         </div>
                         <ProgressBar
                             value={project.progress ?? 0}
                             variant={getStatusColor(project.status)}
                             className="h-2"
                         />
-                        <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-2 text-[11px] text-[var(--text-muted)]">
+                        <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-3 text-[11px]">
                             {project.start_date && (
-                                <div className="flex flex-col">
-                                    <span className="leading-none opacity-80">Start Date</span>
-                                    <span className="font-medium text-[var(--text-main)] mt-0.5">
+                                <div className="flex flex-col gap-0.5">
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-1">
+                                        <Calendar className="w-2.5 h-2.5" /> Start
+                                    </span>
+                                    <span className="font-semibold text-[var(--text-main)]">
                                         <DateTime date={project.start_date} variant="dateOnly" />
                                     </span>
                                 </div>
                             )}
                             {project.end_date && (
-                                <div className="flex flex-col text-right">
-                                    <span className="leading-none opacity-80">Due Date</span>
-                                    <span className="font-medium text-[var(--text-main)] mt-0.5">
+                                <div className="flex flex-col gap-0.5 text-right">
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-1 justify-end">
+                                        <Clock className="w-2.5 h-2.5" /> Due
+                                    </span>
+                                    <span className="font-semibold text-red-400">
                                         <DateTime date={project.end_date} variant="dateOnly" />
                                     </span>
                                 </div>
                             )}
                             {project.start_date && project.end_date && (
-                                <div className="flex flex-col border-t border-[var(--border-main)]/50 pt-1.5 col-span-1">
-                                    <span className="leading-none opacity-80 flex items-center gap-1"><Calendar className="w-2.5 h-2.5" /> Duration</span>
-                                    <span className="font-medium text-[var(--text-main)] mt-0.5">
+                                <div className="flex flex-col gap-0.5 border-t border-[var(--border-main)]/40 pt-2">
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-1">
+                                        <TrendingUp className="w-2.5 h-2.5" /> Duration
+                                    </span>
+                                    <span className="font-semibold text-[var(--text-main)]">
                                         {Math.ceil((new Date(project.end_date) - new Date(project.start_date)) / (1000 * 60 * 60 * 24))} days
                                     </span>
                                 </div>
                             )}
-                            <div className="flex flex-col border-t border-[var(--border-main)]/50 pt-1.5 col-span-1 text-right">
-                                <span className="leading-none opacity-80 flex items-center gap-1 justify-end"><Clock className="w-2.5 h-2.5" /> Updated</span>
-                                <span className="font-medium text-[var(--text-main)] mt-0.5">
+                            <div className="flex flex-col gap-0.5 border-t border-[var(--border-main)]/40 pt-2 text-right">
+                                <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-1 justify-end">
+                                    <User className="w-2.5 h-2.5" /> Created
+                                </span>
+                                <span className="font-semibold text-[var(--text-main)]">
                                     <DateTime date={project.created_at} variant="dateOnly" />
                                 </span>
                             </div>
