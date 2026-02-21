@@ -33,7 +33,7 @@ const STEP_COLORS = [
 
 const getModuleIcon = (name) => {
     const lowercaseName = name?.toLowerCase() || '';
-    if (lowercaseName.includes('auth') || lowercaseName.includes('login')) return Lock;
+    if (lowercaseName.includes('auth') || lowercaseName.includes('login')) return Box;
     if (lowercaseName.includes('user') || lowercaseName.includes('profile')) return Users;
     if (lowercaseName.includes('data') || lowercaseName.includes('db')) return Database;
     if (lowercaseName.includes('config') || lowercaseName.includes('setting')) return Settings;
@@ -44,17 +44,31 @@ const getModuleIcon = (name) => {
     return Box;
 };
 
+const STATUS_STYLES = {
+    active:      { label: 'Active',      cls: 'bg-emerald-400/20 text-emerald-300 border-emerald-400/30' },
+    inactive:    { label: 'Inactive',    cls: 'bg-slate-400/20  text-slate-300  border-slate-400/30'  },
+    completed:   { label: 'Completed',  cls: 'bg-blue-400/20   text-blue-300   border-blue-400/30'   },
+    in_progress: { label: 'In Progress',cls: 'bg-amber-400/20  text-amber-300  border-amber-400/30'  },
+    pending:     { label: 'Pending',    cls: 'bg-orange-400/20 text-orange-300 border-orange-400/30' },
+};
+
+const getStatusStyle = (status) => {
+    const key = (status || '').toLowerCase().replace(/[\s-]/g, '_');
+    return STATUS_STYLES[key] || { label: status || 'N/A', cls: 'bg-white/10 text-white/60 border-white/20' };
+};
+
 const ArrowStepCard = ({ module, index, onEdit, onDelete, onViewTask }) => {
     const colorConfig = STEP_COLORS[index % STEP_COLORS.length];
     const ModuleIcon = getModuleIcon(module.name);
     const stepNumber = String(index + 1).padStart(2, '0');
+    const statusStyle = getStatusStyle(module.status);
 
     return (
-        <div className="group relative flex items-center justify-center min-w-[280px] md:min-w-[320px] lg:min-w-[340px] px-2 py-4">
+        <div className="group relative flex items-center justify-center min-w-[260px] md:min-w-[300px] lg:min-w-[320px] px-2 py-3">
             {/* The Arrow Shape Container */}
             <div
                 className={cn(
-                    "relative w-full h-32 md:h-36 flex items-center shadow-xl transition-all duration-500 group-hover:scale-105 group-hover:shadow-2xl cursor-default overflow-hidden",
+                    "relative w-full h-20 md:h-24 flex items-center shadow-xl transition-all duration-500 group-hover:scale-105 group-hover:shadow-2xl cursor-default overflow-hidden",
                     colorConfig.bg
                 )}
                 style={{
@@ -62,61 +76,63 @@ const ArrowStepCard = ({ module, index, onEdit, onDelete, onViewTask }) => {
                 }}
             >
                 {/* Visual Accent - Left border line */}
-                <div className="absolute left-0 top-0 bottom-0 w-3 bg-black/10" />
+                <div className="absolute left-0 top-0 bottom-0 w-2 bg-black/10" />
 
                 {/* Content Layout */}
-                <div className="flex items-center w-[85%] px-8 space-x-6">
+                <div className="flex items-center w-[85%] px-5 space-x-3">
                     {/* Icon Section */}
-                    <div className="relative z-10 p-3 bg-white/10 rounded-2xl border border-white/20 backdrop-blur-md">
-                        <ModuleIcon className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                    <div className="relative z-10 flex-shrink-0 p-2 bg-white/10 rounded-xl border border-white/20 backdrop-blur-md">
+                        <ModuleIcon className="w-5 h-5 text-white" />
                     </div>
 
                     {/* Text Section */}
-                    <div className="flex flex-col min-w-0 pr-4">
-                        <h4 className="text-lg md:text-xl font-black text-white italic tracking-tight uppercase truncate">
+                    <div className="flex flex-col min-w-0 pr-2 gap-0.5">
+                        <h4 className="text-sm md:text-base font-black text-white italic tracking-tight uppercase leading-tight break-words whitespace-normal">
                             {module.name}
                         </h4>
-                        <p className="text-[10px] md:text-xs text-white/70 font-bold uppercase tracking-widest leading-none">
-                            Phase {stepNumber}
-                        </p>
+                        {/* Status Badge */}
+                        <span className={`mt-1 self-start inline-flex items-center px-1.5 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest border ${statusStyle.cls}`}>
+                            {statusStyle.label}
+                        </span>
                     </div>
                 </div>
 
                 {/* Numbering "Cutout" - Half circle on the right arrow tip */}
                 <div
-                    className="absolute right-[5%] top-1/2 -translate-y-1/2 w-16 h-24 md:w-20 md:h-28 bg-white/95 flex items-center justify-center shadow-inner"
+                    className="absolute right-[5%] top-1/2 -translate-y-1/2 w-12 h-18 md:w-14 md:h-20 bg-white/95 flex items-center justify-center shadow-inner"
                     style={{
-                        clipPath: 'ellipse(55% 50% at 100% 50%)'
+                        clipPath: 'ellipse(55% 50% at 100% 50%)',
+                        height: '72px'
                     }}
                 >
-                    <span className="text-xl md:text-2xl font-black italic tracking-tighter text-slate-400 pl-4">
+                    <span className="text-base md:text-lg font-black italic tracking-tighter text-slate-400 pl-3">
                         {stepNumber}
                     </span>
                 </div>
             </div>
 
             {/* Management Bar Overlay - Appears on Hover */}
-            <div className="absolute inset-x-0 -top-8 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 group-hover:-top-12 transition-all duration-300 z-50">
+            <div className="absolute inset-x-0 -top-8 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 group-hover:-top-11 transition-all duration-300 z-50">
                 <button
                     onClick={() => onViewTask(module)}
-                    className="p-3 rounded-2xl bg-[#3A81A1] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-2 border border-white/20"
+                    className="p-2 rounded-xl bg-[#3A81A1] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 border border-white/20"
                 >
-                    <ArrowUpRight className="w-4 h-4" />
-                    <span className="text-[10px] font-black uppercase tracking-widest pr-1">Tasks</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                    <span className="text-[9px] font-black uppercase tracking-widest pr-1">Tasks</span>
                 </button>
                 <button
                     onClick={() => onEdit(module)}
-                    className="p-3 rounded-2xl bg-[#5B9279] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-2 border border-white/20"
+                    className="p-2 rounded-xl bg-[#5B9279] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 border border-white/20"
                 >
-                    <Edit2 className="w-4 h-4" />
-                    <span className="text-[10px] font-black uppercase tracking-widest pr-1">Edit</span>
+                    <Edit2 className="w-3.5 h-3.5" />
+                    <span className="text-[9px] font-black uppercase tracking-widest pr-1">Edit</span>
                 </button>
                 <button
                     onClick={() => onDelete(module)}
-                    className="p-3 rounded-2xl bg-[#936789] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-2 border border-white/20"
+                    className="p-2 rounded-xl bg-[#936789] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 border border-white/20"
                 >
-                    <Trash2 className="w-4 h-4" />
-                    <span className="text-[10px] font-black uppercase tracking-widest pr-1">Delete</span>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span className="text-[9px] font-black uppercase tracking-widest pr-1">Delete</span>
                 </button>
             </div>
         </div>
@@ -181,27 +197,27 @@ const ProjectModuleAdminView = ({ projectId, onRefresh }) => {
     return (
         <div className="space-y-12 pb-20 overflow-visible">
             {/* Header Area */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 px-4">
-                <div className="space-y-2">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 rounded-2xl bg-primary-500/10 border border-primary-500/20 shadow-inner">
-                            <Settings className="w-6 h-6 text-primary-500" />
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-4">
+                <div className="space-y-1">
+                    <div className="flex items-center gap-2.5">
+                        <div className="p-2 rounded-xl bg-primary-500/10 border border-primary-500/20 shadow-inner">
+                            <Settings className="w-4 h-4 text-primary-500" />
                         </div>
-                        <h2 className="text-3xl md:text-4xl font-black text-[var(--text-main)] italic tracking-tight uppercase leading-none">
-                            Process Timeline
+                        <h2 className="text-xl md:text-xl font-black text-[var(--text-main)] italic tracking-tight uppercase leading-none">
+                            Modules
                         </h2>
                     </div>
-                    <p className="text-[11px] md:text-xs text-[var(--text-muted)] font-black uppercase tracking-[0.2em] opacity-80">
-                        Strategic Module Sequencing & Asset Management
+                    <p className="text-[9px] md:text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] opacity-70">
+                        Strategic Module Sequencing
                     </p>
                 </div>
 
                 <Button
                     onClick={handleAdd}
-                    leftIcon={<Plus className="w-5 h-5" />}
-                    className="h-16 px-10 rounded-2xl text-xs font-black uppercase tracking-[0.2em] shadow-2xl hover:scale-105 active:scale-95 transition-all"
+                    leftIcon={<Plus className="w-3.5 h-3.5" />}
+                    className="h-9 px-5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] shadow-lg hover:scale-105 active:scale-95 transition-all"
                 >
-                    Add System Phase
+                    Add Module
                 </Button>
             </div>
 
