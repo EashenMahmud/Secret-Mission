@@ -23,12 +23,12 @@ import ConfirmationModal from '../../../components/ui/ConfirmationModal';
 import { cn } from '../../../lib/utils';
 
 const STEP_COLORS = [
-    { bg: 'bg-[#936789]', text: 'text-[#936789]', border: 'border-[#936789]/20', number: '01' },
-    { bg: 'bg-[#5B9279]', text: 'text-[#5B9279]', border: 'border-[#5B9279]/20', number: '02' },
-    { bg: 'bg-[#3A81A1]', text: 'text-[#3A81A1]', border: 'border-[#3A81A1]/20', number: '03' },
-    { bg: 'bg-[#5C7492]', text: 'text-[#5C7492]', border: 'border-[#5C7492]/20', number: '04' },
-    { bg: 'bg-[#A9C394]', text: 'text-[#A9C394]', border: 'border-[#A9C394]/20', number: '05' },
-    { bg: 'bg-[#6272A4]', text: 'text-[#6272A4]', border: 'border-[#6272A4]/20', number: '06' },
+    { bg: 'bg-[#823B6D]', text: 'text-[#823B6D]', border: 'border-[#823B6D]/20', number: '01' },
+    { bg: 'bg-[#2A7053]', text: 'text-[#2A7053]', border: 'border-[#2A7053]/20', number: '02' },
+    { bg: 'bg-[#11558E]', text: 'text-[#11558E]', border: 'border-[#11558E]/20', number: '03' },
+    { bg: 'bg-[#3D5470]', text: 'text-[#3D5470]', border: 'border-[#3D5470]/20', number: '04' },
+    { bg: 'bg-[#6D854F]', text: 'text-[#6D854F]', border: 'border-[#6D854F]/20', number: '05' },
+    { bg: 'bg-[#3F497E]', text: 'text-[#3F497E]', border: 'border-[#3F497E]/20', number: '06' },
 ];
 
 const getModuleIcon = (name) => {
@@ -45,13 +45,13 @@ const getModuleIcon = (name) => {
 };
 
 const STATUS_STYLES = {
-    active:      { label: 'Active',      cls: 'bg-emerald-500  text-white border-emerald-600' },
-    inactive:    { label: 'Inactive',    cls: 'bg-slate-500    text-white border-slate-600'   },
-    completed:   { label: 'Completed',   cls: 'bg-blue-500     text-white border-blue-600'    },
-    in_progress: { label: 'In Progress', cls: 'bg-amber-500    text-white border-amber-600'   },
-    pending:     { label: 'Pending',     cls: 'bg-orange-500   text-white border-orange-600'  },
-    blocked:     { label: 'Blocked',     cls: 'bg-red-500      text-white border-red-600'     },
-    draft:       { label: 'Draft',       cls: 'bg-zinc-500     text-white border-zinc-600'    },
+    active: { label: 'Active', cls: 'bg-emerald-500  text-white border-emerald-600' },
+    inactive: { label: 'Inactive', cls: 'bg-slate-500    text-white border-slate-600' },
+    completed: { label: 'Completed', cls: 'bg-blue-500     text-white border-blue-600' },
+    in_progress: { label: 'In Progress', cls: 'bg-amber-500    text-white border-amber-600' },
+    pending: { label: 'Pending', cls: 'bg-orange-500   text-white border-orange-600' },
+    blocked: { label: 'Blocked', cls: 'bg-red-500      text-white border-red-600' },
+    draft: { label: 'Draft', cls: 'bg-zinc-500     text-white border-zinc-600' },
 };
 
 const getStatusStyle = (status) => {
@@ -67,50 +67,57 @@ const ArrowStepCard = ({ module, index, onEdit, onDelete, onViewTask }) => {
 
     return (
         <div className="group relative flex items-center justify-center min-w-[260px] md:min-w-[300px] lg:min-w-[320px] px-2 py-3">
-            {/* The Arrow Shape Container */}
+            {/* The Arrow Shape Container with Shadow Wrapper */}
             <div
-                onClick={() => onViewTask(module)}
-                className={cn(
-                    "relative w-full h-20 md:h-24 flex items-center shadow-xl transition-all duration-500 group-hover:scale-105 group-hover:shadow-2xl cursor-pointer overflow-hidden",
-                    colorConfig.bg
-                )}
+                className="relative w-full py-4 overflow-visible group"
                 style={{
-                    clipPath: 'polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%)'
+                    filter: 'drop-shadow(0 12px 10px rgba(0,0,0,0.3)) drop-shadow(0 5px 4px rgba(0,0,0,0.15))'
                 }}
             >
-                {/* Visual Accent - Left border line */}
-                <div className="absolute left-0 top-0 bottom-0 w-2 bg-black/10" />
-
-                {/* Content Layout */}
-                <div className="flex items-center w-[85%] px-5 space-x-3">
-                    {/* Icon Section */}
-                    <div className="relative z-10 flex-shrink-0 p-2 bg-white/10 rounded-xl border border-white/20 backdrop-blur-md">
-                        <ModuleIcon className="w-5 h-5 text-white" />
-                    </div>
-
-                    {/* Text Section */}
-                    <div className="flex flex-col min-w-0 pr-2 gap-0.5">
-                        <h4 className="text-sm md:text-base font-black text-white italic tracking-tight uppercase leading-tight break-words whitespace-normal">
-                            {module.name}
-                        </h4>
-                        {/* Status Badge */}
-                        <span className={`mt-1 self-start inline-flex items-center px-1.5 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest border ${statusStyle.cls}`}>
-                            {statusStyle.label}
-                        </span>
-                    </div>
-                </div>
-
-                {/* Numbering "Cutout" - Half circle on the right arrow tip */}
                 <div
-                    className="absolute right-[5%] top-1/2 -translate-y-1/2 w-12 h-18 md:w-14 md:h-20 bg-white/95 flex items-center justify-center shadow-inner"
+                    onClick={() => onViewTask(module)}
+                    className={cn(
+                        "relative w-full h-20 md:h-24 flex items-center transition-all duration-500 group-hover:scale-[1.02] cursor-pointer",
+                        colorConfig.bg
+                    )}
                     style={{
-                        clipPath: 'ellipse(55% 50% at 100% 50%)',
-                        height: '72px'
+                        clipPath: 'polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%)'
                     }}
                 >
-                    <span className="text-base md:text-lg font-black italic tracking-tighter text-slate-400 pl-3">
-                        {stepNumber}
-                    </span>
+                    {/* Visual Accent - Left border line */}
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-black/10" />
+
+                    {/* Content Layout */}
+                    <div className="flex items-center w-[85%] px-5 space-x-3">
+                        {/* Icon Section */}
+                        <div className="relative z-10 flex-shrink-0 p-2 bg-white/10 rounded-xl border border-white/20 backdrop-blur-md">
+                            <ModuleIcon className="w-5 h-5 text-white" />
+                        </div>
+
+                        {/* Text Section */}
+                        <div className="flex flex-col min-w-0 pr-2 gap-0.5">
+                            <h4 className="text-sm md:text-base font-black text-white italic tracking-tight uppercase leading-tight break-words whitespace-normal">
+                                {module.name}
+                            </h4>
+                            {/* Status Badge */}
+                            <span className={`mt-1 self-start inline-flex items-center px-1.5 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest border ${statusStyle.cls}`}>
+                                {statusStyle.label}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Numbering "Cutout" - Half circle on the right arrow tip */}
+                    <div
+                        className="absolute right-[5%] top-1/2 -translate-y-1/2 w-12 h-18 md:w-14 md:h-20 bg-white/95 flex items-center justify-center shadow-inner"
+                        style={{
+                            clipPath: 'ellipse(55% 50% at 100% 50%)',
+                            height: '72px'
+                        }}
+                    >
+                        <span className="text-base md:text-lg font-black italic tracking-tighter text-slate-400 pl-3">
+                            {stepNumber}
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -118,21 +125,21 @@ const ArrowStepCard = ({ module, index, onEdit, onDelete, onViewTask }) => {
             <div className="absolute inset-x-0 -top-8 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 group-hover:-top-11 transition-all duration-300 z-50">
                 <button
                     onClick={() => onViewTask(module)}
-                    className="p-2 rounded-xl bg-[#3A81A1] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 border border-white/20"
+                    className="p-2 rounded-xl bg-[#11558E] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 border border-white/20"
                 >
                     <ArrowUpRight className="w-3.5 h-3.5" />
                     <span className="text-[9px] font-black uppercase tracking-widest pr-1">Tasks</span>
                 </button>
                 <button
                     onClick={() => onEdit(module)}
-                    className="p-2 rounded-xl bg-[#5B9279] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 border border-white/20"
+                    className="p-2 rounded-xl bg-[#2A7053] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 border border-white/20"
                 >
                     <Edit2 className="w-3.5 h-3.5" />
                     <span className="text-[9px] font-black uppercase tracking-widest pr-1">Edit</span>
                 </button>
                 <button
                     onClick={() => onDelete(module)}
-                    className="p-2 rounded-xl bg-[#936789] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 border border-white/20"
+                    className="p-2 rounded-xl bg-[#823B6D] text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 border border-white/20"
                 >
                     <Trash2 className="w-3.5 h-3.5" />
                     <span className="text-[9px] font-black uppercase tracking-widest pr-1">Delete</span>
