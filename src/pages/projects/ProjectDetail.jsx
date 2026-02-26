@@ -23,6 +23,7 @@ import ProjectManpowerSection from './planning/ProjectManpowerSection';
 import ProjectGanttCustom from './planning/ProjectGanttCustom';
 import ProjectModuleAdminView from './modules/ProjectModuleAdminView';
 import ProjectModuleStepView from './modules/ProjectModuleStepView';
+import ProjectCalendar from './modules/ProjectCalendar';
 import DateTime from '../../components/ui/DateTime';
 import ProgressBar from '../../components/ui/ProgressBar';
 import { toast } from 'react-toastify';
@@ -290,6 +291,9 @@ const ProjectDetail = () => {
                     onDelete={(item) => setDeletePlanningItem(item)}
                 />
             </div>
+
+            {/* Project Calendar */}
+            <ProjectCalendar projectId={id} />
 
 
 
