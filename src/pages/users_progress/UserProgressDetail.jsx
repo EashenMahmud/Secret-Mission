@@ -212,7 +212,7 @@ const ProjectGanttBlock = ({ project }) => {
                                 }}>
                                     <div style={{ padding: '8px 12px', fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)' }}>TASK</div>
                                     {days.map((d, i) => {
-                                        const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+                                        const isWeekend = d.getDay() === 5 || d.getDay() === 6;
                                         return (
                                             <div key={i} style={{
                                                 textAlign: 'center',

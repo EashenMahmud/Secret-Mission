@@ -466,7 +466,7 @@ const UserProgress = () => {
                                 gridTemplateColumns: `repeat(${days.length}, 32px)`,
                             }}>
                                 {days.map((d, i) => {
-                                    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+                                    const isWeekend = d.getDay() === 5 || d.getDay() === 6;
                                     return (
                                         <div key={i} style={{
                                             textAlign: 'center',
