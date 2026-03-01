@@ -14,6 +14,8 @@ const STATUS_CONFIG = {
     in_review: { color: '#f59e0b', label: 'In Review' },
     in_progress: { color: '#3b82f6', label: 'In Progress' },
     pending: { color: '#8b5cf6', label: 'Pending' },
+    draft: { color: '#94a3b8', label: 'Draft' },
+    blocked: { color: '#ef4444', label: 'Blocked' },
     default: { color: '#6b7280', label: 'Unknown' },
 };
 

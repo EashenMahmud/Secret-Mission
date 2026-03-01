@@ -14,6 +14,8 @@ const STATUS_CONFIG = {
     in_review: { color: '#f59e0b', bg: 'rgba(245,158,11,0.15)', label: 'In Review' },
     in_progress: { color: '#3b82f6', bg: 'rgba(59,130,246,0.15)', label: 'In Progress' },
     pending: { color: '#8b5cf6', bg: 'rgba(139,92,246,0.15)', label: 'Pending' },
+    draft: { color: '#94a3b8', bg: 'rgba(148,163,184,0.15)', label: 'Draft' },
+    blocked: { color: '#ef4444', bg: 'rgba(239,68,68,0.15)', label: 'Blocked' },
     default: { color: '#6b7280', bg: 'rgba(107,114,128,0.15)', label: 'Unknown' },
 };
 
