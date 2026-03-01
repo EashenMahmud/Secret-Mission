@@ -9,7 +9,8 @@ import {
     GanttChart,
     Timer,
     UserPlus,
-    Settings
+    Settings,
+    Activity
 } from 'lucide-react';
 
 // Menu configuration with role-based access
@@ -26,6 +27,13 @@ export const menuItems = [
         label: 'Users',
         path: '/users',
         icon: Users,
+        roles: ['admin'],
+    },
+    {
+        id: 'user-progress',
+        label: 'User Progress',
+        path: '/admin/user-progress',
+        icon: Activity,
         roles: ['admin'],
     },
     {

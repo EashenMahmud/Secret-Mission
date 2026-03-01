@@ -40,6 +40,8 @@ const MyProfile = lazy(() => import('./pages/users/MyProfile'));
 const ProjectPlanningTypes = lazy(() => import('./pages/organization/ProjectPlanningTypeList'));
 const ClientList = lazy(() => import('./pages/clients/VendorList'));
 const TaskDetailsPage = lazy(() => import('./pages/projects/Taskmanagement/TaskDetails'));
+const UserProgress = lazy(() => import('./pages/users_progress/UserProgress'));
+const UserProgressDetail = lazy(() => import('./pages/users_progress/UserProgressDetail'));
 
 // Loading component
 const PageLoader = () => (
@@ -101,6 +103,26 @@ function App() {
                     <ProtectedRoute allowedRoles={['admin']}>
                       <Suspense fallback={<PageLoader />}>
                         <ClientList />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="admin/user-progress"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <Suspense fallback={<PageLoader />}>
+                        <UserProgress />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="admin/user-progress/:userId"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <Suspense fallback={<PageLoader />}>
+                        <UserProgressDetail />
                       </Suspense>
                     </ProtectedRoute>
                   }
