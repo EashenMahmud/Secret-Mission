@@ -23,6 +23,13 @@ export const menuItems = [
         roles: ['admin', 'employee', 'developer'],
     },
     {
+        id: 'my-progress',
+        label: 'My Progress',
+        path: '/my-progress',
+        icon: Activity,
+        roles: ['admin', 'employee', 'developer'],
+    },
+    {
         id: 'users',
         label: 'Users',
         path: '/users',

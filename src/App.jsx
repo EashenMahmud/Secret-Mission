@@ -42,6 +42,7 @@ const ClientList = lazy(() => import('./pages/clients/VendorList'));
 const TaskDetailsPage = lazy(() => import('./pages/projects/Taskmanagement/TaskDetails'));
 const UserProgress = lazy(() => import('./pages/users_progress/UserProgress'));
 const UserProgressDetail = lazy(() => import('./pages/users_progress/UserProgressDetail'));
+const MyProgress = lazy(() => import('./pages/users_progress/MyProgress'));
 
 // Loading component
 const PageLoader = () => (
@@ -87,6 +88,14 @@ function App() {
               >
                 <Route index element={<Navigate to="/dashboard" replace />} />
                 <Route path="dashboard" element={<Dashboard />} />
+                <Route
+                  path="my-progress"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <MyProgress />
+                    </Suspense>
+                  }
+                />
                 <Route
                   path="users"
                   element={
